@@ -305,6 +305,91 @@
 						\end{packed_enum}
 					\end{packed_item}
 
+					\noindent \underbar{\textbf{ UC18: komentiranje djela PRIJAVLJENI}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: } Registrirani korisnik
+						\item  \textbf{Cilj:} Kometiranje djela						
+						\item \textbf{Sudionici:} Baza podataka
+						\item  \textbf{Preduvjet:} Korisnik je prijavljen
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item Korisnik odabire polje za komentare
+							\item Korisnik upisuje svoj komentar u polje
+							\item Korisnik potvrđuje svoj komentar
+							\item . Baza podataka se ažurira
+							\item . Korisnikov komentar se nalazi u polju pokraj slike
+
+						\end{packed_enum}
+					\end{packed_item}
+					
+					\noindent \underbar{\textbf{ UC19: kupnja djela PRIJAVLJENI}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: } Registrirani korisnik
+						\item  \textbf{Cilj:} Kupnja određenog djela
+						\item  \textbf{Sudionici:} Baza podataka
+						\item  \textbf{Preduvjet:} Korisnik je prijavljen
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item Korisnik odabire kupnju djela						
+							\item Korisnik se prijavljuje na stranicu partnera (PayPal)							
+							\item Korisnik preko protokola za plaćanje uplaćuje sredstva
+							\item . Baza podataka se ažurira
+							\item . Pokreće se proces slanja slike 
+
+						\end{packed_enum}
+						
+						\item \textbf{Opis mogućih odstupanja:} 					
+							\item[] \begin{packed_enum}
+							\item Korisnik zbog nekog razloga nije u mogućnosti prijaviti se na stranicu partnera
+							\item Korisnik zbog nekog razloga nije u mogućnosti obaviti uplatu
+						\end{packed_enum}
+
+
+	
+					\end{packed_item}
+					
+					
+					\noindent \underbar{\textbf{ UC20: pregled vlastitih izvršenih transakcija PRIJAVLJENI
+					}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: } Registrirani korisnik
+						\item  \textbf{Cilj:} Pregled svih vlastitih izvršenih transakcija						
+						\item  \textbf{Sudionici:} Baza podataka
+						\item  \textbf{Preduvjet:} Korisnik je prijavljen
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item Korisnik odabire popis svih transakcija
+							\item Prikaže se lista svih izvršenih transakcija							
+						\end{packed_enum}
+					\end{packed_item}
+					
+					\noindent \underbar{\textbf{ UC21: pregled svih transakcija ADMIN
+					}}
+					\begin{packed_item}
+											
+						\item \textbf{Glavni sudionik: } Administrator
+						\item  \textbf{Cilj:} Pregled svih transakcija na stranici											
+						\item  \textbf{Sudionici:} Baza podataka
+						\item  \textbf{Preduvjet:} Korisnik ima prava administratora
+						\item  \textbf{Opis osnovnog tijeka:}
+											
+						\item[] \begin{packed_enum}
+												
+							\item Korisnik odabire popis svih transakcija
+							\item Prikaže se lista svih transakcija							
+					
+						\end{packed_enum}
+					\end{packed_item}
+
 
 					\noindent \underbar{\textbf{UC22 - Pregledavanje računa}}
 					\begin{packed_item}
