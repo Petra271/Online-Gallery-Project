@@ -59,6 +59,176 @@
 				
 				\subsubsection{Opis obrazaca uporabe}
 					\textit{Funkcionalne zahtjeve razraditi u obliku obrazaca uporabe. Svaki obrazac je potrebno razraditi prema donjem predlošku. Ukoliko u nekom koraku može doći do odstupanja, potrebno je to odstupanje opisati i po mogućnosti ponuditi rješenje kojim bi se tijek obrasca vratio na osnovni tijek.}\\
+
+
+								\noindent \underbar{\textbf{UC$<$1$>$ -$<$Registracija posjetitelja$>$}}
+							\begin{packed_item}
+			
+								\item \textbf{Glavni sudionik: }$<$posjetitelj$>$
+								\item  \textbf{Cilj:} $<$Registrirati posjetitelja na platformu$>$
+								\item  \textbf{Sudionici:} $<$Baza podataka$>$
+								\item  \textbf{Preduvjet:} $<$-$>$
+								\item  \textbf{Opis osnovnog tijeka:}
+								
+								\item[] \begin{packed_enum}
+			
+									\item $<$Korisnik odabire opciju za registraciju$>$
+									\item $<$Korisnik unosi ime, prezime, e-mail adresu i PayPal račun$>$
+									\item $<$Korisnik prima obavijest o uspješnoj registraciji$>$
+								\end{packed_enum}
+								
+								\item  \textbf{Opis mogućih odstupanja:}
+								
+								\item[] \begin{packed_item}
+			
+									\item[2.a] $<$Odabir već zauzetog korisničkog imena i/ili e-maila, unos korisničkog 
+									podatka u nedozvoljenom formatu, pružanje neispravnoga e-maila ili neispravnog PayPal računa$>$
+									\item[] \begin{packed_enum}
+										
+										\item $<$Sustav obavještava korisnika o neuspjelom upisu i 
+										vraća ga na stranicu za registraciju$>$
+										\item $<$Korisnik mijenja potrebne podatke te završava unos ili
+										odustaje od registracije$>$
+										
+									\end{packed_enum}
+									
+								\end{packed_item}
+							\end{packed_item}
+						
+							\noindent \underbar{\textbf{UC$<$2$>$ -$<$Registracija umjetnika$>$}}
+							\begin{packed_item}
+								
+								\item \textbf{Glavni sudionik: }$<$Umjetnik$>$
+								\item  \textbf{Cilj:} $<$Registrirati umjetnika na platformu$>$
+								\item  \textbf{Sudionici:} $<$Baza podataka$>$
+								\item  \textbf{Preduvjet:} $<$-$>$
+								\item  \textbf{Opis osnovnog tijeka:}
+								
+								\item[] \begin{packed_enum}
+									
+									\item $<$Korisnik odabire opciju za registraciju$>$
+									\item $<$Korisnik unosi ime, prezime, e-mail adresu, PayPal račun i 
+									portfolio u obliku PDF datoteke$>$
+									\item $<$Korisnik prima obavijest o uspješnoj registraciji$>$
+								\end{packed_enum}
+								
+								\item  \textbf{Opis mogućih odstupanja:}
+								
+								\item[] \begin{packed_item}
+									
+									\item[2.a] $<$Odabir već zauzetog korisničkog imena i/ili e-maila, unos korisničkog 
+									podatka u nedozvoljenom formatu, pružanje neispravnoga e-maila ili neispravnog PayPal računa$>$
+									\item[] \begin{packed_enum}
+										
+										\item $<$Sustav obavještava korisnika o neuspjelom upisu i 
+										vraća ga na stranicu za registraciju$>$
+										\item $<$Korisnik mijenja potrebne podatke te završava unos ili 
+										odustaje od registracije$>$
+										
+									\end{packed_enum}
+									
+								\end{packed_item}
+							\end{packed_item}
+						
+							\noindent \underbar{\textbf{UC$<$3$>$ -$<$Prijava u sustav$>$}}
+							\begin{packed_item}
+								
+								\item \textbf{Glavni sudionik: }$<$Umjetnik, registrirani posjetitelj, administrator$>$
+								\item  \textbf{Cilj:} $<$Dobiti pristup korisničkom sučelju$>$
+								\item  \textbf{Sudionici:} $<$Baza podataka$>$
+								\item  \textbf{Preduvjet:} $<$Registracija$>$
+								\item  \textbf{Opis osnovnog tijeka:}
+								
+								\item[] \begin{packed_enum}
+									
+									\item $<$Unos korisničkog imena i lozinke$>$
+									\item $<$Potvrda o ispravnosti unesenih podataka$>$
+									\item $<$Pristup korisničkim funkcijama$>$
+								\end{packed_enum}
+								
+								\item  \textbf{Opis mogućih odstupanja:}
+								
+								\item[] \begin{packed_item}
+									
+									\item[2.a] $<$Neispravno korisničko ime i/ili lozinka$>$
+									\item[] \begin{packed_enum}
+										
+										\item $<$Sustav obavještava korisnika o neuspjelom upisu i 
+										vraća ga na stranicu za registraciju$>$
+										
+									\end{packed_enum}							
+									
+								\end{packed_item}
+							\end{packed_item}
+					
+						\noindent \underbar{\textbf{UC$<$4$>$ -$<$Pregled osobnih podataka$>$}}
+						\begin{packed_item}
+							
+							\item \textbf{Glavni sudionik: }$<$Umjetnik, registrirani posjetitelj, administrator$>$
+							\item  \textbf{Cilj:} $<$Pregledati osobne podatke$>$
+							\item  \textbf{Sudionici:} $<$Baza podataka$>$
+							\item  \textbf{Preduvjet:} $<$Prijava u sustav$>$
+							\item  \textbf{Opis osnovnog tijeka:}
+							
+							\item[] \begin{packed_enum}
+								
+								\item $<$Korisnik odabire opciju "Osobni podatci"$>$
+								\item $<$Aplikacija prikazuje osobne podatke korisnika$>$						
+							\end{packed_enum}
+							
+							\item  \textbf{Opis mogućih odstupanja:}
+							
+							\item[] \begin{packed_item}
+								
+								\item[2.a] $<$Korisnik promijeni svoje osobne podatke, ali ne odabere opciju ”Spremi promjene"$>$
+								\item[] \begin{packed_enum}
+									
+									\item $<$Sustav obavještava korisnika da nije spremio podatke prije izlaska iz prozora$>$							
+									
+								\end{packed_enum}						
+								
+							\end{packed_item}
+						\end{packed_item}
+				
+					\noindent \underbar{\textbf{UC$<$5$>$ -$<$Dodavanje kolekcija$>$}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: }$<$Umjetnik$>$
+						\item  \textbf{Cilj:} $<$Dodati nove kolekcije na korisnikov račun$>$
+						\item  \textbf{Sudionici:} $<$Baza podataka$>$
+						\item  \textbf{Preduvjet:} $<$Korisnik je prijavljen u sustav kao umjetnik$>$
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item $<$Korisnik odabire opciju za dodavanje kolekcija$>$
+							\item $<$Korisnik dodaje novu kolekciju na svoj račun$>$
+							\item $<$korisnik sprema promjene$>$
+							\item $<$Baza podataka se ažurira$>$					
+						\end{packed_enum}
+						
+						\item  \textbf{Opis mogućih odstupanja:}
+						
+						\item[] \begin{packed_item}
+							
+							\item[2.a] $<$Korisnik doda novu kolekciju, ali ne odabere opciju "Spremi"$>$
+							\item[] \begin{packed_enum}
+								
+								\item $<$Sustav obavještava korisnika da nije spremio podatke prije izlaska iz prozora$>$
+								
+							\end{packed_enum}
+						
+							\item[2.b] $<$Pri stvaranju nove kolekcije korisnik ne unese jedan od sljedećih podataka o kolekciji:
+							naziv, opis, stil te jedno ili više djela u nekom slikovnom formatu$>$
+							\item[] \begin{packed_enum}
+								
+								\item $<$Sustav obavještava korisnika da određeni podaci o kolekciji nedostaju$>$
+								\item $<$Korisnik mijenja potrebne podatke te završava 
+								unos ili odustaje od dodavanja nove kolekcije$>$
+							\end{packed_enum}
+							
+						\end{packed_item}
+					\end{packed_item}
 					
 
 					\noindent \underbar{\textbf{UC22 - Pregledavanje računa}}
