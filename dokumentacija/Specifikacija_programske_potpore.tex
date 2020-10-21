@@ -305,6 +305,104 @@
 						\end{packed_enum}
 					\end{packed_item}
 
+					\noindent \underbar{\textbf{UC10 - Prijava na natječaj}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: }Umjetnik
+						\item  \textbf{Cilj: }Prijaviti se na natječaj
+						\item  \textbf{Sudionici: }Baza podataka
+						\item  \textbf{Preduvjet:} Umjetnik je prijavljen i postoji aktivni natječaj
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item Umjetnik odabire opciju "Aktivni natječaji"
+							\item Prikazuje se lista trenutno
+							aktivnih natječaja
+							\item Umjetnik odabire natječaj na koji se želi prijaviti
+							\item Nudi se lista umjetnikovih kolekcija čiji stil odgovara stilu traženom u natječaju
+							\item Umjetnik odabire jednu ili više kolekcija
+							\item Umjetnik odabire opciju "Potvrdi prijavu"
+							\item Promjena se pohranjuje u bazu podataka
+							
+						\end{packed_enum}
+						
+						\item  \textbf{Opis mogućih odstupanja:}
+						
+						\item[] \begin{packed_item}
+							
+							\item[4.a] Umjetnik nema nijednu kolekciju čiji stil odgovara stilu traženom u natječaju
+							\item[] \begin{packed_enum}
+								\item Sustav obavještava umjetnika da nema nijednu kolekciju u traženom stilu
+							\end{packed_enum}
+							
+						\end{packed_item}
+					\end{packed_item}
+					
+					\noindent \underbar{\textbf{UC11 - Pregled prijava}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: }Administrator
+						\item  \textbf{Cilj: }Pregledati prijave
+						\item  \textbf{Sudionici: }Baza podataka
+						\item  \textbf{Preduvjet:} Korisnik je registriran i dodijeljena su mu prava administratora
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item Administrator odabire opciju "Završeni natječaji"
+							\item Prikazuje se lista završenih natječaja
+							\item Administrator odabire natječaj za koji želi pregledati dobivene prijave
+							\item Prikazuje se lista prijava
+							
+						\end{packed_enum}
+						
+					\end{packed_item}
+					
+					\noindent \underbar{\textbf{UC12 - Odabir kolekcija za izložbu}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: }Administrator
+						\item  \textbf{Cilj: }Odabrati kolekcije za izložbu
+						\item  \textbf{Sudionici: }Baza podataka
+						\item  \textbf{Preduvjet:} Korisnik je registriran i dodijeljena su mu prava administratora
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item Umjetnik odabire natječaj za koji želi razmotriti prijave
+							\item Prikazuje se lista prijava
+							\item Administrator pregledava prijavljene kolekcije umjetnika
+							\item Administrator prihvaća određenu kolekciju odabirom opcije "Prihvati kolekciju"
+							\item Promjena se pohranjuje u bazu podataka
+							
+						\end{packed_enum}
+						
+					\end{packed_item}
+				
+					\noindent \underbar{\textbf{UC13 - Stvaranje izložbe}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: }Administrator
+						\item  \textbf{Cilj: }Stvoriti izložbu
+						\item  \textbf{Sudionici: }Baza podataka
+						\item  \textbf{Preduvjet:} 
+						\begin{packed_item}
+							\item Korisnik je registriran i dodijeljena su mu prava administratora
+							\item Administrator je odabrao kolekcije za izložbu
+						\end{packed_item}
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item Administrator upisuje naziv i opis izložbe, vrijeme početka i trajanja, te iznos provizije
+							\item Administrator stvara izložbu odabirom opcije "Stvori izložbu"
+							\item Promjena se pohranjuje u bazu podataka
+							
+						\end{packed_enum}
+						
+					\end{packed_item}
+
 					\noindent \underbar{\textbf{ UC18: komentiranje djela }}
 					\begin{packed_item}
 						
