@@ -2,20 +2,14 @@
 		
 	\section{Funkcionalni zahtjevi}
 			
-			\textbf{\textit{dio 1. revizije}}\\
-			
-			\textit{Navesti \textbf{dionike} koji imaju \textbf{interes u ovom sustavu} ili  \textbf{su nositelji odgovornosti}. To su prije svega korisnici, ali i administratori sustava, naručitelji, razvojni tim.}\\
-				
-			\textit{Navesti \textbf{aktore} koji izravno \textbf{koriste} ili \textbf{komuniciraju sa sustavom}. Oni mogu imati inicijatorsku ulogu, tj. započinju određene procese u sustavu ili samo sudioničku ulogu, tj. obavljaju određeni posao. Za svakog aktora navesti funkcionalne zahtjeve koji se na njega odnose.}\\
-			
-			
 			\noindent \textbf{Dionici:}
 			
 			\begin{packed_enum}
 				
-				\item Dionik 1
-				\item Dionik 2				
-				\item ...
+				\item Neregistrirani korisnici
+				\item Umjetnici				
+				\item Registrirani posjetitelji
+				\item Administratori
 				
 			\end{packed_enum}
 			
@@ -23,28 +17,74 @@
 			
 			
 			\begin{packed_enum}
-				\item  \underbar{Aktor 1 (inicijator) može:}
+				\item  \underbar{Neregistrirani korisnik (inicijator) može:}
 				
 				\begin{packed_enum}
 					
-					\item funkcionalnost 1
-					\item funkcionalnost 2
-					\begin{packed_enum}
-						
-						\item  podfunkcionalnost 1 
-						\item  podfunkcionalnost 2
-				
-					\end{packed_enum}
-					\item  funkcionalnost 3
+					\item vidjeti aktivne i nadolazeće izložbe
+					\item sortirati izložbe po različitim svojstvima
+					\item  se registrirati u sustav, stvoriti novi korisnicki račun za koji su mu potrebni ime, prezime,
+					email i PayPal račun, a umjetnici dodatno prilažu i svoj
+					portfolio u obliku PDF datoteke
+					
 					
 				\end{packed_enum}
-			
-				\item  \underbar{Aktor 2 (sudionik) može:}
+				
+				\item  \underbar{Umjetnik (inicijator) može:}
 				
 				\begin{packed_enum}
 					
-					\item funkcionalnost 1
-					\item funkcionalnost 2
+					\item vidjeti aktivne i nadolazeće izložbe
+					\item sortirati izložbe po različitim svojstvima
+					\item dodavati, pregledavati i uređivati kolekcije radova
+					na svojem računu
+					\item pregledavati aktivne natječaje
+					\item prijaviti jednu ili više svojih kolekcija na natječaj čiji stilovi odgovaraju stilu natječaja
+					\item ući u izložbu i pregledavati djela
+					\begin{packed_enum}
+						\item komentirati djela
+						\item kupiti neprodana djela
+					\end{packed_enum}
+					\item pregledavati vlastite izvršene transakcije
+					
+				\end{packed_enum}
+				
+				\item  \underbar{Posjetitelj (inicijator) može:}
+				
+				\begin{packed_enum}
+					
+					\item vidjeti aktivne i nadolazeće izložbe
+					\item sortirati izložbe po različitim svojstvima
+					\item ući u izložbu i pregledavati djela
+					\begin{packed_enum}
+						\item komentirati djela
+						\item kupiti neprodana djela
+					\end{packed_enum}
+					\item pregledavati vlastite izvršene transakcije
+					
+				\end{packed_enum}
+				
+				\item  \underbar{Administrator (inicijator) može:}
+				
+				\begin{packed_enum}
+					
+					\item stvarati natječaje
+					\item vidjeti prijave kolekcija na natječaje te
+					iste odbiti ili prihvatiti
+					\item stvoriti izložbu nakon odabiranja kolekcija
+					\item pregledavati sve izvršene transakcije
+					\item pregledavati i uklanjati sve račune
+					\item zatvarati izložbe prije završetka
+					\item brisati komentare
+					
+				\end{packed_enum}
+				
+				\item  \underbar{Baza podataka (sudionik):}
+				
+				\begin{packed_enum}
+					
+					\item pohranjuje sve podatke o korisnicima i njihovim ovlastima
+					\item pohranjuje sve podatke o natječajima, izložbama i kolekcijama
 					
 				\end{packed_enum}
 			\end{packed_enum}
@@ -52,14 +92,505 @@
 			\eject 
 			
 			
+			
 				
 			\subsection{Obrasci uporabe}
 				
-				\textbf{\textit{dio 1. revizije}}
-				
 				\subsubsection{Opis obrazaca uporabe}
-					\textit{Funkcionalne zahtjeve razraditi u obliku obrazaca uporabe. Svaki obrazac je potrebno razraditi prema donjem predlošku. Ukoliko u nekom koraku može doći do odstupanja, potrebno je to odstupanje opisati i po mogućnosti ponuditi rješenje kojim bi se tijek obrasca vratio na osnovni tijek.}\\
+
+					\noindent \underbar{\textbf{UC1 - Registracija posjetitelja}}
+					\begin{packed_item}
+	
+						\item \textbf{Glavni sudionik: } posjetitelj
+						\item  \textbf{Cilj:}  Registrirati posjetitelja na platformu
+						\item  \textbf{Sudionici:}  Baza podataka
+						\item  \textbf{Preduvjet:}  -
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+	
+							\item  Korisnik odabire opciju za registraciju
+							\item  Korisnik unosi ime, prezime, e-mail adresu i PayPal račun
+							\item  Korisnik prima obavijest o uspješnoj registraciji
+						\end{packed_enum}
+						
+						\item  \textbf{Opis mogućih odstupanja:}
+						
+						\item[] \begin{packed_item}
+	
+							\item[2.a]  Odabir već zauzetog korisničkog imena i/ili e-maila, unos korisničkog 
+							podatka u nedozvoljenom formatu, pružanje neispravnoga e-maila ili neispravnog PayPal računa
+							\item[] \begin{packed_enum}
+								
+								\item  Sustav obavještava korisnika o neuspjelom upisu i 
+								vraća ga na stranicu za registraciju
+								\item  Korisnik mijenja potrebne podatke te završava unos ili
+								odustaje od registracije
+								
+							\end{packed_enum}
+							
+						\end{packed_item}
+					\end{packed_item}
+						
+					\noindent \underbar{\textbf{UC 2 - Registracija umjetnika}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: } Umjetnik
+						\item  \textbf{Cilj:}  Registrirati umjetnika na platformu
+						\item  \textbf{Sudionici:}  Baza podataka
+						\item  \textbf{Preduvjet:}  -
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item  Korisnik odabire opciju za registraciju
+							\item  Korisnik unosi ime, prezime, e-mail adresu, PayPal račun i 
+							portfolio u obliku PDF datoteke
+							\item  Korisnik prima obavijest o uspješnoj registraciji
+						\end{packed_enum}
+						
+						\item  \textbf{Opis mogućih odstupanja:}
+						
+						\item[] \begin{packed_item}
+							
+							\item[2.a]  Odabir već zauzetog korisničkog imena i/ili e-maila, unos korisničkog 
+							podatka u nedozvoljenom formatu, pružanje neispravnoga e-maila ili neispravnog PayPal računa
+							\item[] \begin{packed_enum}
+								
+								\item  Sustav obavještava korisnika o neuspjelom upisu i 
+								vraća ga na stranicu za registraciju
+								\item  Korisnik mijenja potrebne podatke te završava unos ili 
+								odustaje od registracije
+								
+							\end{packed_enum}
+							
+						\end{packed_item}
+					\end{packed_item}
+						
+					\noindent \underbar{\textbf{UC 3 - Prijava u sustav}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: } Umjetnik, registrirani posjetitelj, administrator
+						\item  \textbf{Cilj:}  Dobiti pristup korisničkom sučelju
+						\item  \textbf{Sudionici:}  Baza podataka
+						\item  \textbf{Preduvjet:}  Registracija
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item  Unos korisničkog imena i lozinke
+							\item  Potvrda o ispravnosti unesenih podataka
+							\item  Pristup korisničkim funkcijama
+						\end{packed_enum}
+						
+						\item  \textbf{Opis mogućih odstupanja:}
+						
+						\item[] \begin{packed_item}
+							
+							\item[2.a]  Neispravno korisničko ime i/ili lozinka
+							\item[] \begin{packed_enum}
+								
+								\item  Sustav obavještava korisnika o neuspjelom upisu i 
+								vraća ga na stranicu za registraciju
+								
+							\end{packed_enum}							
+							
+						\end{packed_item}
+					\end{packed_item}
 					
+					\noindent \underbar{\textbf{UC4 - Pregled osobnih podataka}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: }Umjetnik, registrirani posjetitelj, administrator
+						\item  \textbf{Cilj:}  Pregledati osobne podatke
+						\item  \textbf{Sudionici:}  Baza podataka
+						\item  \textbf{Preduvjet:}  Prijava u sustav
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item  Korisnik odabire opciju "Osobni podatci"
+							\item  Aplikacija prikazuje osobne podatke korisnika						
+						\end{packed_enum}
+						
+						\item  \textbf{Opis mogućih odstupanja:}
+						
+						\item[] \begin{packed_item}
+							
+							\item[2.a]  Korisnik promijeni svoje osobne podatke, ali ne odabere opciju ”Spremi promjene"
+							\item[] \begin{packed_enum}
+								
+								\item  Sustav obavještava korisnika da nije spremio podatke prije izlaska iz prozora							
+								
+							\end{packed_enum}						
+							
+						\end{packed_item}
+					\end{packed_item}
+				
+					\noindent \underbar{\textbf{UC5 - Dodavanje kolekcija}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: }Umjetnik
+						\item  \textbf{Cilj:} Dodati nove kolekcije na korisnikov račun
+						\item  \textbf{Sudionici:} Baza podataka
+						\item  \textbf{Preduvjet:} Korisnik je prijavljen u sustav kao umjetnik
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item Korisnik odabire opciju za dodavanje kolekcija
+							\item Korisnik dodaje novu kolekciju na svoj račun
+							\item korisnik sprema promjene
+							\item Baza podataka se ažurira					
+						\end{packed_enum}
+						
+						\item  \textbf{Opis mogućih odstupanja:}
+						
+						\item[] \begin{packed_item}
+							
+							\item[2.a] Korisnik doda novu kolekciju, ali ne odabere opciju "Spremi"
+							\item[] \begin{packed_enum}
+								
+								\item Sustav obavještava korisnika da nije spremio podatke prije izlaska iz prozora
+								
+							\end{packed_enum}
+						
+							\item[2.b] Pri stvaranju nove kolekcije korisnik ne unese jedan od sljedećih podataka o kolekciji:
+							naziv, opis, stil te jedno ili više djela u nekom slikovnom formatu
+							\item[] \begin{packed_enum}
+								
+								\item Sustav obavještava korisnika da određeni podaci o kolekciji nedostaju
+								\item Korisnik mijenja potrebne podatke te završava 
+								unos ili odustaje od dodavanja nove kolekcije
+							\end{packed_enum}
+							
+						\end{packed_item}
+					\end{packed_item}
+					
+
+					\noindent \underbar{\textbf{UC6 - Pregledavanje kolekcija}}
+					\begin{packed_item}
+	
+						\item \textbf{Glavni sudionik: }Umjetnik
+						\item  \textbf{Cilj:} Pregledati kolekcije radova na svojem računu
+						\item  \textbf{Sudionici:} Baza podataka
+						\item  \textbf{Preduvjet:} Umjetnik je prijavljen
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+	
+							\item Umjetnik odabire opciju "Moje kolekcije"
+							\item Prikazuju se umjetnikove kolekcije radova
+						\end{packed_enum}
+					\end{packed_item}
+					
+					
+					\noindent \underbar{\textbf{UC7 - Uređivanje kolekcija}}
+					\begin{packed_item}
+	
+						\item \textbf{Glavni sudionik: }Umjetnik
+						\item  \textbf{Cilj:} Urediti kolekcije radova na svojem računu
+						\item  \textbf{Sudionici:} Baza podataka
+						\item  \textbf{Preduvjet:} Umjetnik je prijavljen
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+	
+							\item Umjetnik odabire opciju "Moje kolekcije"
+							\item Prikazuju se umjetnikove kolekcije radova
+							\item Umjetnik odabire kolekciju koju želi urediti
+							\item Nakon uređivanja potvrđuje izmjenu
+							\item Promjene se upisuju u bazu podataka
+						\end{packed_enum}
+					\end{packed_item}
+					
+					
+					\noindent \underbar{\textbf{UC8 - Stvaranje natječaja}}
+					\begin{packed_item}
+	
+						\item \textbf{Glavni sudionik: }Administrator
+						\item  \textbf{Cilj:} Stvoriti natječaj za umjetnike
+						\item  \textbf{Sudionici:} Baza podataka
+						\item  \textbf{Preduvjet:} Korisnik je registriran i dodijeljena su mu prava administratora
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+	
+							\item Administrator odabire opciju stvaranja natječaja
+							\item Unosi se minimalni skup informacija o natječaju
+							\item Administrator odabire opciju ”Spremi”
+							\item Natječaj postaje vidljiv unutar aplikacije
+						\end{packed_enum}
+					\end{packed_item}
+					
+					
+					\noindent \underbar{\textbf{UC9 - Pregled natječaja}}
+					\begin{packed_item}
+	
+						\item \textbf{Glavni sudionik: }Umjetnik
+						\item  \textbf{Cilj:} Pregled aktivnih natječaja
+						\item  \textbf{Sudionici:} Baza podataka
+						\item  \textbf{Preduvjet:} Umjetnik je prijavljen
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+	
+							\item Umjetnik odabire opciju "Natječaji"
+							\item Umjetniku se prikazuje lista svih aktivnih natječaja
+							\item Umjetnik odabire natječaj
+							\item Prikazuju se podatci o natječaju
+						\end{packed_enum}
+					\end{packed_item}
+
+					\noindent \underbar{\textbf{UC10 - Prijava na natječaj}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: }Umjetnik
+						\item  \textbf{Cilj: }Prijaviti se na natječaj
+						\item  \textbf{Sudionici: }Baza podataka
+						\item  \textbf{Preduvjet:} Umjetnik je prijavljen i postoji aktivni natječaj
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item Umjetnik odabire opciju "Aktivni natječaji"
+							\item Prikazuje se lista trenutno
+							aktivnih natječaja
+							\item Umjetnik odabire natječaj na koji se želi prijaviti
+							\item Nudi se lista umjetnikovih kolekcija čiji stil odgovara stilu traženom u natječaju
+							\item Umjetnik odabire jednu ili više kolekcija
+							\item Umjetnik odabire opciju "Potvrdi prijavu"
+							\item Promjena se pohranjuje u bazu podataka
+							
+						\end{packed_enum}
+						
+						\item  \textbf{Opis mogućih odstupanja:}
+						
+						\item[] \begin{packed_item}
+							
+							\item[4.a] Umjetnik nema nijednu kolekciju čiji stil odgovara stilu traženom u natječaju
+							\item[] \begin{packed_enum}
+								\item Sustav obavještava umjetnika da nema nijednu kolekciju u traženom stilu
+							\end{packed_enum}
+							
+						\end{packed_item}
+					\end{packed_item}
+					
+					\noindent \underbar{\textbf{UC11 - Pregled prijava}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: }Administrator
+						\item  \textbf{Cilj: }Pregledati prijave
+						\item  \textbf{Sudionici: }Baza podataka
+						\item  \textbf{Preduvjet:} Korisnik je registriran i dodijeljena su mu prava administratora
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item Administrator odabire opciju "Završeni natječaji"
+							\item Prikazuje se lista završenih natječaja
+							\item Administrator odabire natječaj za koji želi pregledati dobivene prijave
+							\item Prikazuje se lista prijava
+							
+						\end{packed_enum}
+						
+					\end{packed_item}
+					
+					\noindent \underbar{\textbf{UC12 - Odabir kolekcija za izložbu}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: }Administrator
+						\item  \textbf{Cilj: }Odabrati kolekcije za izložbu
+						\item  \textbf{Sudionici: }Baza podataka
+						\item  \textbf{Preduvjet:} Korisnik je registriran i dodijeljena su mu prava administratora
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item Umjetnik odabire natječaj za koji želi razmotriti prijave
+							\item Prikazuje se lista prijava
+							\item Administrator pregledava prijavljene kolekcije umjetnika
+							\item Administrator prihvaća određenu kolekciju odabirom opcije "Prihvati kolekciju"
+							\item Promjena se pohranjuje u bazu podataka
+							
+						\end{packed_enum}
+						
+					\end{packed_item}
+				
+					\noindent \underbar{\textbf{UC13 - Stvaranje izložbe}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: }Administrator
+						\item  \textbf{Cilj: }Stvoriti izložbu
+						\item  \textbf{Sudionici: }Baza podataka
+						\item  \textbf{Preduvjet:} 
+						\begin{packed_item}
+							\item Korisnik je registriran i dodijeljena su mu prava administratora
+							\item Administrator je odabrao kolekcije za izložbu
+						\end{packed_item}
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item Administrator upisuje naziv i opis izložbe, vrijeme početka i trajanja, te iznos provizije
+							\item Administrator stvara izložbu odabirom opcije "Stvori izložbu"
+							\item Promjena se pohranjuje u bazu podataka
+							
+						\end{packed_enum}
+						
+					\end{packed_item}
+				
+					\noindent \underbar{\textbf{UC14 - Pregled aktivnih i nadolazećih izložbi}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: }Korisnik
+						\item  \textbf{Cilj:} Pregledati trenutno aktivne i nadolazeće izložbe
+						\item  \textbf{Sudionici:} Baza podataka
+						\item  \textbf{Preduvjet:} -
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item Korisnik odabire opciju "Izložbe"
+							\item Prikaže se popis izložbi s osnovnim informacijama
+						\end{packed_enum}
+					\end{packed_item}
+					
+					\noindent \underbar{\textbf{UC15 - Ulazak u izložbu}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: }Korisnik
+						\item  \textbf{Cilj:} Ući u odabranu izložbu
+						\item  \textbf{Sudionici:} Baza podataka
+						\item  \textbf{Preduvjet:} Korisnik je prijavljen
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item Korisnik odabere izložbu
+							\item Otvara se stranica izložbe
+						\end{packed_enum}
+					\end{packed_item}
+					
+					\noindent \underbar{\textbf{UC16 - Pregled djela u izložbi}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: }Korisnik
+						\item  \textbf{Cilj:} Pregledati sva djela u izložbi
+						\item  \textbf{Sudionici:} Baza podataka
+						\item  \textbf{Preduvjet:} Korisnik je prijavljen
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item Korisnik odabire opciju "Prikaži djela"
+							\item Otvara se stranica sa slikom djela i osnovnim informacijama o djelu
+							\item Korisnik odabire opciju "Sljedeće" ili "Prethodno"
+						\end{packed_enum}
+					\end{packed_item}
+					
+					
+					\noindent \underbar{\textbf{UC17 - Pregled odabranog djela i komentara}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: }Korisnik
+						\item  \textbf{Cilj:} Pregledati sve informacije i komentare o djelu
+						\item  \textbf{Sudionici:} Baza podataka
+						\item  \textbf{Preduvjet:} Korisnik je prijavljen
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item Korisnik odabire opciju "Prikaži više o djelu"
+							\item Otvara se stranica sa svim detaljima i komentarima o djelu
+						\end{packed_enum}
+					\end{packed_item}
+
+					\noindent \underbar{\textbf{UC18 - Komentiranje djela }}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: } Registrirani korisnik
+						\item  \textbf{Cilj:} Kometiranje djela						
+						\item \textbf{Sudionici:} Baza podataka
+						\item  \textbf{Preduvjet:} Korisnik je prijavljen
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item Korisnik odabire polje za komentare
+							\item Korisnik upisuje svoj komentar u polje
+							\item Korisnik potvrđuje svoj komentar
+							\item . Baza podataka se ažurira
+							\item . Korisnikov komentar se nalazi u polju pokraj slike
+
+						\end{packed_enum}
+					\end{packed_item}
+					
+					\noindent \underbar{\textbf{UC19 - Kupnja djela}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: } Registrirani korisnik
+						\item  \textbf{Cilj:} Kupnja određenog djela
+						\item  \textbf{Sudionici:} Baza podataka
+						\item  \textbf{Preduvjet:} Korisnik je prijavljen
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item Korisnik odabire kupnju djela						
+							\item Korisnik se prijavljuje na stranicu partnera (PayPal)							
+							\item Korisnik preko protokola za plaćanje uplaćuje sredstva
+							\item . Baza podataka se ažurira
+							\item . Pokreće se proces slanja slike 
+
+						\end{packed_enum}
+						
+						\item \textbf{Opis mogućih odstupanja:} 					
+							\item[] \begin{packed_enum}
+							\item Korisnik zbog nekog razloga nije u mogućnosti prijaviti se na stranicu partnera
+							\item Korisnik zbog nekog razloga nije u mogućnosti obaviti uplatu
+						\end{packed_enum}
+
+
+	
+					\end{packed_item}
+					
+					
+					\noindent \underbar{\textbf{UC20 - Pregled vlastitih izvršenih transakcija 
+					}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: } Registrirani korisnik
+						\item  \textbf{Cilj:} Pregled svih vlastitih izvršenih transakcija						
+						\item  \textbf{Sudionici:} Baza podataka
+						\item  \textbf{Preduvjet:} Korisnik je prijavljen
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item Korisnik odabire popis svih transakcija
+							\item Prikaže se lista svih izvršenih transakcija							
+						\end{packed_enum}
+					\end{packed_item}
+					
+					\noindent \underbar{\textbf{UC21 - Pregled svih transakcija 
+					}}
+					\begin{packed_item}
+											
+						\item \textbf{Glavni sudionik: } Administrator
+						\item  \textbf{Cilj:} Pregled svih transakcija na stranici											
+						\item  \textbf{Sudionici:} Baza podataka
+						\item  \textbf{Preduvjet:} Korisnik ima prava administratora
+						\item  \textbf{Opis osnovnog tijeka:}
+											
+						\item[] \begin{packed_enum}
+												
+							\item Korisnik odabire popis svih transakcija
+							\item Prikaže se lista svih transakcija							
+					
+						\end{packed_enum}
+					\end{packed_item}
+
 
 					\noindent \underbar{\textbf{UC22 - Pregledavanje računa}}
 					\begin{packed_item}
