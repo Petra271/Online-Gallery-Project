@@ -98,11 +98,11 @@
 				
 				\subsubsection{Opis obrazaca uporabe}
 
-					\noindent \underbar{\textbf{UC1 - Registracija posjetitelja}}
+					\noindent \underbar{\textbf{UC1 - Registracija korisnika}}
 					\begin{packed_item}
 	
-						\item \textbf{Glavni sudionik: } posjetitelj
-						\item  \textbf{Cilj:}  Registrirati posjetitelja na platformu
+						\item \textbf{Glavni sudionik: } Neregistirani korisnik
+						\item  \textbf{Cilj:}  Registrirati korisnika na platformu
 						\item  \textbf{Sudionici:}  Baza podataka
 						\item  \textbf{Preduvjet:}  -
 						\item  \textbf{Opis osnovnog tijeka:}
@@ -132,7 +132,7 @@
 						\end{packed_item}
 					\end{packed_item}
 						
-					\noindent \underbar{\textbf{UC 2 - Registracija umjetnika}}
+					\noindent \underbar{\textbf{UC2 - Registracija umjetnika}}
 					\begin{packed_item}
 						
 						\item \textbf{Glavni sudionik: } Umjetnik
@@ -167,10 +167,10 @@
 						\end{packed_item}
 					\end{packed_item}
 						
-					\noindent \underbar{\textbf{UC 3 - Prijava u sustav}}
+					\noindent \underbar{\textbf{UC3 - Prijava u sustav}}
 					\begin{packed_item}
 						
-						\item \textbf{Glavni sudionik: } Umjetnik, registrirani posjetitelj, administrator
+						\item \textbf{Glavni sudionik: } Posjetitelj
 						\item  \textbf{Cilj:}  Dobiti pristup korisničkom sučelju
 						\item  \textbf{Sudionici:}  Baza podataka
 						\item  \textbf{Preduvjet:}  Registracija
@@ -201,7 +201,7 @@
 					\noindent \underbar{\textbf{UC4 - Pregled osobnih podataka}}
 					\begin{packed_item}
 						
-						\item \textbf{Glavni sudionik: }Umjetnik, registrirani posjetitelj, administrator
+						\item \textbf{Glavni sudionik: } Posjetitelj
 						\item  \textbf{Cilj:}  Pregledati osobne podatke
 						\item  \textbf{Sudionici:}  Baza podataka
 						\item  \textbf{Preduvjet:}  Prijava u sustav
@@ -211,6 +211,24 @@
 							
 							\item  Korisnik odabire opciju "Osobni podatci"
 							\item  Aplikacija prikazuje osobne podatke korisnika						
+						\end{packed_enum}
+					\end{packed_item}
+				
+					\noindent \underbar{\textbf{UC5 - Promjena osobnih podataka}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: } Posjetitelj
+						\item  \textbf{Cilj:}  Promijeniti osobne podatke
+						\item  \textbf{Sudionici:}  Baza podataka
+						\item  \textbf{Preduvjet:}  Prijava u sustav
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item  Korisnik odabire opciju za promjenu osobnih podataka
+							\item  Korisnik promijeni podatke
+							\item  Korisnik sprema promjene
+							\item  Baza podataka se ažurira						
 						\end{packed_enum}
 						
 						\item  \textbf{Opis mogućih odstupanja:}
@@ -227,7 +245,24 @@
 						\end{packed_item}
 					\end{packed_item}
 				
-					\noindent \underbar{\textbf{UC5 - Dodavanje kolekcija}}
+					\noindent \underbar{\textbf{UC6 - Brisanje računa}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: } Posjetitelj
+						\item  \textbf{Cilj:}  Izbrisati korisnički račun
+						\item  \textbf{Sudionici:}  Baza podataka
+						\item  \textbf{Preduvjet:}  Prijava u sustav
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item  Korisnik odabire opciju "Izbriši račun"
+							\item  Korisnički račun se izbriše iz baze podataka
+							\item  Otvara se naslovna stranica				
+						\end{packed_enum}
+					\end{packed_item}
+				
+					\noindent \underbar{\textbf{UC7 - Dodavanje kolekcija}}
 					\begin{packed_item}
 						
 						\item \textbf{Glavni sudionik: }Umjetnik
@@ -268,7 +303,7 @@
 					\end{packed_item}
 					
 
-					\noindent \underbar{\textbf{UC6 - Pregledavanje kolekcija}}
+					\noindent \underbar{\textbf{UC8- Pregled kolekcija}}
 					\begin{packed_item}
 	
 						\item \textbf{Glavni sudionik: }Umjetnik
@@ -285,7 +320,7 @@
 					\end{packed_item}
 					
 					
-					\noindent \underbar{\textbf{UC7 - Uređivanje kolekcija}}
+					\noindent \underbar{\textbf{UC9 - Uređivanje kolekcija}}
 					\begin{packed_item}
 	
 						\item \textbf{Glavni sudionik: }Umjetnik
@@ -305,7 +340,7 @@
 					\end{packed_item}
 					
 					
-					\noindent \underbar{\textbf{UC8 - Stvaranje natječaja}}
+					\noindent \underbar{\textbf{UC10 - Stvaranje natječaja}}
 					\begin{packed_item}
 	
 						\item \textbf{Glavni sudionik: }Administrator
@@ -324,13 +359,13 @@
 					\end{packed_item}
 					
 					
-					\noindent \underbar{\textbf{UC9 - Pregled natječaja}}
+					\noindent \underbar{\textbf{UC11 - Pregled natječaja}}
 					\begin{packed_item}
 	
-						\item \textbf{Glavni sudionik: }Umjetnik
+						\item \textbf{Glavni sudionik: }Umjetnik, administrator
 						\item  \textbf{Cilj:} Pregled aktivnih natječaja
 						\item  \textbf{Sudionici:} Baza podataka
-						\item  \textbf{Preduvjet:} Umjetnik je prijavljen
+						\item  \textbf{Preduvjet:} Korisnik je prijavljen kao umjetnik ili su mu dodijeljena prava administratora
 						\item  \textbf{Opis osnovnog tijeka:}
 						
 						\item[] \begin{packed_enum}
@@ -342,7 +377,7 @@
 						\end{packed_enum}
 					\end{packed_item}
 
-					\noindent \underbar{\textbf{UC10 - Prijava na natječaj}}
+					\noindent \underbar{\textbf{UC12 - Prijava na natječaj}}
 					\begin{packed_item}
 						
 						\item \textbf{Glavni sudionik: }Umjetnik
@@ -376,7 +411,7 @@
 						\end{packed_item}
 					\end{packed_item}
 					
-					\noindent \underbar{\textbf{UC11 - Pregled prijava}}
+					\noindent \underbar{\textbf{UC13 - Pregled prijava}}
 					\begin{packed_item}
 						
 						\item \textbf{Glavni sudionik: }Administrator
@@ -396,7 +431,7 @@
 						
 					\end{packed_item}
 					
-					\noindent \underbar{\textbf{UC12 - Odabir kolekcija za izložbu}}
+					\noindent \underbar{\textbf{UC14 - Odabir kolekcija za izložbu}}
 					\begin{packed_item}
 						
 						\item \textbf{Glavni sudionik: }Administrator
@@ -417,7 +452,7 @@
 						
 					\end{packed_item}
 				
-					\noindent \underbar{\textbf{UC13 - Stvaranje izložbe}}
+					\noindent \underbar{\textbf{UC15 - Stvaranje izložbe}}
 					\begin{packed_item}
 						
 						\item \textbf{Glavni sudionik: }Administrator
@@ -440,10 +475,10 @@
 						
 					\end{packed_item}
 				
-					\noindent \underbar{\textbf{UC14 - Pregled aktivnih i nadolazećih izložbi}}
+					\noindent \underbar{\textbf{UC16 - Pregled aktivnih i nadolazećih izložbi}}
 					\begin{packed_item}
 						
-						\item \textbf{Glavni sudionik: }Korisnik
+						\item \textbf{Glavni sudionik: } Neregistrirani korisnik, posjetitelj
 						\item  \textbf{Cilj:} Pregledati trenutno aktivne i nadolazeće izložbe
 						\item  \textbf{Sudionici:} Baza podataka
 						\item  \textbf{Preduvjet:} -
@@ -456,10 +491,10 @@
 						\end{packed_enum}
 					\end{packed_item}
 					
-					\noindent \underbar{\textbf{UC15 - Ulazak u izložbu}}
+					\noindent \underbar{\textbf{UC17 - Ulazak u izložbu}}
 					\begin{packed_item}
 						
-						\item \textbf{Glavni sudionik: }Korisnik
+						\item \textbf{Glavni sudionik: }Posjetitelj
 						\item  \textbf{Cilj:} Ući u odabranu izložbu
 						\item  \textbf{Sudionici:} Baza podataka
 						\item  \textbf{Preduvjet:} Korisnik je prijavljen
@@ -472,28 +507,11 @@
 						\end{packed_enum}
 					\end{packed_item}
 					
-					\noindent \underbar{\textbf{UC16 - Pregled djela u izložbi}}
+
+					\noindent \underbar{\textbf{UC18 - Pregled odabranog djela i komentara}}
 					\begin{packed_item}
 						
-						\item \textbf{Glavni sudionik: }Korisnik
-						\item  \textbf{Cilj:} Pregledati sva djela u izložbi
-						\item  \textbf{Sudionici:} Baza podataka
-						\item  \textbf{Preduvjet:} Korisnik je prijavljen
-						\item  \textbf{Opis osnovnog tijeka:}
-						
-						\item[] \begin{packed_enum}
-							
-							\item Korisnik odabire opciju "Prikaži djela"
-							\item Otvara se stranica sa slikom djela i osnovnim informacijama o djelu
-							\item Korisnik odabire opciju "Sljedeće" ili "Prethodno"
-						\end{packed_enum}
-					\end{packed_item}
-					
-					
-					\noindent \underbar{\textbf{UC17 - Pregled odabranog djela i komentara}}
-					\begin{packed_item}
-						
-						\item \textbf{Glavni sudionik: }Korisnik
+						\item \textbf{Glavni sudionik: }Posjetitelj
 						\item  \textbf{Cilj:} Pregledati sve informacije i komentare o djelu
 						\item  \textbf{Sudionici:} Baza podataka
 						\item  \textbf{Preduvjet:} Korisnik je prijavljen
@@ -506,10 +524,10 @@
 						\end{packed_enum}
 					\end{packed_item}
 
-					\noindent \underbar{\textbf{UC18 - Komentiranje djela }}
+					\noindent \underbar{\textbf{UC19 - Komentiranje djela }}
 					\begin{packed_item}
 						
-						\item \textbf{Glavni sudionik: } Registrirani korisnik
+						\item \textbf{Glavni sudionik: }Posjetitelj
 						\item  \textbf{Cilj:} Kometiranje djela						
 						\item \textbf{Sudionici:} Baza podataka
 						\item  \textbf{Preduvjet:} Korisnik je prijavljen
@@ -526,10 +544,10 @@
 						\end{packed_enum}
 					\end{packed_item}
 					
-					\noindent \underbar{\textbf{UC19 - Kupnja djela}}
+					\noindent \underbar{\textbf{UC20 - Kupnja djela}}
 					\begin{packed_item}
 						
-						\item \textbf{Glavni sudionik: } Registrirani korisnik
+						\item \textbf{Glavni sudionik: }Posjetitelj
 						\item  \textbf{Cilj:} Kupnja određenog djela
 						\item  \textbf{Sudionici:} Baza podataka
 						\item  \textbf{Preduvjet:} Korisnik je prijavljen
@@ -556,11 +574,11 @@
 					\end{packed_item}
 					
 					
-					\noindent \underbar{\textbf{UC20 - Pregled vlastitih izvršenih transakcija 
+					\noindent \underbar{\textbf{UC21 - Pregled vlastitih izvršenih transakcija 
 					}}
 					\begin{packed_item}
 						
-						\item \textbf{Glavni sudionik: } Registrirani korisnik
+						\item \textbf{Glavni sudionik: }Posjetitelj
 						\item  \textbf{Cilj:} Pregled svih vlastitih izvršenih transakcija						
 						\item  \textbf{Sudionici:} Baza podataka
 						\item  \textbf{Preduvjet:} Korisnik je prijavljen
@@ -573,7 +591,7 @@
 						\end{packed_enum}
 					\end{packed_item}
 					
-					\noindent \underbar{\textbf{UC21 - Pregled svih transakcija 
+					\noindent \underbar{\textbf{UC22 - Pregled svih transakcija 
 					}}
 					\begin{packed_item}
 											
@@ -592,7 +610,7 @@
 					\end{packed_item}
 
 
-					\noindent \underbar{\textbf{UC22 - Pregledavanje računa}}
+					\noindent \underbar{\textbf{UC23 - Pregledavanje računa}}
 					\begin{packed_item}
 	
 						\item \textbf{Glavni sudionik: }Administrator
@@ -609,7 +627,7 @@
 					\end{packed_item}
 				
 					
-					\noindent \underbar{\textbf{UC23 - Uklanjanje računa}}
+					\noindent \underbar{\textbf{UC24 - Uklanjanje računa}}
 					\begin{packed_item}
 						
 						\item \textbf{Glavni sudionik: }Administrator
@@ -627,7 +645,7 @@
 					\end{packed_item}
 				
 				
-					\noindent \underbar{\textbf{UC24 - Zatvaranje izložbi prije kraja}}
+					\noindent \underbar{\textbf{UC25 - Zatvaranje izložbi prije kraja}}
 					\begin{packed_item}
 						
 						\item \textbf{Glavni sudionik: }Administrator
@@ -647,7 +665,7 @@
 					\end{packed_item}
 				
 					
-					\noindent \underbar{\textbf{UC25 - Brisanje komentara}}
+					\noindent \underbar{\textbf{UC26 - Brisanje komentara}}
 					\begin{packed_item}
 						
 						\item \textbf{Glavni sudionik: }Administrator
@@ -664,10 +682,29 @@
 						\end{packed_enum}
 					\end{packed_item}
 				
+				\eject
+			\subsubsection{Dijagrami obrazaca uporabe}
+
+				
+					\graphicspath{ {./slike/} }
+				\begin{figure}[H]
+					\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_1}
+					\caption{Dijagram obrazaca uporabe: funkcionalnosti korisnika i posjetitelja}
 					
-				\subsubsection{Dijagrami obrazaca uporabe}
+				\end{figure}
+			
+				\begin{figure}[H]
+					\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_2}
+					\caption{Dijagram obrazaca uporabe: funkcionalnosti umjetnika}
 					
-					\textit{Prikazati odnos aktora i obrazaca uporabe odgovarajućim UML dijagramom. Nije nužno nacrtati sve na jednom dijagramu. Modelirati po razinama apstrakcije i skupovima srodnih funkcionalnosti.}
+				\end{figure}
+			
+				\begin{figure}[H]
+					\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_3}
+					\caption{Dijagram obrazaca uporabe: funkcionalnosti administratora}
+				
+				\end{figure}
+				
 				\eject		
 				
 			\subsection{Sekvencijski dijagrami}
