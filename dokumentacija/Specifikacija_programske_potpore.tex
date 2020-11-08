@@ -10,6 +10,7 @@
 				\item Umjetnici				
 				\item Registrirani posjetitelji
 				\item Administratori
+				\item Baza podataka
 				
 			\end{packed_enum}
 			
@@ -48,6 +49,7 @@
 					\item pregledavati vlastite izvršene transakcije
 					
 				\end{packed_enum}
+			\eject
 				
 				\item  \underbar{Posjetitelj (inicijator) može:}
 				
@@ -410,6 +412,7 @@
 							
 						\end{packed_item}
 					\end{packed_item}
+				\eject
 					
 					\noindent \underbar{\textbf{UC13 - Pregled prijava}}
 					\begin{packed_item}
@@ -558,8 +561,8 @@
 							\item Korisnik odabire kupnju djela						
 							\item Korisnik se prijavljuje na stranicu partnera (PayPal)							
 							\item Korisnik preko protokola za plaćanje uplaćuje sredstva
-							\item . Baza podataka se ažurira
-							\item . Pokreće se proces slanja slike 
+							\item Baza podataka se ažurira
+							\item Pokreće se proces slanja slike 
 
 						\end{packed_enum}
 						
@@ -708,18 +711,90 @@
 				\eject		
 				
 			\subsection{Sekvencijski dijagrami}
+			
+			\subsubsection{Obrazac uporabe UC9 - Uređivanje kolekcija}
+			
+					{Umjetnik odabire opciju "Moje kolekcije". Poslužitelj dohvaća popis umjetnikovih kolekcija iz baze podataka te ih
+					prikazuje umjetniku. Umjetnik odabire kolekciju koju želi urediti. Poslužitelj dohvaća podatke o kolekciji iz baze 
+					podataka i prikazuje ih umjetniku. Umjetnik šalje zahtjev za promjenu kolekcije. Poslužitelj mu dopušta izmjenu kolekcije. Umjetnik unosi 
+					nove podatke podatke o kolekciji,
+					briše i\textbackslash ili dodaje slike. Poslužitelj unosi izmjene u bazu podataka. Baza podataka potvrđuje promjenu poslužitelju, a poslužitelj umjetniku.}
+			
+			\begin{figure}[H]
+		
+				\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{sd_uc9}
+				\caption{Sekvencijski dijagram za UC9}
 				
-				\textbf{\textit{dio 1. revizije}}\\
-				
-				\textit{Nacrtati sekvencijske dijagrame koji modeliraju najvažnije dijelove sustava (max. 4 dijagrama). Ukoliko postoji nedoumica oko odabira, razjasniti s asistentom. Uz svaki dijagram napisati detaljni opis dijagrama.}
-				\eject
+			\end{figure}
+		\eject
+		
+		\subsubsection{Obrazac uporabe UC12 - Prijava na natječaj}
+		
+		{Umjetnik odabire opciju "Aktivni natječaji". Poslužitelj dohvaća popis aktivnih natječaja iz baze te
+			ih prikazuje umjetniku. Umjetnik odabire natječaj na koji se želi prijaviti. Poslužitelj iz baze podataka dohvaća umjetnikove kolekcije. U slučaju da umjetnik nema
+			nijednu kolekciju čiji stil odgovara stilu traženom u natječaju, sustav ga obavještava o tome. 
+			U suprotnom, poslužitelj prikazuje kolekcije umjetniku. Umjetnik odabire jednu ili više kolekcija
+			te šalje zahtjev za potvrđivanje prijave. Poslužitelj sprema prijavu u bazu podataka. Baza podataka potvrđuje
+			izmjene.}
+		
+		\begin{figure}[H]
+			
+			\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{sd_uc12}
+			\caption{Sekvencijski dijagram za UC12}
+			
+		\end{figure}
+		\eject
+		
+		\subsubsection{Obrazac uporabe UC12 - Prijava na natječaj}
+		
+		{Umjetnik odabire opciju "Aktivni natječaji". Poslužitelj dohvaća popis aktivnih natječaja iz baze te
+			ih prikazuje umjetniku. Umjetnik odabire natječaj na koji se želi prijaviti. Poslužitelj iz baze podataka dohvaća umjetnikove kolekcije. U slučaju da umjetnik nema
+			nijednu kolekciju čiji stil odgovara stilu traženom u natječaju, sustav ga obavještava o tome. 
+			U suprotnom, poslužitelj prikazuje kolekcije umjetniku. Umjetnik odabire jednu ili više kolekcija
+			te šalje zahtjev za potvrđivanje prijave. Poslužitelj sprema prijavu u bazu podataka. Baza podataka potvrđuje
+			izmjene.}
+		
+		\begin{figure}[H]
+			
+			\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{sd_uc12}
+			\caption{Sekvencijski dijagram za UC12}
+			
+		\end{figure}
+		\eject
+		
+		\subsubsection{Obrazac uporabe UC14 - Odabir kolekcija za izložbu}
+		
+		{Administrator odabire opciju "Natječaji". Poslužitelj iz baze podataka dohvaća natječaje i prikazuje ih.
+			Administrator odabire natječaj za koji želi razmotriti prijave. Poslužitelj iz baze dohvaća prijave na natječaj
+			i prikazuje ih administratoru. Administrator odabire prijavu, poslužitelj iz baze podataka dohvaća prijavljene kolekcije
+			i prikazuje ih. Administrator odabire kolekciju koju želi razmotriti. Poslužitelj iz baze podataka dohvaća podatke o kolekciji i prikazuje ih. Administrator odabire opciju prihvati/odbij kolekciju. Poslužitelj odluku pohranjuje u bazu podataka. Postupak odabira prijave i pregleda kolekcija ponavlja se sve dok administrator ne razmotri sve prijave. Na kraju, administrator odabire opciju "Završi pregled". }
+		
+		\begin{figure}[H]
+			
+			\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{sd_uc14}
+			\caption{Sekvencijski dijagram za UC14}
+			
+		\end{figure}
+		\eject
 	
 		\section{Ostali zahtjevi}
 		
-			\textbf{\textit{dio 1. revizije}}\\
-		 
-			 \textit{Nefunkcionalni zahtjevi i zahtjevi domene primjene dopunjuju funkcionalne zahtjeve. Oni opisuju \textbf{kako se sustav treba ponašati} i koja \textbf{ograničenja} treba poštivati (performanse, korisničko iskustvo, pouzdanost, standardi kvalitete, sigurnost...). Primjeri takvih zahtjeva u Vašem projektu mogu biti: podržani jezici korisničkog sučelja, vrijeme odziva, najveći mogući podržani broj korisnika, podržane web/mobilne platforme, razina zaštite (protokoli komunikacije, kriptiranje...)... Svaki takav zahtjev potrebno je navesti u jednoj ili dvije rečenice.}
-			 
-			 
-			 
+			\begin{packed_item}
+				\item Sustav pri implementaciji mora koristiti objektno-orijentiranu paradigmu
+				\item Sustav treba sadržavati upute za rad
+				\item Rad u sustavu treba biti jednostavan i intuitivan te osigurati pozitivno iskustvo korisnika
+				\item Neispravno korištenje ne smije utjecati na rad sustava
+				\item Korisnik u prosjeku na odgovor ne bi trebao čekati duže od jedne sekunde
+				\item Nadogradnja sustava ne smije utjecati na postojeće funkcionalnosti 
+				\item Korisničko sučelje mora podržavati hrvatske dijakritičke znakove
+				\item Sustav mora korisititi HTTPS protokol
+				\item Veza s bazom podataka mora biti adekvatno zaštićena, pouzdana i efikasna
+				\item Privatnih podaci korisnika moraju biti zaštićeni
+				\item Sustav mora osigurati pouzdanost i točnost podataka
+				\item Sustav mora upravljati ulogama i pravima korisnika
+				te omogućiti obavljanje samo dozvoljenih akcija 
+				\item Sustav mora poštovati zakone i regulacije
+				\item Sustav kao valutu koristi HRK
+			\end{packed_item}
+		
 	
