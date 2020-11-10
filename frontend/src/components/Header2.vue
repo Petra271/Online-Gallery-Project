@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <!-- <v-card class="overflow-hidden">
+    <v-card class="overflow-hidden">
       <v-app-bar
         fixed
         color="#fcb69f"
@@ -14,23 +14,17 @@
             v-bind="props"
             gradient="to top right, rgba(19,84,122,.5), rgba(128,208,199,.8)"
           ></v-img>
-        </template> -->
+        </template>
 
         <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
 
-        <!-- <v-toolbar-title>onlinegalerija</v-toolbar-title>
+        <v-toolbar-title>onlinegalerija</v-toolbar-title>
 
         <v-spacer></v-spacer>
 
-        <div v-if="!this.$store.getters.form">
+        <div v-if="!this.$store.getters.logged_in">
         <v-btn text rounded class="prijava" v-on:click="sign_in()">prijava</v-btn>
         <v-btn text rounded class="prijava" v-on:click="register()">registracija</v-btn>
-        <v-btn icon to="/about">
-              <v-icon>mdi-dots-vertical</v-icon>
-            </v-btn>
-            <v-btn icon to="/izlozba">
-              <v-icon>mdi-menu</v-icon>
-            </v-btn>
         </div>
 
         
@@ -53,12 +47,12 @@
             <v-list>
               <v-list-item link> Transakcije <v-spacer></v-spacer> <v-icon>mdi-cash-multiple</v-icon> </v-list-item>
               <v-list-item link> Osobni Podaci <v-spacer></v-spacer> <v-icon>mdi-account-details</v-icon> </v-list-item>
-              <v-list-item link v-on:click="sign_out()"> Odjava <v-spacer></v-spacer> <v-icon>mdi-exit-to-app</v-icon> </v-list-item>
+              <v-list-item> <v-btn text v-on:click="sign_out()"> Odjava </v-btn><v-spacer></v-spacer> <v-icon>mdi-exit-to-app</v-icon> </v-list-item>
             </v-list>
           </v-menu>
         </div>
       </v-app-bar>   
-    </v-card> -->
+    </v-card>
     <div id="nav">
       <!-- <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link> |
@@ -71,11 +65,7 @@
 
 <script>
 export default {
-  components: {
-
-  },
-
-  
+  name: 'Header2',
 
   data: () => {
     return {
@@ -128,21 +118,23 @@ export default {
       //this.register_att = true;
       this.register_form = true;
       this.sign_in_form = false;
+      this.$store.commit('register', true)
     },
 
     sign_out() {
       this.sign_in_form = false;
       this.register_form = false;
       this.enter_exh = false;
-      this.$store.commit('form', false)
+      this.$store.commit('show_tool', false)
       this.$store.commit('sign_in', false)
+      this.$store.commit('register', false)
     },
 
     validate() {
         this.$refs.form.validate()
         if (this.valid) {
           this.form = true;
-          this.$store.commit('show_form', true)
+          this.$store.commit('show_tool', true)
         }
         this.enter_exh = true;
         this.sign_in_form = false;
