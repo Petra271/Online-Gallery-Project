@@ -25,6 +25,7 @@
         <div v-if="!this.$store.getters.logged_in">
         <v-btn text rounded class="prijava" v-on:click="sign_in()">prijava</v-btn>
         <v-btn text rounded class="prijava" v-on:click="register()">registracija</v-btn>
+        <v-btn icon class="prijava" v-on:click="mode()"><v-icon>mdi-coach-lamp</v-icon></v-btn>
         </div>
 
         
@@ -47,7 +48,7 @@
             <v-list>
               <v-list-item link> Transakcije <v-spacer></v-spacer> <v-icon>mdi-cash-multiple</v-icon> </v-list-item>
               <v-list-item link> Osobni Podaci <v-spacer></v-spacer> <v-icon>mdi-account-details</v-icon> </v-list-item>
-              <v-list-item> <v-btn text v-on:click="sign_out()"> Odjava </v-btn><v-spacer></v-spacer> <v-icon>mdi-exit-to-app</v-icon> </v-list-item>
+              <v-list-item link v-on:click="sign_out()" to="/"> Odjava <v-spacer></v-spacer> <v-icon>mdi-exit-to-app</v-icon> </v-list-item>
             </v-list>
           </v-menu>
         </div>
@@ -116,15 +117,15 @@ export default {
 
     register() {
       //this.register_att = true;
-      this.register_form = true;
-      this.sign_in_form = false;
+      // this.register_form = true;
+      // this.sign_in_form = false;
       this.$store.commit('register', true)
     },
 
     sign_out() {
-      this.sign_in_form = false;
-      this.register_form = false;
-      this.enter_exh = false;
+      // this.sign_in_form = false;
+      // this.register_form = false;
+      // this.enter_exh = false;
       this.$store.commit('show_tool', false)
       this.$store.commit('sign_in', false)
       this.$store.commit('register', false)
@@ -136,16 +137,24 @@ export default {
           this.form = true;
           this.$store.commit('show_tool', true)
         }
-        this.enter_exh = true;
-        this.sign_in_form = false;
-        this.register_form = false;
+      //   this.enter_exh = true;
+      //   this.sign_in_form = false;
+      //   this.register_form = false;
     },
 
     cancel() {
       this.$refs.form.reset()
-      this.sign_in_form = false;
-      this.register_form = false;
+      // this.sign_in_form = false;
+      // this.register_form = false;
     },
+
+    mode() {
+      if (this.$store.getters.mode == true) {
+         this.$store.commit('theme', false)
+      } else {
+         this.$store.commit('theme', true)
+      }
+    }
   }
 }
 </script>
@@ -159,6 +168,10 @@ export default {
   color: #2c3e50;
 }
 
+
+.btn {
+    text-transform: none;
+}
 #nav {
   padding: 30px;
 

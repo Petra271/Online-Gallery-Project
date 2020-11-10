@@ -1,6 +1,7 @@
 <template>
   <v-app>
-    <div class="front_page">
+    <!-- <div class="front_page"> -->
+      <div :class="{ 'light': !$store.getters.mode, 'dark': $store.getters.mode }">
       <div>
         <Header2/>
       </div>
@@ -105,7 +106,7 @@
           class="mr-4"
           @click="cancel()"
         >
-          Poništi
+          Natrag
         </v-btn>
 
       </div>
@@ -204,7 +205,7 @@
           class="mr-4"
           @click="cancel()"
         >
-          Poništi
+          Natrag
         </v-btn>
 
       </div>
@@ -237,7 +238,10 @@
                 class="d-flex transition-fast-in-fast-out orange darken-2 v-card--reveal display-3 white--text"
                 style="height: 100%;"
               >
-                Izložba {{n}}
+              <div class="izl">
+                <p>Izložba {{n}}</p> <br>
+                Traje do: 1{{n}}.11.2020
+              </div>
               </div>
             </v-expand-transition>
               <v-card-title class="align-end fill-height" primary-title>
@@ -249,7 +253,7 @@
                       :class="{ 'show-btns': hover }"
                       v-bind="attrs"
                       v-on="{ ...tooltip, ...menu }"
-                      :disabled="enter_exh == false"
+                      :disabled="!$store.getters.logged_in"
                       to="/izlozba">
                       <v-icon>mdi-door-open</v-icon>
                     </v-btn>
@@ -288,7 +292,10 @@
                 class="d-flex transition-fast-in-fast-out orange darken-2 v-card--reveal display-3 white--text"
                 style="height: 100%;"
               >
-                Izložba {{n}}
+                <div class="izl">
+                  <p>Izložba {{n}}</p> <br>
+                  Traje do: 1{{n}}.11.2020
+                </div>
               </div>
             </v-expand-transition>
               <v-card-title class="align-end fill-height" primary-title>
@@ -300,7 +307,7 @@
                       :class="{ 'show-btns': hover }"
                       v-bind="attrs"
                       v-on="{ ...tooltip, ...menu }"
-                      :disabled="enter_exh == false"
+                      :disabled="!$store.getters.logged_in"
                       to="/izlozba"
                       >
                       <v-icon>mdi-door-open</v-icon>
@@ -365,6 +372,7 @@ export default {
       register_form: false,
       enter_exh: false,
       artist_check: false,
+      show: true,
 
       colors: ['deep-purple accent-4', 'error', 'teal darken-1'],
       valid: true,
@@ -398,7 +406,12 @@ export default {
   mounted() {
         // Set the default value of this.item based on what's in the store
         this.sign_in_form = this.$store.getters.sign_in_form
-        this.enter_exh = this.$store.getters.logged_in
+        //this.enter_exh = this.$store.getters.logged_in
+        if (this.$store.getters.logged_in) {
+          this.enter_exh = true;
+        } else {
+          this.enter_exh = false;
+        }
     },
 
   methods: {
@@ -457,6 +470,14 @@ export default {
 .front_page {
   background-color: rgb(214, 136, 46);
   /* background-color:#f08989; */
+}
+
+.light {
+  background-color: rgb(214, 136, 46);
+}
+
+.dark {
+  background-color: rgb(43, 34, 23);
 }
 
 .prijava {
@@ -524,6 +545,11 @@ export default {
 .img {
   margin: 7%;
   border-radius: 50px;
+}
+
+.izl {
+  align-content: center;
+  /* margin-left: 15%; */
 }
 
 .img_btn {
