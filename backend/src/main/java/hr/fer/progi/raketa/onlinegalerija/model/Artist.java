@@ -3,12 +3,12 @@ package hr.fer.progi.raketa.onlinegalerija.model;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class Artist extends User {
+public class Artist extends Visitor {
     private ArrayList<Collection> collections = new ArrayList<>();
 
     public Artist(UUID id, String name, String surname, String email,
-                  String password, String paypalMail, String paypalPass) {
-        super(name, surname, email, password, paypalMail, paypalPass);
+                  String password, String paypalMail) {
+        super(name, surname, email, password, paypalMail);
     }
 
     public ArrayList<Collection> getCollections() {
