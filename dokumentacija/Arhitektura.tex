@@ -19,12 +19,17 @@
 			
 			\textbf{\textit{dio 1. revizije}}\\
 			
-		\textit{Potrebno je opisati koju vrstu i implementaciju baze podataka ste odabrali, glavne komponente od kojih se sastoji i slično.}
+		{Za našu web stranicu koristit ćemo relacijsku bazu podataka. Baza podataka se sastoji}
 		
 			\subsection{Opis tablica}
-			
 
 				
+			
+
+				{\textbf{ Korisnik    } Ovaj entitet sadržava sve informacije o korisniku stranice. Sadrži atribute: Id , korisničko ime , ime , prezime , e-mail , 
+				lozinka , e-mail adresa Paypal računa , razina ovlasti korisnika te njegov pdf portfolio. Ovaj entitet je u vezi  One-to-Many s entitetom Komentar
+			 	preko atributa Id korisnika , u vezi  One-to-Many s entitetom PosjetiteljIzlozba preko atributa Id korisnika , u vezi  One-to-Many s entitetom Transakcija preko atributa
+				Id korisnika i u vezi One-to-Many s entitetom Kolekcija preko atributa Id korisnika. }
 				
 				\begin{longtabu} to \textwidth {|X[10, l]|X[6, l]|X[14, l]|}
 					
@@ -50,6 +55,10 @@
 					
 				\end{longtabu}
 
+				{\textbf{ Kolekcija    } Ovaj entitet sadržava sve informacije o kolekcijama na stranici. Sadrži atribute: Id kolekcije , naziv kolekcije, opis kolekcije, stil kolekcije te Id 						umjetnika čija je kolekcija . Ovaj entitet je u vezi  One-to-Many s entitetom KolekcijaNatjecaj 
+			 	preko atributa Id kolekcije , u vezi  One-to-Many s entitetom KolekcijaIzlozba preko atributa Id kolekcije , u vezi  One-to-Many s entitetom Djelo preko atributa
+				Id kolekcije i u vezi One-to-Many s entitetom Korisnik preko atributa Id umjetnika. }
+
 				
 				\begin{longtabu} to \textwidth {|X[10, l]|X[6, l]|X[14, l]|}
 					
@@ -71,6 +80,10 @@
 					
 				\end{longtabu}
 
+				{\textbf{ Komentar    } Ovaj entitet sadržava sve informacije  komentarima djela. Sadrži atribute: Id komentara , tekst komentara , vrijeme komentara, Id djela koje
+				je komentirano napisan te Id autora koji je to djelo komentirao. . Ovaj entitet je u vezi  One-to-Many s entitetom Djelo
+			 	preko atributa Id djelo , u vezi  One-to-Many s entitetom Korisnik preko atributa Id autor. }
+
 				\begin{longtabu} to \textwidth {|X[10, l]|X[6, l]|X[14, l]|}
 					
 					\hline \multicolumn{3}{|c|}{\textbf{Komentar}}	 \\[3pt] \hline
@@ -91,6 +104,10 @@
 					
 				\end{longtabu}
 
+				{\textbf{ Transakcija    } Ovaj entitet sadržava sve informacije o pojedinoj  transakciji kupnje djela. Sadrži atribute:Id transakcije , iznos , vrijeme transakcije , Id djela 					koje je kupljeno , Id platitelja koji je kupio djelo te Id korisnika koji prima novce . Ovaj entitet je u vezi  One-to-Many s entitetom Korisnik
+			 	preko atributa Id platitelj i Id primatelj i u vezi  One-to-Many s entitetom Djelo preko atributa Id djelo. }
+
+
 				\begin{longtabu} to \textwidth {|X[10, l]|X[6, l]|X[14, l]|}
 					
 					\hline \multicolumn{3}{|c|}{\textbf{Transakcija}}	 \\[3pt] \hline
@@ -107,10 +124,14 @@
 					Vrijeme & TIMESTAMP &   Vrijeme kada je transakcija tj. uplata sredstava završena\\ \hline 
 					\cellcolor{LightBlue}IdDjelo(FK) & VARCHAR	&  Strani ključevi vezani uz  kupljena djela razmaknuti zarezom	\\ \hline 
 					\cellcolor{LightBlue}IdPlatitelj(FK) & INT	&  Strani ključ vezan uz korisnika koji je uplatio sredstva\\ \hline 
-					\cellcolor{LightBlue} IdPrimatelj(FK)& INT &   Strani ključ vezan uz autora djela tj. umjetnika koji je naslikao djelo	\\ \hline 
+					\cellcolor{LightBlue} IdPrimatelj(FK)& INT &   Strani ključ vezan uz korisnika koji prima novce	\\ \hline 
 					
 					
 				\end{longtabu}
+
+				{\textbf{ KolekcijaNatjecaj    } Ovaj entitet sadržava sve informacije o odnosu kolekcije i natjecaja . Sadrži atribute : Id kolekcije te Id natječaja u kojem je kolekcija.
+				Ovaj entitet je u vezi One-to-Many s entitetom Kolekcija preko atributa Id kolekcija i u vezi One-to-Many s entitetom Natjecaj preko atributa Id natjecaj.}
+
 
 				\begin{longtabu} to \textwidth {|X[10, l]|X[6, l]|X[14, l]|}
 					
@@ -128,6 +149,10 @@
 					
 					
 				\end{longtabu}
+			
+				{\textbf{ KolekcijaIzlozba   } Ovaj entitet sadržava sve informacije o odnosu kolekcije i izložbe . Sadrži atribute : Id izložbe te Id kolekcije u kojem je izložba.
+				Ovaj entitet je u vezi One-to-Many s entitetom Kolekcija preko atributa Id kolekcija i u vezi One-to-Many s entitetom Izlozba preko atributa Id izlozba.}
+
 
 				\begin{longtabu} to \textwidth {|X[10, l]|X[6, l]|X[14, l]|}
 					
@@ -145,6 +170,9 @@
 					
 					
 				\end{longtabu}
+
+				{\textbf{ PosjetiteljIzlozba   } Ovaj entitet sadržava sve informacije o odnosu posjetitelja i izložbe . Sadrži atribute : Id posjetitelja te Id izložbe koju posjetitelj 							pregledava. Ovaj entitet je u vezi One-to-Many s entitetom Posjetitelj preko atributa Id posjetitelj i u vezi One-to-Many s entitetom Izlozba preko atributa Id izlozba.}
+
 			
 				\begin{longtabu} to \textwidth {|X[10, l]|X[6, l]|X[14, l]|}
 					
@@ -162,6 +190,9 @@
 					
 					
 				\end{longtabu}
+
+				{\textbf{ Djelo  } Ovaj entitet sadržava sve informacije o pojedinom djelu . Sadrži atribute : Id djela, naziv, opis, cijena, stil, djelo u binarnom formatu te Id kolekcije u 						jem je djelo. Ovaj entitet je u vezi One-to-Many s entitetom Kolekcija preko atributa Id kolekcija, u vezi One-to-Many s entitetom Transakcija preko atributa Id djelo.}
+
 
 				\begin{longtabu} to \textwidth {|X[10, l]|X[6, l]|X[14, l]|}
 					
@@ -184,6 +215,9 @@
 					
 					
 				\end{longtabu}
+
+				{\textbf{ Izlozba   } Ovaj entitet sadržava sve informacije o  izložbama . Sadrži atribute :Id izložbe , naziv, opis, vrijeme početka izložbe, vrijeme trajanja, provizija 						prilikom kupnje djela , stil te Id natječaja unutar kojeg je izloženo djelo.Ovaj entitet je u vezi One-to-Many s entitetom PosjetiteljIzlozba preko atributa Id izlozba , u 						vezi One-to-Many s entitetom KolekcijaIzlozba preko atributa Id izlozba i u vezi One-to-Many s entitetom Natjecaj preko atributa Id natjecaj. }
+
 				
 				\begin{longtabu} to \textwidth {|X[10, l]|X[6, l]|X[14, l]|}
 					
@@ -208,6 +242,9 @@
 					
 					
 				\end{longtabu}
+
+				{\textbf{ Natjecaj   } Ovaj entitet sadržava sve informacije o natječajima . Sadrži atribute : Id natječaja, naziv, opis, vrijeme početka natječaja, vrijeme trajanja, 						provizija prilikom kupnje djela te stil natječaja. Ovaj entitet je u vezi One-to-Many s entitetom Izlozba preko atributa Id natjecaj i u vezi One-to-Many s entitetom 						KolekcijaNatjecaj preko atributa Id natjecaj.}
+
 
 				\begin{longtabu} to \textwidth {|X[10, l]|X[6, l]|X[14, l]|}
 					
