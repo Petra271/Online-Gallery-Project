@@ -3,7 +3,7 @@
     <!-- <div class="front_page"> -->
       <div :class="{ 'light': !$store.getters.mode, 'dark': $store.getters.mode }">
       <div>
-        <Header2/>
+        <Header/>
       </div>
     <!-- <v-card class="overflow-hidden">
     <v-app-bar
@@ -92,7 +92,7 @@
         ></v-text-field>
 
       <div class="form_buttons">
-        <v-btn
+        <v-btn rounded
           :disabled="!valid"
           color="success"
           class="mr-4"
@@ -101,7 +101,7 @@
           Prijava
         </v-btn>
 
-        <v-btn
+        <v-btn rounded
           color="error"
           class="mr-4"
           @click="cancel()"
@@ -142,7 +142,7 @@
 
         <v-text-field
           v-model="payPal"
-          :rules="[v => !!v || 'Potrebno je upisati PayPal račun']"
+          :rules="payPalRules"
           label="PayPal račun"
           required
         ></v-text-field>
@@ -191,7 +191,7 @@
         ></v-select> -->
 
       <div class="form_buttons">
-        <v-btn
+        <v-btn rounded
           :disabled="!valid"
           color="success"
           class="mr-4"
@@ -200,7 +200,7 @@
           Registracija
         </v-btn>
 
-        <v-btn
+        <v-btn rounded
           color="error"
           class="mr-4"
           @click="cancel()"
@@ -281,8 +281,8 @@
             :class="{ 'on-hover': hover }"
           >
             <v-img
-              :src="`https://picsum.photos/500/300?image=${n * 5 + 10}`"
-              :lazy-src="`https://picsum.photos/10/6?image=${n * 5 + 10}`"
+              :src="`https://picsum.photos/500/300?image=${n * 3 + 10}`"
+              :lazy-src="`https://picsum.photos/10/6?image=${n * 3 + 10}`"
               aspect-ratio="1"
               class="grey lighten-2 img"
             >
@@ -346,21 +346,14 @@
 
 <script>
 import HelloWorld from '../components/HelloWorld';
-import Header2 from '@/components/Header2'
-// import {sign_att,
-//       register_att,
-//       form,
-//       sign_in_form,
-//       register_form,
-//       enter_exh,
-//       artist_check} from 'App.vue'
+import Header from '@/components/Header'
 
 export default {
   name: 'App',
 
   components: {
     HelloWorld,
-    Header2
+    Header
   },
 
   data: () => {
@@ -372,7 +365,6 @@ export default {
       register_form: false,
       enter_exh: false,
       artist_check: false,
-      show: true,
 
       colors: ['deep-purple accent-4', 'error', 'teal darken-1'],
       valid: true,
@@ -390,6 +382,10 @@ export default {
       emailRules: [
         v => !!v || 'Potrebno je upisati E-mail',
         v => /.+@.+\..+/.test(v) || 'E-mail mora biti valjan',
+      ],
+      payPalRules: [
+        v => !!v || 'Potrebno je upisati PayPal račun',
+        v => /.+@.+\..+/.test(v) || 'Paypal račun mora biti valjan',
       ],
       select: null,
       checkbox: false,
@@ -420,6 +416,7 @@ export default {
       // this.sign_in_form = true;
       // this.register_form = false;
       this.$store.commit('sign_in', true)
+      this.$store.commit('register', false)
     },
 
     register() {
@@ -427,6 +424,7 @@ export default {
       // this.register_form = true;
       // this.sign_in_form = false;
       this.$store.commit('register', true)
+      this.$store.commit('sign_in', false)
     },
 
     sign_out() {
@@ -473,11 +471,14 @@ export default {
 }
 
 .light {
-  background-color: rgb(214, 136, 46);
+  /* background-color: rgb(214, 136, 46); */
+  background-color: rgb(93, 202, 166);
+  color: #2c3e50;
 }
 
 .dark {
-  background-color: rgb(43, 34, 23);
+  background-color: rgb(22, 5, 12);
+  color: #016b4b;
 }
 
 .prijava {
@@ -553,7 +554,8 @@ export default {
 }
 
 .img_btn {
-  /* background-color:rgb(173, 62, 168);  */
+  background-color:rgb(209, 74, 74, 0.3);  
+  /* background-color: rgb(22, 5, 12, 0.3); */
   /* opacity: 0.8; */
 }
 </style>
