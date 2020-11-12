@@ -24,28 +24,214 @@
 			\subsection{Opis tablica}
 			
 
-				\textit{Svaku tablicu je potrebno opisati po zadanom predlošku. Lijevo se nalazi točno ime varijable u bazi podataka, u sredini se nalazi tip podataka, a desno se nalazi opis varijable. Svjetlozelenom bojom označite primarni ključ. Svjetlo plavom označite strani ključ}
 				
-				\begin{longtabu} to \textwidth {|X[6, l]|X[6, l]|X[20, l]|}
+				
+				\begin{longtabu} to \textwidth {|X[10, l]|X[6, l]|X[14, l]|}
 					
-					\hline \multicolumn{3}{|c|}{\textbf{korisnik - ime tablice}}	 \\[3pt] \hline
+					\hline \multicolumn{3}{|c|}{\textbf{Korisnik}}	 \\[3pt] \hline
 					\endfirsthead
 					
-					\hline \multicolumn{3}{|c|}{\textbf{korisnik - ime tablice}}	 \\[3pt] \hline
+					\hline \multicolumn{3}{|c|}{\textbf{Korisnik}}	 \\[3pt] \hline
 					\endhead
 					
 					\hline 
 					\endlastfoot
 					
-					\cellcolor{LightGreen}IDKorisnik & INT	&  	Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam 	\\ \hline
-					korisnickoIme	& VARCHAR &   	\\ \hline 
-					email & VARCHAR &   \\ \hline 
-					ime & VARCHAR	&  		\\ \hline 
-					\cellcolor{LightBlue} primjer	& VARCHAR &   	\\ \hline 
+					\cellcolor{LightGreen}Id (PK) & INT&  Primarni ključ za korisnika	\\ \hline
+					KorisnickoIme& VARCHAR &  Korisničko ime korisnika, ujedno i sekundarni ključ jer je jedinstveno  za svakog korisnika\\ \hline 
+					Ime	& VARCHAR &   Ime korisnika\\ \hline 
+					Prezime & VARCHAR&   Prezime korisnika		\\ \hline 
+					Email & VARCHAR &  E-mail korisnika ,ujedno i sekundarni ključ jer je e-mail jedinstven za svakog korisnika  \\ \hline 
+					Lozinka & VARCHAR&  Lozinka korisnika	\\ \hline 
+					PayPalEmail & VARCHAR&  Lozinka korisnika	\\ \hline 
+					RazinaOvlasti & INT&  Oznaka razine ovlasti korisnika	\\ \hline 
+					PdfPortfolio & BYTEA&  Portfolio umjetnika u obliku pdfa , samo za umjetnike	\\ \hline 
+					
+					
+				\end{longtabu}
+
+				
+				\begin{longtabu} to \textwidth {|X[10, l]|X[6, l]|X[14, l]|}
+					
+					\hline \multicolumn{3}{|c|}{\textbf{Kolekcija}}	 \\[3pt] \hline
+					\endfirsthead
+					
+					\hline \multicolumn{3}{|c|}{\textbf{Kolekcija}}	 \\[3pt] \hline
+					\endhead
+					
+					\hline 
+					\endlastfoot
+					
+					\cellcolor{LightGreen}Id(PK) & INT&   Primarni ključ za kolekciju	\\ \hline
+					Naziv	& VARCHAR &   Naziv kolekcije	\\ \hline 
+					Opis & VARCHAR &  Opis kolekcije  \\ \hline 
+					Stil & VARCHAR&  Stil kolekcije	\\ \hline 
+					\cellcolor{LightBlue} IdUmjetnik (FK)& INT &  Strani ključ vezan uz korisnika s ulogom umjetnik	\\ \hline 
+					
+					
+				\end{longtabu}
+
+				\begin{longtabu} to \textwidth {|X[10, l]|X[6, l]|X[14, l]|}
+					
+					\hline \multicolumn{3}{|c|}{\textbf{Komentar}}	 \\[3pt] \hline
+					\endfirsthead
+					
+					\hline \multicolumn{3}{|c|}{\textbf{Komentar}}	 \\[3pt] \hline
+					\endhead
+					
+					\hline 
+					\endlastfoot
+					
+					\cellcolor{LightGreen}Id (PK)& INT&  Primarni ključ komentara	\\ \hline
+					Tekst	& VARCHAR &   Tekst komentara	\\ \hline 
+					Vrijeme & TIMESTSAMP &  Vrijeme kada je korisnik ostavio komentar  \\ \hline 
+					\cellcolor{LightBlue}IdDjelo(FK) & INT&  Strani ključ vezan uz djelo	\\ \hline 
+					\cellcolor{LightBlue} IdAutor(FK)& INT &  Strani ključ vezan uz korisnika koji je komentirao	\\ \hline 
+					
+					
+				\end{longtabu}
+
+				\begin{longtabu} to \textwidth {|X[10, l]|X[6, l]|X[14, l]|}
+					
+					\hline \multicolumn{3}{|c|}{\textbf{Transakcija}}	 \\[3pt] \hline
+					\endfirsthead
+					
+					\hline \multicolumn{3}{|c|}{\textbf{Transakcija}}	 \\[3pt] \hline
+					\endhead
+					
+					\hline 
+					\endlastfoot
+					
+					\cellcolor{LightGreen}Id(PK) & INT& Primarni ključ transakcije  	\\ \hline
+					Iznos	& FLOAT &   	Iznos plaćene cijene u kunama\\ \hline 
+					Vrijeme & TIMESTAMP &   Vrijeme kada je transakcija tj. uplata sredstava završena\\ \hline 
+					\cellcolor{LightBlue}IdDjelo(FK) & VARCHAR	&  Strani ključevi vezani uz  kupljena djela razmaknuti zarezom	\\ \hline 
+					\cellcolor{LightBlue}IdPlatitelj(FK) & INT	&  Strani ključ vezan uz korisnika koji je uplatio sredstva\\ \hline 
+					\cellcolor{LightBlue} IdPrimatelj(FK)& INT &   Strani ključ vezan uz autora djela tj. umjetnika koji je naslikao djelo	\\ \hline 
+					
+					
+				\end{longtabu}
+
+				\begin{longtabu} to \textwidth {|X[10, l]|X[6, l]|X[14, l]|}
+					
+					\hline \multicolumn{3}{|c|}{\textbf{KolekcijaNatjecaj}}	 \\[3pt] \hline
+					\endfirsthead
+					
+					\hline \multicolumn{3}{|c|}{\textbf{KolekcijaNatjecaj}}	 \\[3pt] \hline
+					\endhead
+					
+					\hline 
+					\endlastfoot
+					
+					 IdKolekcija(PK,FK)	& INT &   Dio primarnog ključa vezan uz kolekciju,ujedno i  strani ključ	\\ \hline 
+					 IdNatjecaj(PK,FK)	& INT &  Dio primarnog ključa vezan uz natječaj, ujedno i  strani ključ	\\ \hline 
+					
+					
+				\end{longtabu}
+
+				\begin{longtabu} to \textwidth {|X[10, l]|X[6, l]|X[14, l]|}
+					
+					\hline \multicolumn{3}{|c|}{\textbf{KolekcijaIzlozba}}	 \\[3pt] \hline
+					\endfirsthead
+					
+					\hline \multicolumn{3}{|c|}{\textbf{KolekcijaIzlozba}}	 \\[3pt] \hline
+					\endhead
+					
+					\hline 
+					\endlastfoot
+					
+					 IdKolekcija(PK,FK)	& INT &   Dio primarnog ključa vezan uz kolekciju, ujedno i  strani ključ	\\ \hline 
+					 IdIzlozba(PK,FK)	& INT &   Dio primarnog ključa vezan uz izložbu, ujedno i  strani ključ	\\ \hline 
 					
 					
 				\end{longtabu}
 			
+				\begin{longtabu} to \textwidth {|X[10, l]|X[6, l]|X[14, l]|}
+					
+					\hline \multicolumn{3}{|c|}{\textbf{PosjetiteljIzlozba}}	 \\[3pt] \hline
+					\endfirsthead
+					
+					\hline \multicolumn{3}{|c|}{\textbf{PosjetiteljIzlozba}}	 \\[3pt] \hline
+					\endhead
+					
+					\hline 
+					\endlastfoot
+					
+					 IdIzlozba(PK,FK)	& INT &   Dio primarnog ključa vezan uz izložbu,ujedno i  strani ključ	\\ \hline 
+					 IdPosjetitelj(PK,FK)& INT &  Dio primarnog ključa vezan uz korisnika koji je posjetio izložbu , ujedno i strani ključ	\\ \hline 
+					
+					
+				\end{longtabu}
+
+				\begin{longtabu} to \textwidth {|X[10, l]|X[6, l]|X[14, l]|}
+					
+					\hline \multicolumn{3}{|c|}{\textbf{Djelo}}	 \\[3pt] \hline
+					\endfirsthead
+					
+					\hline \multicolumn{3}{|c|}{\textbf{Djelo}}	 \\[3pt] \hline
+					\endhead
+					
+					\hline 
+					\endlastfoot
+					
+					\cellcolor{LightGreen}Id(PK) & INT& Primarni ključ djela 	\\ \hline
+					Naziv	& VARCHAR&   Naziv djela\\ \hline 
+					Opis	& VARCHAR &   Autorov tj. umjetnikov opis djela\\ \hline 
+					Cijena	& FLOAT &   	Cijena djela u kunama\\ \hline 
+					Stil & VARCHAR & Stil djela\\ \hline 
+					blob & BYTEA & Djelo u pdf formatu \\ \hline 
+					\cellcolor{LightBlue} IdKolekcija(FK)& INT &   Strani ključ vezan uz kolekciju u kojem je djelo	\\ \hline 
+					
+					
+				\end{longtabu}
+				
+				\begin{longtabu} to \textwidth {|X[10, l]|X[6, l]|X[14, l]|}
+					
+					\hline \multicolumn{3}{|c|}{\textbf{Izlozba}}	 \\[3pt] \hline
+					\endfirsthead
+					
+					\hline \multicolumn{3}{|c|}{\textbf{Izlozba}}	 \\[3pt] \hline
+					\endhead
+					
+					\hline 
+					\endlastfoot
+					
+					\cellcolor{LightGreen}Id(PK) & INT& Primarni ključ izložbe 	\\ \hline
+					Naziv	& VARCHAR&   Naziv djela\\ \hline 
+					Opis	& VARCHAR &   Autorov tj. umjetnikov opis djela\\ \hline 
+					VrijemePocetka& TIMESTAMP &   	Vrijeme u kojem počinje izložba\\ \hline 
+					VrijemeTrajanja& INTERVAL &   	Interval u kojem izložba traje\\ \hline 
+					Provizija &FLOAT & Broj izražen u postocima o kojem ovisi koliko stranica uzima proviziju od cijene djela
+ tj. koliko će od ukupne cijene djela novaca dobiti korisnik. Korisnik dobiva (100-Provizija)/100*CijenaDjela kuna dok ostatak novaca ide stranici.\\ \hline 
+					Stil & VARCHAR & Stil izložbe\\ \hline 
+					\cellcolor{LightBlue} IdNatjecaj(FK)& INT &   Strani ključ vezan uz natječaj u kojem je djelo	\\ \hline 
+					
+					
+				\end{longtabu}
+
+				\begin{longtabu} to \textwidth {|X[10, l]|X[6, l]|X[14, l]|}
+					
+					\hline \multicolumn{3}{|c|}{\textbf{Natjecaj}}	 \\[3pt] \hline
+					\endfirsthead
+					
+					\hline \multicolumn{3}{|c|}{\textbf{Natjecaj}}	 \\[3pt] \hline
+					\endhead
+					
+					\hline 
+					\endlastfoot
+					
+					\cellcolor{LightGreen}Id(PK) & INT& Primarni ključ natječaja 	\\ \hline
+					Naziv	& VARCHAR&   Naziv natječaja\\ \hline 
+					Opis	& VARCHAR &   Administratorov opis natječaja\\ \hline 
+					VrijemePocetka& TIMESTAMP &   	Vrijeme u kojem počinje natječaj\\ \hline 
+					VrijemeTrajanja& INTERVAL &   	Interval u kojem natječaj traje\\ \hline 
+					Provizija &FLOAT & Broj izražen u postocima o kojem ovisi koliko stranica uzima proviziju od cijene djela
+ tj. koliko će od ukupne cijene djela novaca dobiti korisnik. Korisnik dobiva (100-Provizija)/100*CijenaDjela kuna dok ostatak novaca ide stranici.\\ \hline 
+					Stil & VARCHAR & Stil natječaja\\ \hline 
+					
+					
+				\end{longtabu}
+
 			
 			\subsection{Dijagram baze podataka}
 				\begin{figure}[H]
