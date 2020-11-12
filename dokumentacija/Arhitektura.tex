@@ -1,35 +1,50 @@
 \chapter{Arhitektura i dizajn sustava}
-		
-		\textbf{\textit{dio 1. revizije}}\\
 
-		\textit{ Potrebno je opisati stil arhitekture te identificirati: podsustave, preslikavanje na radnu platformu, spremišta podataka, mrežne protokole, globalni upravljački tok i sklopovsko-programske zahtjeve. Po točkama razraditi i popratiti odgovarajućim skicama:}
-	\begin{itemize}
-		\item 	\textit{izbor arhitekture temeljem principa oblikovanja pokazanih na predavanjima (objasniti zašto ste baš odabrali takvu arhitekturu)}
-		\item 	\textit{organizaciju sustava s najviše razine apstrakcije (npr. klijent-poslužitelj, baza podataka, datotečni sustav, grafičko sučelje)}
-		\item 	\textit{organizaciju aplikacije (npr. slojevi frontend i backend, MVC arhitektura) }		
-	\end{itemize}
-
-	
+		Arhitektura se može podijeliti na tri podsustava:
 		
+		\begin{itemize}
+			\item Web poslužitelj
+			\item Web aplikacija
+			\item Baza podataka
+		\end{itemize}
+		
+		\begin{figure}[H]
+			
+			\centering
+			\includegraphics[scale=0.25,keepaspectratio]{arhitektura}
+			\caption{Arhitektura sustava}
+			
+		\end{figure}
+		
+		Za izradu web stranice odlučili smo se za korištenje PostgreSQL baze podataka s kojom ćemo komunicirati putem Klijent-Server modela.
+		
+		Za frontend tj. klijentski  dio aplikacije koristit ćemo vue.js. Vue.js je open-source JavaScript framework za izradu web aplikacija. On je dizajniran s ciljem da komplicirane aplikacije podijelimo na manje dijelove koje možemo ponovno koristiti. 
+		
+		Za backend tj. serverski dio aplikacije koristit ćemo programski jezik Javu i Spring Boot framework.
 
 		
 
 				
 		\section{Baza podataka}
 			
-			\textbf{\textit{dio 1. revizije}}\\
-			
-		{Za našu web stranicu koristit ćemo relacijsku bazu podataka. Baza podataka se sastoji}
+			Za našu web stranicu koristit ćemo relacijsku bazu podataka PostgreSQL. Baza podataka se sastoji od tablica, odnosno relacija koje su definirane svojim imenom i skupom atributa. Zadaća baze podataka je brza i jednostavna pohrana, izmjena i dohvat podataka za daljnju obradu. \newline Baza podataka ove aplikacije sastoji se od sljedećih tablica:
+			\begin{itemize}
+				\item Korisnik
+				\item Kolekcija
+				\item Komentar
+				\item Transakcija
+				\item KolekcijaNatjecaj
+				\item KolekcijaIzlozba
+				\item PosjetiteljIzlozba
+				\item Djelo
+				\item Izlozba
+				\item Natjecaj
+				
+			\end{itemize}
 		
 			\subsection{Opis tablica}
-
 				
-			
-
-				{\textbf{ Korisnik    } Ovaj entitet sadržava sve informacije o korisniku stranice. Sadrži atribute: Id , korisničko ime , ime , prezime , e-mail , 
-				lozinka , e-mail adresa Paypal računa , razina ovlasti korisnika te njegov pdf portfolio. Ovaj entitet je u vezi  One-to-Many s entitetom Komentar
-			 	preko atributa Id korisnika , u vezi  One-to-Many s entitetom PosjetiteljIzlozba preko atributa Id korisnika , u vezi  One-to-Many s entitetom Transakcija preko atributa
-				Id korisnika i u vezi One-to-Many s entitetom Kolekcija preko atributa Id korisnika. }
+				{\textbf{Korisnik} Ovaj entitet sadržava sve informacije o korisniku stranice. Sadrži atribute: Id, korisničko ime, ime, prezime, e-mail, lozinka, e-mail adresa PayPal računa, razina ovlasti korisnika te njegov portfolio u PDF-u. Ovaj entitet je u vezi \textit{Many-to-One} s entitetom Komentar preko atributa Id korisnika, u vezi \textit{Many-to-Many} s entitetom PosjetiteljIzlozba preko atributa Id korisnika, u vezi \textit{One-to-Many} s entitetom Transakcija u ulozi primatelja i pošiljatelja preko atributa	Id korisnika i u vezi \textit{One-to-Many} s entitetom Kolekcija preko atributa Id korisnika.}
 				
 				\begin{longtabu} to \textwidth {|X[10, l]|X[6, l]|X[14, l]|}
 					
@@ -43,21 +58,19 @@
 					\endlastfoot
 					
 					\cellcolor{LightGreen}Id (PK) & INT&  Primarni ključ za korisnika	\\ \hline
-					KorisnickoIme& VARCHAR &  Korisničko ime korisnika, ujedno i sekundarni ključ jer je jedinstveno  za svakog korisnika\\ \hline 
+					KorisnickoIme& VARCHAR &  Korisničko ime korisnika, ujedno i sekundarni ključ jer je jedinstveno za svakog korisnika\\ \hline 
 					Ime	& VARCHAR &   Ime korisnika\\ \hline 
 					Prezime & VARCHAR&   Prezime korisnika		\\ \hline 
-					Email & VARCHAR &  E-mail korisnika ,ujedno i sekundarni ključ jer je e-mail jedinstven za svakog korisnika  \\ \hline 
+					Email & VARCHAR &  E-mail korisnika, ujedno i sekundarni ključ jer je e-mail jedinstven za svakog korisnika  \\ \hline 
 					Lozinka & VARCHAR&  Lozinka korisnika	\\ \hline 
 					PayPalEmail & VARCHAR&  Lozinka korisnika	\\ \hline 
-					RazinaOvlasti & INT&  Oznaka razine ovlasti korisnika	\\ \hline 
-					PdfPortfolio & BYTEA&  Portfolio umjetnika u obliku pdfa , samo za umjetnike	\\ \hline 
+					RazinaOvlasti & VARCHAR&  Oznaka razine ovlasti korisnika	\\ \hline 
+					PdfPortfolio & BYTEA&  Portfolio umjetnika u obliku pdfa, samo za umjetnike	\\ \hline 
 					
 					
 				\end{longtabu}
-
-				{\textbf{ Kolekcija    } Ovaj entitet sadržava sve informacije o kolekcijama na stranici. Sadrži atribute: Id kolekcije , naziv kolekcije, opis kolekcije, stil kolekcije te Id 						umjetnika čija je kolekcija . Ovaj entitet je u vezi  One-to-Many s entitetom KolekcijaNatjecaj 
-			 	preko atributa Id kolekcije , u vezi  One-to-Many s entitetom KolekcijaIzlozba preko atributa Id kolekcije , u vezi  One-to-Many s entitetom Djelo preko atributa
-				Id kolekcije i u vezi One-to-Many s entitetom Korisnik preko atributa Id umjetnika. }
+			
+				{\noindent\textbf{Kolekcija} Ovaj entitet sadržava sve informacije o kolekcijama na stranici. Sadrži atribute: Id kolekcije, naziv kolekcije, opis kolekcije, stil kolekcije te Id umjetnika čija je kolekcija. Ovaj entitet je u vezi \textit{One-to-Many} s entitetom KolekcijaNatjecaj preko atributa Id kolekcije, u vezi \textit{One-to-Many} s entitetom KolekcijaIzlozba preko atributa Id kolekcije, u vezi \textit{One-to-Many} s entitetom Djelo preko atributa Id kolekcije i u vezi \textit{Many-to-One} s entitetom Korisnik preko atributa Id umjetnika.}
 
 				
 				\begin{longtabu} to \textwidth {|X[10, l]|X[6, l]|X[14, l]|}
@@ -80,9 +93,7 @@
 					
 				\end{longtabu}
 
-				{\textbf{ Komentar    } Ovaj entitet sadržava sve informacije  komentarima djela. Sadrži atribute: Id komentara , tekst komentara , vrijeme komentara, Id djela koje
-				je komentirano napisan te Id autora koji je to djelo komentirao. . Ovaj entitet je u vezi  One-to-Many s entitetom Djelo
-			 	preko atributa Id djelo , u vezi  One-to-Many s entitetom Korisnik preko atributa Id autor. }
+				{\noindent\textbf{Komentar} Ovaj entitet sadržava sve informacije o komentarima djela. Sadrži atribute: Id komentara, tekst komentara, vrijeme komentara, Id djela koje je komentirano napisan te Id autora koji je to djelo komentirao. Ovaj entitet je u vezi  \textit{Many-to-One} s entitetom Djelo preko atributa Id djelo, u vezi \textit{Many-to-One} s entitetom Korisnik preko atributa Id autor.}
 
 				\begin{longtabu} to \textwidth {|X[10, l]|X[6, l]|X[14, l]|}
 					
@@ -104,8 +115,8 @@
 					
 				\end{longtabu}
 
-				{\textbf{ Transakcija    } Ovaj entitet sadržava sve informacije o pojedinoj  transakciji kupnje djela. Sadrži atribute:Id transakcije , iznos , vrijeme transakcije , Id djela 					koje je kupljeno , Id platitelja koji je kupio djelo te Id korisnika koji prima novce . Ovaj entitet je u vezi  One-to-Many s entitetom Korisnik
-			 	preko atributa Id platitelj i Id primatelj i u vezi  One-to-Many s entitetom Djelo preko atributa Id djelo. }
+				{\noindent\textbf{Transakcija} Ovaj entitet sadržava sve informacije o pojedinoj  transakciji kupnje djela. Sadrži atribute: Id transakcije, iznos, vrijeme transakcije, Id djela koje je kupljeno, Id platitelja koji je kupio djelo te Id korisnika koji prima novce. Ovaj entitet je u vezi \textit{Many-to-One} s entitetom Korisnik
+			 	preko atributa Id platitelj i Id primatelj i u vezi \textit{One-to-One} s entitetom Djelo preko atributa Id djelo.}
 
 
 				\begin{longtabu} to \textwidth {|X[10, l]|X[6, l]|X[14, l]|}
@@ -122,15 +133,14 @@
 					\cellcolor{LightGreen}Id(PK) & INT& Primarni ključ transakcije  	\\ \hline
 					Iznos	& FLOAT &   	Iznos plaćene cijene u kunama\\ \hline 
 					Vrijeme & TIMESTAMP &   Vrijeme kada je transakcija tj. uplata sredstava završena\\ \hline 
-					\cellcolor{LightBlue}IdDjelo(FK) & VARCHAR	&  Strani ključevi vezani uz  kupljena djela razmaknuti zarezom	\\ \hline 
+					\cellcolor{LightBlue}IdDjelo(FK) & INT	&  Strani ključ vezan uz kupljeno djelo	\\ \hline 
 					\cellcolor{LightBlue}IdPlatitelj(FK) & INT	&  Strani ključ vezan uz korisnika koji je uplatio sredstva\\ \hline 
 					\cellcolor{LightBlue} IdPrimatelj(FK)& INT &   Strani ključ vezan uz korisnika koji prima novce	\\ \hline 
 					
 					
 				\end{longtabu}
 
-				{\textbf{ KolekcijaNatjecaj    } Ovaj entitet sadržava sve informacije o odnosu kolekcije i natjecaja . Sadrži atribute : Id kolekcije te Id natječaja u kojem je kolekcija.
-				Ovaj entitet je u vezi One-to-Many s entitetom Kolekcija preko atributa Id kolekcija i u vezi One-to-Many s entitetom Natjecaj preko atributa Id natjecaj.}
+				{\noindent\textbf{KolekcijaNatjecaj} Ovaj entitet sadržava sve informacije o odnosu kolekcije i natjecaja. Sadrži atribute: Id kolekcije te Id natječaja u kojem je kolekcija. Ovaj entitet je u vezi \textit{Many-to-One} s entitetom Kolekcija preko atributa Id kolekcija i u vezi \textit{Many-to-One} s entitetom Natjecaj preko atributa Id natjecaj.}
 
 
 				\begin{longtabu} to \textwidth {|X[10, l]|X[6, l]|X[14, l]|}
@@ -144,14 +154,13 @@
 					\hline 
 					\endlastfoot
 					
-					 IdKolekcija(PK,FK)	& INT &   Dio primarnog ključa vezan uz kolekciju,ujedno i  strani ključ	\\ \hline 
+					 IdKolekcija(PK,FK)	& INT &   Dio primarnog ključa vezan uz kolekciju, ujedno i  strani ključ	\\ \hline 
 					 IdNatjecaj(PK,FK)	& INT &  Dio primarnog ključa vezan uz natječaj, ujedno i  strani ključ	\\ \hline 
 					
 					
 				\end{longtabu}
 			
-				{\textbf{ KolekcijaIzlozba   } Ovaj entitet sadržava sve informacije o odnosu kolekcije i izložbe . Sadrži atribute : Id izložbe te Id kolekcije u kojem je izložba.
-				Ovaj entitet je u vezi One-to-Many s entitetom Kolekcija preko atributa Id kolekcija i u vezi One-to-Many s entitetom Izlozba preko atributa Id izlozba.}
+				{\noindent\textbf{KolekcijaIzlozba} Ovaj entitet sadržava sve informacije o odnosu kolekcije i izložbe. Sadrži atribute: Id izložbe te Id kolekcije u kojem je izložba. Ovaj entitet je u vezi \textit{Many-to-One} s entitetom Kolekcija preko atributa Id kolekcija i u vezi \textit{Many-to-One} s entitetom Izlozba preko atributa Id izlozba.}
 
 
 				\begin{longtabu} to \textwidth {|X[10, l]|X[6, l]|X[14, l]|}
@@ -171,7 +180,7 @@
 					
 				\end{longtabu}
 
-				{\textbf{ PosjetiteljIzlozba   } Ovaj entitet sadržava sve informacije o odnosu posjetitelja i izložbe . Sadrži atribute : Id posjetitelja te Id izložbe koju posjetitelj 							pregledava. Ovaj entitet je u vezi One-to-Many s entitetom Posjetitelj preko atributa Id posjetitelj i u vezi One-to-Many s entitetom Izlozba preko atributa Id izlozba.}
+				{\noindent\textbf{PosjetiteljIzlozba} Ovaj entitet sadržava sve informacije o odnosu posjetitelja i izložbe. Sadrži atribute: Id posjetitelja te Id izložbe koju posjetitelj pregledava. Ovaj entitet je u vezi \textit{Many-to-One} s entitetom Posjetitelj preko atributa Id posjetitelj i u vezi \textit{Many-to-One} s entitetom Izlozba preko atributa Id izlozba.}
 
 			
 				\begin{longtabu} to \textwidth {|X[10, l]|X[6, l]|X[14, l]|}
@@ -186,12 +195,12 @@
 					\endlastfoot
 					
 					 IdIzlozba(PK,FK)	& INT &   Dio primarnog ključa vezan uz izložbu,ujedno i  strani ključ	\\ \hline 
-					 IdPosjetitelj(PK,FK)& INT &  Dio primarnog ključa vezan uz korisnika koji je posjetio izložbu , ujedno i strani ključ	\\ \hline 
+					 IdPosjetitelj(PK,FK)& INT &  Dio primarnog ključa vezan uz korisnika koji je posjetio izložbu, ujedno i strani ključ	\\ \hline 
 					
 					
 				\end{longtabu}
 
-				{\textbf{ Djelo  } Ovaj entitet sadržava sve informacije o pojedinom djelu . Sadrži atribute : Id djela, naziv, opis, cijena, stil, djelo u binarnom formatu te Id kolekcije u 						jem je djelo. Ovaj entitet je u vezi One-to-Many s entitetom Kolekcija preko atributa Id kolekcija, u vezi One-to-Many s entitetom Transakcija preko atributa Id djelo.}
+				{\noindent\textbf{Djelo} Ovaj entitet sadržava sve informacije o pojedinom djelu. Sadrži atribute: Id djela, naziv, opis, cijena, stil, djelo u binarnom formatu te Id kolekcije u kojem je djelo. Ovaj entitet je u vezi \textit{Many-to-One} s entitetom Kolekcija preko atributa Id kolekcija, u vezi \textit{One-to-One} s entitetom Transakcija preko atributa Id djelo.}
 
 
 				\begin{longtabu} to \textwidth {|X[10, l]|X[6, l]|X[14, l]|}
@@ -216,7 +225,7 @@
 					
 				\end{longtabu}
 
-				{\textbf{ Izlozba   } Ovaj entitet sadržava sve informacije o  izložbama . Sadrži atribute :Id izložbe , naziv, opis, vrijeme početka izložbe, vrijeme trajanja, provizija 						prilikom kupnje djela , stil te Id natječaja unutar kojeg je izloženo djelo.Ovaj entitet je u vezi One-to-Many s entitetom PosjetiteljIzlozba preko atributa Id izlozba , u 						vezi One-to-Many s entitetom KolekcijaIzlozba preko atributa Id izlozba i u vezi One-to-Many s entitetom Natjecaj preko atributa Id natjecaj. }
+				{\noindent\textbf{Izlozba} Ovaj entitet sadržava sve informacije o  izložbama. Sadrži atribute: Id izložbe, naziv, opis, vrijeme početka izložbe, vrijeme trajanja, provizija prilikom kupnje djela, stil te Id natječaja unutar kojeg je izloženo djelo. Ovaj entitet je u vezi \textit{One-to-Many} s entitetom PosjetiteljIzlozba preko atributa Id izlozba, u vezi \textit{One-to-Many} s entitetom KolekcijaIzlozba preko atributa Id izlozba i u vezi \textit{Many-to-One} s entitetom Natjecaj preko atributa Id natjecaj.}
 
 				
 				\begin{longtabu} to \textwidth {|X[10, l]|X[6, l]|X[14, l]|}
@@ -243,7 +252,7 @@
 					
 				\end{longtabu}
 
-				{\textbf{ Natjecaj   } Ovaj entitet sadržava sve informacije o natječajima . Sadrži atribute : Id natječaja, naziv, opis, vrijeme početka natječaja, vrijeme trajanja, 						provizija prilikom kupnje djela te stil natječaja. Ovaj entitet je u vezi One-to-Many s entitetom Izlozba preko atributa Id natjecaj i u vezi One-to-Many s entitetom 						KolekcijaNatjecaj preko atributa Id natjecaj.}
+				{\noindent\textbf{Natjecaj} Ovaj entitet sadržava sve informacije o natječajima. Sadrži atribute: Id natječaja, naziv, opis, vrijeme početka natječaja, vrijeme trajanja, provizija prilikom kupnje djela te stil natječaja. Ovaj entitet je u vezi \textit{One-to-One} s entitetom Izlozba preko atributa Id natjecaj i u vezi \textit{One-to-Many} s entitetom KolekcijaNatjecaj preko atributa Id natjecaj.}
 
 
 				\begin{longtabu} to \textwidth {|X[10, l]|X[6, l]|X[14, l]|}
