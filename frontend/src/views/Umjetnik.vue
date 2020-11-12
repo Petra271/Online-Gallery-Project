@@ -1,8 +1,8 @@
 <template>
 <v-app>
-  <div class="front_page">
+  <div :class="{ 'light': !$store.getters.mode, 'dark': $store.getters.mode }">
     <div>
-      <Header2/>
+      <Header/>
     </div>
     <h1 class="te">Moj profil</h1>
     <div class="mk">Moje kolekcije</div>
@@ -140,13 +140,13 @@
 </template>
 
 <script>
-import Header2 from '@/components/Header2'
+import Header from '@/components/Header'
 
 export default {
   name: 'App',
   
   components: {
-    Header2
+    Header
   },
 
   data: () => {
@@ -214,6 +214,12 @@ export default {
 }
 .te {
   font-size: 80px;
+}
+.block {
+    background: none repeat scroll 0 0;
+    display: block;
+    overflow: auto;
+    width: fit-content;
 }
 .overlay {
     position: absolute;

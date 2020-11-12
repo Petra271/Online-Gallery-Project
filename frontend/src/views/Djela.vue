@@ -1,8 +1,8 @@
 <template>
 <v-app>
-  <div class="front_page">
+  <div :class="{ 'light': !$store.getters.mode, 'dark': $store.getters.mode }">
     <div>
-      <Header2/>
+      <Header/>
     </div>
     <h1 class="te">Djela</h1>
   </div>
@@ -124,13 +124,13 @@
 </template>
 
 <script>
-import Header2 from '@/components/Header2'
+import Header from '@/components/Header'
 
 export default {
   name: 'App',
   
   components: {
-    Header2
+    Header
   },
   data: () => {
     return {
