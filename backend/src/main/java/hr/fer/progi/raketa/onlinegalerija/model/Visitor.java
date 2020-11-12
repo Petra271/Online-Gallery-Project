@@ -2,24 +2,22 @@ package hr.fer.progi.raketa.onlinegalerija.model;
 
 import java.util.UUID;
 
-public class User {
+public class Visitor {
     private final UUID id;
     private String name;
     private String surname;
     private String email;
     private String password;
     private String paypalMail;
-    private String paypalPass;
 
-    public User(String name, String surname, String email,
-                String password, String paypalMail, String paypalPass) {
+    public Visitor(String name, String surname, String email,
+                   String password, String paypalMail) {
         this.id = UUID.randomUUID();
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.password = password;
         this.paypalMail = paypalMail;
-        this.paypalPass = paypalPass;
     }
 
     public UUID getId() {
@@ -46,10 +44,6 @@ public class User {
         return paypalMail;
     }
 
-    public String getPaypalPass() {
-        return paypalPass;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
@@ -68,10 +62,6 @@ public class User {
 
     public void setPaypalMail(String paypalMail) {
         this.paypalMail = paypalMail;
-    }
-
-    public void setPaypalPass(String paypalPass) {
-        this.paypalPass = paypalPass;
     }
 
     public boolean changePassword(String pass){
