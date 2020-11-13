@@ -66,7 +66,7 @@
   <div class="gal_title text-center">Dobrodošli u online galeriju</div>
   
 
-    <div v-if="this.$store.getters.sign_in_form" class="form">
+    <div v-if="this.$store.getters.sign_in_form" class="form" ref="enter_form">
       <v-form
         ref="form"
         v-model="valid"
@@ -92,17 +92,17 @@
         ></v-text-field>
 
       <div class="form_buttons">
-        <v-btn rounded
+        <v-btn rounded dark
           :disabled="!valid"
-          color="success"
+          color="rgba(1, 61, 21)"
           class="mr-4"
           @click="validate()"
         >
           Prijava
         </v-btn>
 
-        <v-btn rounded
-          color="error"
+        <v-btn rounded dark
+          color="rgb(120, 1, 1)"
           class="mr-4"
           @click="cancel()"
         >
@@ -113,7 +113,7 @@
       </v-form>
     </div>
 
-    <div v-if="this.$store.getters.register_form" class="form">
+    <div v-if="this.$store.getters.register_form" class="form" ref="enter_form">
       <v-form
         ref="form"
         v-model="valid"
@@ -191,17 +191,17 @@
         ></v-select> -->
 
       <div class="form_buttons">
-        <v-btn rounded
+        <v-btn rounded dark
           :disabled="!valid"
-          color="success"
+          color="rgba(1, 61, 21)"
           class="mr-4"
           @click="validate()"
         >
           Registracija
         </v-btn>
 
-        <v-btn rounded
-          color="error"
+        <v-btn rounded dark
+          color="rgba(120, 1, 1)"
           class="mr-4"
           @click="cancel()"
         >

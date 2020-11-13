@@ -24,18 +24,18 @@
         <v-spacer></v-spacer>
 
         <div v-if="!this.$store.getters.logged_in" class="prijava">
-        <v-btn text rounded v-on:click="sign_in()">prijava</v-btn>
-        <v-btn text rounded v-on:click="register()">registracija</v-btn>
-        <v-btn icon v-on:click="mode()"><v-icon>mdi-coach-lamp</v-icon></v-btn>
+          <v-btn text rounded @click="sign_in()">prijava</v-btn>
+          <v-btn text rounded @click="register()">registracija</v-btn>
+          <v-btn icon @click="mode()"><v-icon>mdi-coach-lamp</v-icon></v-btn>
         </div>
 
         
-        <div v-else>
+        <div v-else class="prijava">
           <v-menu rounded="b-xl">
             <template v-slot:activator="{ on: menu, attrs }">
               <v-tooltip bottom>
                 <template v-slot:activator="{ on: tooltip }">
-                  <v-btn icon class="prijava"
+                  <v-btn icon
                     v-bind="attrs"
                     v-on="{ ...tooltip, ...menu }"
                   >
@@ -49,11 +49,11 @@
             <v-list>
               <v-list-item link> Transakcije <v-spacer></v-spacer> <v-icon>mdi-cash-multiple</v-icon> </v-list-item>
               <v-list-item link> Osobni Podaci <v-spacer></v-spacer> <v-icon>mdi-account-details</v-icon> </v-list-item>
-              <v-list-item link v-on:click="sign_out()" to="/"> Odjava <v-spacer></v-spacer> <v-icon>mdi-exit-to-app</v-icon> </v-list-item>
+              <v-list-item link @click="sign_out()" to="/"> Odjava <v-spacer></v-spacer> <v-icon>mdi-exit-to-app</v-icon> </v-list-item>
             </v-list>
           </v-menu>
-          <v-btn icon class="prijava" v-on:click="mode()"><v-icon>mdi-coach-lamp</v-icon></v-btn>
-          <v-btn icon class="prijava" to="/"><v-icon>mdi-home-roof</v-icon></v-btn>
+          <v-btn icon @click="mode()"><v-icon>mdi-coach-lamp</v-icon></v-btn>
+          <v-btn icon to="/"><v-icon>mdi-home-roof</v-icon></v-btn>
         </div>
       </v-app-bar>   
     </v-card>
@@ -117,6 +117,8 @@ export default {
       //this.register_form = false;
       this.$store.commit('sign_in', true)
       this.$store.commit('register', false)
+      let el = document.getelementbyid('enter_form');
+      el.scrollIntoView()
     },
 
     register() {
