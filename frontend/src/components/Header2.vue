@@ -6,7 +6,7 @@
         color="#fcb69f"
         dark
         shrink-on-scroll
-        src="@/assets/coland.jpg"
+        src="https://picsum.photos/1920/1080?random"
         
       >
         <template v-slot:img="{ props }">
@@ -18,19 +18,22 @@
 
         <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
 
-        <!-- <v-toolbar-title><v-btn text rounded class="home">onlinegalerija</v-btn></v-toolbar-title> -->
-        <v-toolbar-title>onlinegalerija</v-toolbar-title>
+        
+        <v-toolbar-title>
+          <v-btn text to="/">onlinegalerija
+          </v-btn>
+        </v-toolbar-title>
 
         <v-spacer></v-spacer>
 
-        <div v-if="!this.$store.getters.logged_in" class="prijava">
-          <v-btn text rounded @click="sign_in()">prijava</v-btn>
-          <v-btn text rounded @click="register()">registracija</v-btn>
-          <v-btn icon @click="mode()"><v-icon>mdi-coach-lamp</v-icon></v-btn>
+        <div v-if="!this.$store.getters.logged_in">
+        <v-btn text rounded class="prijava" v-on:click="sign_in()">prijava</v-btn>
+        <v-btn text rounded class="prijava" v-on:click="register()">registracija</v-btn>
+        <v-btn icon class="prijava" v-on:click="mode()"><v-icon>mdi-coach-lamp</v-icon></v-btn>
         </div>
 
         
-        <div v-else class="prijava">
+        <div v-else>
           <v-menu rounded="b-xl">
             <template v-slot:activator="{ on: menu, attrs }">
               <v-tooltip bottom>
@@ -52,8 +55,6 @@
               <v-list-item link v-on:click="sign_out()" to="/"> Odjava <v-spacer></v-spacer> <v-icon>mdi-exit-to-app</v-icon> </v-list-item>
             </v-list>
           </v-menu>
-          <v-btn icon @click="mode()"><v-icon>mdi-coach-lamp</v-icon></v-btn>
-          <v-btn icon to="/"><v-icon>mdi-home-roof</v-icon></v-btn>
         </div>
       </v-app-bar>   
     </v-card>
@@ -69,7 +70,7 @@
 
 <script>
 export default {
-  name: 'Header',
+  name: 'Header2',
 
   data: () => {
     return {
@@ -116,9 +117,6 @@ export default {
       //this.sign_in_form = true;
       //this.register_form = false;
       this.$store.commit('sign_in', true)
-      this.$store.commit('register', false)
-      let el = document.getelementbyid('enter_form');
-      el.scrollIntoView()
     },
 
     register() {
@@ -126,7 +124,6 @@ export default {
       // this.register_form = true;
       // this.sign_in_form = false;
       this.$store.commit('register', true)
-      this.$store.commit('sign_in', false)
     },
 
     sign_out() {
@@ -156,52 +153,39 @@ export default {
     },
 
     mode() {
-      // if (this.$store.getters.mode) {
-      //    this.$store.commit('theme', false)
-      // } else {
-      //    this.$store.commit('theme', true)
-      // }
-      this.$store.getters.mode ? this.$store.commit('theme', false) : this.$store.commit('theme', true)
+      if (this.$store.getters.mode == true) {
+         this.$store.commit('theme', false)
+      } else {
+         this.$store.commit('theme', true)
+      }
     }
   }
 }
 </script>
 
-<style>
+<style lang="scss">
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* text-align: center;
-  color: #2c3e50; */
+  // text-align: center;
+  color: #2c3e50;
 }
 
-.prijava {
-  margin-top: 0px;
-  /* margin-bottom: 10px; */
-}
 
 .btn {
-    text-transform: none !important;
-}
-
-.home {
-    text-transform: none !important;
-    font-size: 28px !important;
-    font-family: Avenir, sans-serif !important;
-    -webkit-font-smoothing: antialiased !important;
-    -moz-osx-font-smoothing: grayscale !important;
+    text-transform: none;
 }
 #nav {
-  
+  padding: 30px;
 
-  /* a {
+  a {
     font-weight: bold;
     color: #2c3e50;
 
     &.router-link-exact-active {
       color: #42b983;
     }
-  } */
+  }
 }
 </style>
