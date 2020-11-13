@@ -75,12 +75,12 @@
 					\endlastfoot
 					
 					\cellcolor{LightGreen}Id (PK) & INT&  Primarni ključ za korisnika	\\ \hline
-					KorisnickoIme& VARCHAR &  Korisničko ime korisnika, ujedno i sekundarni ključ jer je jedinstveno za svakog korisnika\\ \hline 
+					KorisnickoIme (K)& VARCHAR &  Korisničko ime korisnika\\ \hline 
 					Ime	& VARCHAR &   Ime korisnika\\ \hline 
 					Prezime & VARCHAR&   Prezime korisnika		\\ \hline 
-					Email & VARCHAR &  E-mail korisnika, ujedno i sekundarni ključ jer je e-mail jedinstven za svakog korisnika  \\ \hline 
+					Email (K) & VARCHAR &  E-mail korisnika\\ \hline 
 					Lozinka & VARCHAR&  Lozinka korisnika	\\ \hline 
-					PayPalEmail & VARCHAR&  Lozinka korisnika	\\ \hline 
+					PayPalEmail (K) & VARCHAR&  Lozinka korisnika	\\ \hline 
 					RazinaOvlasti & VARCHAR&  Oznaka razine ovlasti korisnika	\\ \hline 
 					PdfPortfolio & BYTEA&  Portfolio umjetnika u obliku pdfa, samo za umjetnike	\\ \hline 
 					
