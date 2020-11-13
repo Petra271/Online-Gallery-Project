@@ -24,9 +24,20 @@
 		
 		Za izradu web stranice odlučili smo se za korištenje PostgreSQL baze podataka s kojom ćemo komunicirati putem Klijent-Server modela.
 		
-		Za frontend tj. klijentski  dio aplikacije koristit ćemo vue.js. Vue.js je open-source JavaScript framework za izradu web aplikacija. On je dizajniran s ciljem da komplicirane aplikacije podijelimo na manje dijelove koje možemo ponovno koristiti. 
+		Za frontend tj. klijentski  dio aplikacije koristit ćemo vue.js. Vue.js je open-source JavaScript framework za izradu web aplikacija. On je dizajniran s ciljem da komplicirane aplikacije podijelimo na manje dijelove koje možemo ponovno koristiti. Razvojno okruženje za vue.js je Micosoft visual studio.
 		
-		Za backend tj. serverski dio aplikacije koristit ćemo programski jezik Javu i Spring Boot framework.
+		Za backend tj. serverski dio aplikacije koristit ćemo programski jezik Javu i Spring Boot framework. Radno okruženje za backend je IntelliJ IDEA.
+		\newline
+		Arhitektura Spring Boot framework-a koristi više slojeva:
+		
+		\begin{itemize}
+			\item Sloj korisničke strane - implementiran u vue.js
+			\item Controller - povezuje korisnika i poslužitelja
+			\item Service - obavlja poslovnu logiku i izračune
+			\item Domain - implementira model podataka domene
+			\item DAO (data access object) - obavlja sve operacije nad bazom podataka 
+			\item Sloj baze podataka - obavlja pohranu podataka u neku bazu
+		\end{itemize}
 
 		
 
