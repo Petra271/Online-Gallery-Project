@@ -8,7 +8,8 @@ export default new Vuex.Store({
     sign_in_form: false,
     register_form: false,
     logged_in: false,
-    mode: false
+    mode: false,
+    admin: false
     //register_in_form: false
   },
   mutations: {
@@ -27,6 +28,10 @@ export default new Vuex.Store({
     theme(state, mode) {
       state.mode = mode
     },
+
+    log_admin(state, admin) {
+      state.admin = admin
+    },
     // change(state, register_in_form) {
     //   state.register_in_form = register_in_form
     // }
@@ -39,6 +44,7 @@ export default new Vuex.Store({
     sign_in_form: state =>  state.sign_in_form, 
     register_form: state =>  state.register_form, 
     logged_in: state =>  state.logged_in,
-    mode: state =>  state.mode 
+    mode: state =>  state.mode,
+    admin: state =>  state.admin
   }
 })
