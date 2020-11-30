@@ -65,7 +65,7 @@
   
   <div class="gal_title text-center">Dobrodošli u online galeriju</div>
   
-
+  <!-- ---------------- PRIJAVA ------------------------- -->
     <div v-if="this.$store.getters.sign_in_form" class="form" ref="enter_form">
       <v-form
         ref="form"
@@ -89,21 +89,22 @@
           label="Lozinka"
           counter
           @click:append="show_sign = !show_sign"
+          required
         ></v-text-field>
 
       <div class="form_buttons">
-        <v-btn rounded dark
+        <v-btn rounded 
           :disabled="!valid"
           color="rgba(1, 61, 21)"
-          class="mr-4"
+          class="mr-4 white--text"
           @click="validate()"
         >
           Prijava
         </v-btn>
 
-        <v-btn rounded dark
+        <v-btn rounded
           color="rgb(120, 1, 1)"
-          class="mr-4"
+          class="mr-4 white--text"
           @click="cancel()"
         >
           Natrag
@@ -113,6 +114,7 @@
       </v-form>
     </div>
 
+    <!-- ------------------- REGISTRACIJA ------------------ -->
     <div v-if="this.$store.getters.register_form" class="form" ref="enter_form">
       <v-form
         ref="form"
@@ -191,18 +193,18 @@
         ></v-select> -->
 
       <div class="form_buttons">
-        <v-btn rounded dark
+        <v-btn rounded
           :disabled="!valid"
           color="rgba(1, 61, 21)"
-          class="mr-4"
+          class="mr-4 white--text"
           @click="validate()"
         >
           Registracija
         </v-btn>
 
-        <v-btn rounded dark
+        <v-btn rounded
           color="rgba(120, 1, 1)"
-          class="mr-4"
+          class="mr-4 white--text"
           @click="cancel()"
         >
           Natrag
@@ -334,7 +336,6 @@
         </v-hover>
       </v-col>
     </v-row>
-  
 
   </div>
 

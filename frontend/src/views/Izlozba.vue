@@ -126,7 +126,7 @@
           ><v-icon>mdi-forum</v-icon></v-btn>
 
           <v-toolbar-title class="com_title">{{ comments.length == 0 ? 'Trenutačno nema komentara' : 
-            comments.length == 1 ? `${comments.length} komentar` : `${comments.length} komentara`}}</v-toolbar-title>
+            comments.length % 10 == 1 && comments.length % 100 != 11 ? `${comments.length} komentar` : `${comments.length} komentara`}}</v-toolbar-title>
 
           <v-spacer></v-spacer>
 
@@ -141,9 +141,33 @@
           max-height="600"
           color="rgba(0, 0, 0, 0)"
         >
+        <v-dialog
+          v-model="dialog"
+          :retain-focus="false"
+          persistent
+          max-width="311"
+        >
+          <template v-slot:activator="{ on, attrs }">
+           
+          </template>
+          <v-card>
+            <v-card-title class="headline">
+              Jeste li sigurni da želite izbrisati komentar?
+            </v-card-title>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="green darken-1" text @click="delete_comment(comIndex)">
+                Da
+              </v-btn>
+              <v-btn color="green darken-1" text @click="dialog = false">
+                Ne
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       <v-container>
         <div class="com_edges"></div>    
-        <div v-for="com in comments" :key="com">
+        <div v-for="(com, index) in comments" :key="index">
           <div :class="{ 'one_com': com[0] != '+', 'one_com_admin': com[0] == '+' }">
             <v-row class="username_and_avatar">
               <v-avatar size="24px">
@@ -153,32 +177,10 @@
                 >
               </v-avatar>
               <p class="username">Vincent V.</p>
-               <v-dialog
-                  v-model="dialog"
-                  persistent
-                  max-width="311"
-                >
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn v-if="$store.getters.admin" icon small 
-                      v-bind="attrs" v-on="on"
-                      style="margin-left: 65%;"
-                    ><v-icon>mdi-trash-can-outline</v-icon></v-btn>
-                  </template>
-                  <v-card>
-                    <v-card-title class="headline">
-                      Jeste li sigurni da želite izbrisati komentar?
-                    </v-card-title>
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn color="green darken-1" text @click="delete_comment(com)">
-                        Da
-                      </v-btn>
-                      <v-btn color="green darken-1" text @click="dialog = false">
-                        Ne
-                      </v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </v-dialog>
+                <v-btn v-if="$store.getters.admin" icon small 
+                  @click="dialog = true, comIndex = index"
+                  style="margin-left: 65%;"
+                ><v-icon>mdi-trash-can-outline</v-icon></v-btn>
               </v-row>
             <p class="com_content">{{com[0] == '+' ? com.substring(1, com.length) : com}}</p>
           </div>
@@ -197,6 +199,7 @@
           prepend-icon="mdi-comment"
           clearable
           append-outer-icon="mdi-send"
+          @keyup.13="sendComment()"
           @click:append-outer="sendComment()"
         ></v-text-field>
       </v-card>
@@ -236,6 +239,7 @@ export default {
       comments: [],
       collapseOnScroll: true,
       comment: '',
+      comIndex: -1,
       dialog: false
     }
   },
@@ -250,8 +254,10 @@ export default {
     sendComment() {
       if(this.$store.getters.admin) {
         this.comments.push('+' + this.comment);
+        this.comment = '';
       } else {
         this.comments.push(this.comment);
+        this.comment = '';
       }
     },
 
@@ -263,11 +269,14 @@ export default {
       }
     },
 
-    delete_comment(com) {
-      const index = this.comments.indexOf(com);
-      if (index > -1) {
-        this.comments.splice(index, 1);
-      }
+    delete_comment(index) {
+      // const index = this.comments.indexOf(com);
+      // if (index > -1) {
+      //   this.comments.splice(index, 1);
+      // }
+      // this.dialog = false;
+      // if(this.comments[index] === com) { 
+      this.comments.splice(index, 1)
       this.dialog = false;
     }
   }

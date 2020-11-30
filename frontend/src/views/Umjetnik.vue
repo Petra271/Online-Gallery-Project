@@ -129,7 +129,7 @@
                 </v-tooltip>
               </v-card-title>
             </v-img>
-            <v-btn text to="/djela">
+            <v-btn text to="/moj_profil/djela">
                 <p class="naziv">Kolekcija {{n}}</p>
             </v-btn>
           </v-card>

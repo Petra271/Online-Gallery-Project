@@ -30,7 +30,7 @@ const routes = [
     component: () => import('../views/Umjetnik.vue')
   },
   {
-    path: '/djela',
+    path: '/moj_profil/djela',
     name: 'Djela',
     component: () => import('../views/Djela.vue')
   },
