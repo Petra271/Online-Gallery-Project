@@ -1,8 +1,14 @@
 package hr.fer.progi.raketa.onlinegalerija.model;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.UUID;
 
+@Entity
+@Table(name="visitor")
 public class Visitor {
+    @Id
     private final UUID id;
     private String name;
     private String surname;
@@ -10,6 +16,9 @@ public class Visitor {
     private String password;
     private String paypalMail;
 
+    public Visitor(){
+        this.id = UUID.randomUUID();
+    }
     public Visitor(String name, String surname, String email,
                    String password, String paypalMail) {
         this.id = UUID.randomUUID();
