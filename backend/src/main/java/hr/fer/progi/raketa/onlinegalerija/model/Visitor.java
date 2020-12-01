@@ -1,19 +1,23 @@
 package hr.fer.progi.raketa.onlinegalerija.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
 @Table(name="visitor")
 public class Visitor {
     @Id
+    @Column(name ="id", nullable = false)
     private final UUID id;
+    @Column(name="name", nullable = false)
     private String name;
+    @Column(name="surname", nullable = false)
     private String surname;
+    @Column(name="email", nullable = false, unique = true)
     private String email;
+    @Column(name="password", nullable = false)
     private String password;
+    @Column(name="pay_pal_mail", nullable = false)
     private String paypalMail;
 
     public Visitor(){

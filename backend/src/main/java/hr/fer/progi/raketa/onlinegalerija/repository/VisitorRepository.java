@@ -1,4 +1,4 @@
-package hr.fer.progi.raketa.onlinegalerija.dao;
+package hr.fer.progi.raketa.onlinegalerija.repository;
 
 import hr.fer.progi.raketa.onlinegalerija.model.Visitor;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,7 +13,6 @@ import java.util.UUID;
 public interface VisitorRepository  extends JpaRepository<Visitor, UUID> {
 
     Visitor findByEmail(String email);
-
     boolean existsByEmail(String email);
 
 }

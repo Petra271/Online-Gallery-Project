@@ -1,48 +1,36 @@
 package hr.fer.progi.raketa.onlinegalerija.api;
 
-import hr.fer.progi.raketa.onlinegalerija.dao.LoginDTO;
-import hr.fer.progi.raketa.onlinegalerija.dao.VisitorRepository;
+import hr.fer.progi.raketa.onlinegalerija.repository.VisitorRepository;
 import hr.fer.progi.raketa.onlinegalerija.model.Visitor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.WebRequest;
 
 @RestController
 @RequestMapping("/visitor")
 public class VisitorController {
-    @Autowired
+
     private  VisitorRepository visitorRepository;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-
+    public VisitorController(VisitorRepository visitorRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.visitorRepository = visitorRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
 
     @PostMapping("/registration")
-    public ResponseEntity<?> registerNewVisitor(@RequestBody VisitorDTO visitorDTO){
-        if(visitorRepository.existsByEmail(visitorDTO.getEmail())){
-            return ResponseEntity.badRequest()
-                    .body("User with this email already exists");
+    public ResponseEntity<?> registerNewVisitor(@RequestBody Visitor visitor)
+    {
+        visitor.setPassword(bCryptPasswordEncoder.encode(visitor.getPassword()));
+        if (!visitorRepository.existsByEmail(visitor.getEmail()))
+            visitorRepository.save(visitor);
+        else{
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
-
-        Visitor visitor = new Visitor(visitorDTO.getName(), visitorDTO.getSurname(), visitorDTO.getEmail(),
-                                    visitorDTO.pswdEncoder().encode(visitorDTO.getPassword()), visitorDTO.getPaypalMail());
-
-        visitorRepository.save(visitor);
 
         return ResponseEntity.ok()
                 .body("Successful registration");
     }
 
-    @PostMapping("/login")
-    ResponseEntity<?> loginVisitor(@RequestBody LoginDTO loginDTO){
-        if(loginDTO.pswdEncoder().matches(loginDTO.getPassword(), visitorRepository.findByEmail(loginDTO.getEmail()).getPassword())){
-            return ResponseEntity.ok()
-                    .body("Successful login");
-        }
-        return ResponseEntity.badRequest()
-                .body("Invalid email/password");
-
-    }
 }
