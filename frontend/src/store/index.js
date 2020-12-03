@@ -1,5 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import createPersistedState from "vuex-persistedstate";
+import auth from './modules/auth';
+import axios from 'axios';
 
 Vue.use(Vuex)
 
@@ -9,7 +12,10 @@ export default new Vuex.Store({
     register_form: false,
     logged_in: false,
     mode: false,
-    admin: false
+    admin: false,
+    status: '',
+    token: localStorage.getItem('token') || '',
+    user : {}
     //register_in_form: false
   },
   mutations: {
@@ -32,11 +38,79 @@ export default new Vuex.Store({
     log_admin(state, admin) {
       state.admin = admin
     },
+
+    //AUTHENTICATION
+    auth_request(state){
+      state.status = 'loading'
+    },
+
+    auth_success(state, token, user){
+      state.status = 'success'
+      state.token = token
+      state.user = user
+    },
+
+    auth_error(state){
+      state.status = 'error'
+    },
+
+    logout(state){
+      state.status = ''
+      state.token = ''
+    },
     // change(state, register_in_form) {
     //   state.register_in_form = register_in_form
     // }
   },
   actions: {
+    login({commit}, user){
+      return new Promise((resolve, reject) => {
+        commit('auth_request')
+        axios({url: 'http://localhost:8080/login', data: user, method: 'POST' })
+        .then(resp => {
+          const token = resp.data.token
+          const user = resp.data.user
+          localStorage.setItem('token', token)
+          axios.defaults.headers.common['Authorization'] = token
+          commit('auth_success', token, user)
+          resolve(resp)
+        })
+        .catch(err => {
+          commit('auth_error')
+          localStorage.removeItem('token')
+          reject(err)
+        })
+      })
+    },
+
+    register({commit}, user){
+      return new Promise((resolve, reject) => {
+        commit('auth_request')
+        axios({url: 'http://localhost:8080/visitor/registration', data: user, method: 'POST' })
+        .then(resp => {
+          const token = resp.data.token
+          const user = resp.data.user
+          localStorage.setItem('token', token)
+          axios.defaults.headers.common['Authorization'] = token
+          commit('auth_success', token, user)
+          resolve(resp)
+        })
+        .catch(err => {
+          commit('auth_error', err)
+          localStorage.removeItem('token')
+          reject(err)
+        })
+      })
+    },
+  },
+
+  logout({commit}){
+    return new Promise((resolve, reject) => {
+      commit('logout')
+      localStorage.removeItem('token')
+      delete axios.defaults.headers.common['Authorization']
+      resolve()
+    })
   },
   modules: {
   },
@@ -45,6 +119,8 @@ export default new Vuex.Store({
     register_form: state =>  state.register_form, 
     logged_in: state =>  state.logged_in,
     mode: state =>  state.mode,
-    admin: state =>  state.admin
+    admin: state =>  state.admin,
+    isLoggedIn: state => !!state.token,
+    authStatus: state => state.status
   }
 })
