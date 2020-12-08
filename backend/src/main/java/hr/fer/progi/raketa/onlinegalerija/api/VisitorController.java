@@ -1,5 +1,6 @@
 package hr.fer.progi.raketa.onlinegalerija.api;
 
+import hr.fer.progi.raketa.onlinegalerija.model.Artist;
 import hr.fer.progi.raketa.onlinegalerija.repository.VisitorRepository;
 import hr.fer.progi.raketa.onlinegalerija.model.Visitor;
 import org.springframework.http.HttpStatus;
@@ -20,11 +21,23 @@ public class VisitorController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<?> registerNewVisitor(@RequestBody Visitor visitor)
+    public ResponseEntity<?> registerNewVisitor(@RequestBody VisitorDTO visitorDTO)
     {
-        visitor.setPassword(bCryptPasswordEncoder.encode(visitor.getPassword()));
-        if (!visitorRepository.existsByEmail(visitor.getEmail()))
-            visitorRepository.save(visitor);
+        visitorDTO.setPassword(bCryptPasswordEncoder.encode(visitorDTO.getPassword()));
+        if (!visitorRepository.existsByEmail(visitorDTO.getEmail())){
+            if(visitorDTO.isFlag()){
+                Artist artist = new Artist(visitorDTO.getName(), visitorDTO.getSurname(), visitorDTO.getEmail(),
+                        visitorDTO.getPassword(), visitorDTO.getPaypalMail(), visitorDTO.getPortfolio());
+                artist.setRole("artist");
+                visitorRepository.save(artist);
+            } else {
+                Visitor visitor = new Visitor(visitorDTO.getName(), visitorDTO.getSurname(), visitorDTO.getEmail(),
+                        visitorDTO.getPassword(), visitorDTO.getPaypalMail());
+                visitor.setRole("visitor");
+                visitorRepository.save(visitor);
+            }
+        }
+
         else{
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
