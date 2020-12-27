@@ -21,8 +21,6 @@ public class VisitorDTO {
     @NotNull
     private String paypalMail;
 
-    private byte[] portfolio;
-
     private boolean flag;
 
     public boolean isFlag() {
@@ -31,14 +29,6 @@ public class VisitorDTO {
 
     public void setFlag(boolean flag) {
         this.flag = flag;
-    }
-
-    public byte[] getPortfolio() {
-        return portfolio;
-    }
-
-    public void setPortfolio(byte[] portfolio) {
-        this.portfolio = portfolio;
     }
 
     public String getName() {

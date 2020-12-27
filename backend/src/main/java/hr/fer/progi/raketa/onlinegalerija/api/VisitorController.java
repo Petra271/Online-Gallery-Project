@@ -7,6 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/visitor")
@@ -20,14 +23,13 @@ public class VisitorController {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    @PostMapping("/registration")
-    public ResponseEntity<?> registerNewVisitor(@RequestBody VisitorDTO visitorDTO)
-    {
+    @PostMapping(value="/registration", consumes={"multipart/form-data"})
+    public ResponseEntity<?> registerNewVisitor(@RequestPart("json") VisitorDTO visitorDTO, @RequestPart("file") MultipartFile file) throws IOException {
         visitorDTO.setPassword(bCryptPasswordEncoder.encode(visitorDTO.getPassword()));
         if (!visitorRepository.existsByEmail(visitorDTO.getEmail())){
             if(visitorDTO.isFlag()){
                 Artist artist = new Artist(visitorDTO.getName(), visitorDTO.getSurname(), visitorDTO.getEmail(),
-                        visitorDTO.getPassword(), visitorDTO.getPaypalMail(), visitorDTO.getPortfolio());
+                        visitorDTO.getPassword(), visitorDTO.getPaypalMail(), file.getBytes());
                 artist.setRole("artist");
                 visitorRepository.save(artist);
             } else {
