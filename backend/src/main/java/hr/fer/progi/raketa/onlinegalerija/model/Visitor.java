@@ -19,6 +19,8 @@ public class Visitor {
     private String password;
     @Column(name="pay_pal_mail", nullable = false)
     private String paypalMail;
+    @Column(name ="role", nullable = false)
+    private String role;
 
     public Visitor(){
         this.id = UUID.randomUUID();
@@ -31,6 +33,14 @@ public class Visitor {
         this.email = email;
         this.password = password;
         this.paypalMail = paypalMail;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public UUID getId() {
