@@ -1,2 +1,7 @@
 src="https://picsum.photos/1920/1080?random"
 src="https://cdn.vuetifyjs.com/images/john.jpg"
+v-app color="#fcb69f"
+gradient="to top right, rgba(19,84,122,.5), rgba(128,208,199,.8)"
+color="rgb(4, 196, 132)" komentari
+enter comment icon prepend-icon="mdi-comment"
+enter comment 'border-style': 'solid', 'border-width': '1px', 'border-color': 'black'

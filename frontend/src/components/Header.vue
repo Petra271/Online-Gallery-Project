@@ -10,27 +10,39 @@
         
       >
         <template v-slot:img="{ props }">
-          <v-img
+          <v-img v-if="!$store.getters.mode"
             v-bind="props"
-            gradient="to top right, rgba(19,84,122,.5), rgba(128,208,199,.8)"
+            gradient="to top right,  rgba(0, 0, 0, 0.8),  rgba(0, 0, 0, 0.6)"
+          ></v-img>
+
+          <v-img v-else
+            v-bind="props"
+            gradient="to top right,  rgba(255, 255, 255, 0.5),  rgba(255, 255, 255, 0.3)"
           ></v-img>
         </template>
 
         <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
 
         <!-- <v-toolbar-title><v-btn text rounded class="home">onlinegalerija</v-btn></v-toolbar-title> -->
-        <v-toolbar-title>onlinegalerija</v-toolbar-title>
+        <v-toolbar-title 
+          :class="{'tool_title': !$store.getters.mode, 'tool_title black--text': $store.getters.mode}"
+          >
+          onlinegalerija
+        </v-toolbar-title>
 
         <v-spacer></v-spacer>
 
-        <div v-if="!this.$store.getters.logged_in" class="prijava">
-          <v-btn text rounded @click="sign_in()">prijava</v-btn>
-          <v-btn text rounded @click="register()">registracija</v-btn>
-          <v-btn icon @click="mode()"><v-icon>mdi-coach-lamp</v-icon></v-btn>
+        <div v-if="!this.$store.getters.logged_in">
+          <v-btn text rounded @click="sign_in()" :class="{'black--text': $store.getters.mode}">prijava</v-btn>
+          <v-btn text rounded @click="register()" :class="{'black--text': $store.getters.mode}">registracija</v-btn>
+          <v-btn icon @click="mode()">
+            <v-icon v-if="$store.getters.mode" color="black">mdi-coach-lamp</v-icon>
+            <v-icon v-else>mdi-coach-lamp</v-icon>
+          </v-btn>
         </div>
 
         
-        <div v-else class="prijava">
+        <div v-else>
           <v-menu rounded="b-xl">
             <template v-slot:activator="{ on: menu, attrs }">
               <v-tooltip bottom>
@@ -39,7 +51,8 @@
                     v-bind="attrs"
                     v-on="{ ...tooltip, ...menu }"
                   >
-                    <v-icon>mdi-account</v-icon>
+                    <v-icon v-if="$store.getters.mode" color="black">mdi-account</v-icon>
+                    <v-icon v-else>mdi-account</v-icon>
                   </v-btn>
                 </template>
                 <span>Moj Profil</span>
@@ -52,8 +65,14 @@
               <v-list-item link v-on:click="sign_out()"> Odjava <v-spacer></v-spacer> <v-icon>mdi-exit-to-app</v-icon> </v-list-item>
             </v-list>
           </v-menu>
-          <v-btn icon @click="mode()"><v-icon>mdi-coach-lamp</v-icon></v-btn>
-          <v-btn icon to="/"><v-icon>mdi-home-roof</v-icon></v-btn>
+          <v-btn icon @click="home()">
+            <v-icon v-if="$store.getters.mode" color="black">mdi-home-roof</v-icon>
+            <v-icon v-else>mdi-home-roof</v-icon>
+          </v-btn>
+          <v-btn icon @click="mode()">
+            <v-icon v-if="$store.getters.mode" color="black">mdi-coach-lamp</v-icon>
+            <v-icon v-else>mdi-coach-lamp</v-icon>
+          </v-btn>
         </div>
       </v-app-bar>   
     </v-card>
@@ -108,6 +127,10 @@ export default {
           emailMatch: () => (`The email and password you entered don't match`),
         },
     }
+  },
+
+  computed: {
+
   },
 
   methods: {
@@ -178,6 +201,10 @@ export default {
       // this.register_form = false;
     },
 
+    home() {
+      this.$router.push('/')
+    },
+
     mode() {
       // if (this.$store.getters.mode) {
       //    this.$store.commit('theme', false)
@@ -185,22 +212,39 @@ export default {
       //    this.$store.commit('theme', true)
       // }
       this.$store.getters.mode ? this.$store.commit('theme', false) : this.$store.commit('theme', true)
+    },
+
+    iconColor(mode) {
+    	let color = (mode === true) ? 'white' : 'black';
+    	return 'color: '+ color;
     }
   }
 }
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@100;400&display=swap');
+
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Work Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /* text-align: center;
   color: #2c3e50; */
 }
 
+.tool_title {
+  font-weight: 200;
+  color: "{$store.getters.mode ? black : white}";
+}
+
+/* .tool_image {
+  background-image: linear-gradient(top right, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.6));
+} */
+
 .prijava {
-  margin-top: 0px;
+  
+  font-weight: 100;
   /* margin-bottom: 10px; */
 }
 
@@ -211,7 +255,7 @@ export default {
 .home {
     text-transform: none !important;
     font-size: 28px !important;
-    font-family: Avenir, sans-serif !important;
+    font-family: 'Work Sans', sans-serif !important;
     -webkit-font-smoothing: antialiased !important;
     -moz-osx-font-smoothing: grayscale !important;
 }

@@ -159,8 +159,21 @@ export default {
 </script>
 
 <style lang="scss">
+// @font-face {
+//   font-family: "Work Sans";
+//   src: local("Work Sans"),
+//    url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@100&display=swap') format("truetype");
+// }
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@100&display=swap');
+
+// .description{
+//      font-family: 'Work Sans', sans-serif;
+//      font-size: 20px;
+//   }
+
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Work Sans', sans-serif;
+  //font-family: "Work Sans", Helvetica, Arial;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   // text-align: center;
