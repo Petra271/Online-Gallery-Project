@@ -5,8 +5,10 @@ import javax.persistence.Table;
 import java.util.UUID;
 
 @Entity
-@Table(name="admin")
+@Table(name="visitor")
 public class Admin extends Visitor {
+
+    public Admin(){};
 
     public Admin(UUID id, String name, String surname, String email,
                  String password, String paypalMail) {

@@ -121,6 +121,7 @@ export default new Vuex.Store({
     mode: state =>  state.mode,
     admin: state =>  state.admin,
     isLoggedIn: state => !!state.token,
-    authStatus: state => state.status
+    authStatus: state => state.status,
+    user: state => state.user
   }
 })

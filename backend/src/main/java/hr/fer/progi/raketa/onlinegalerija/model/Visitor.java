@@ -7,17 +7,17 @@ import java.util.UUID;
 @Table(name="visitor")
 public class Visitor {
     @Id
-    @Column(name ="id", nullable = false)
+    @Column(name ="id")
     private final UUID id;
-    @Column(name="name", nullable = false)
+    @Column(name="name")
     private String name;
-    @Column(name="surname", nullable = false)
+    @Column(name="surname")
     private String surname;
     @Column(name="email", nullable = false, unique = true)
     private String email;
     @Column(name="password", nullable = false)
     private String password;
-    @Column(name="pay_pal_mail", nullable = false)
+    @Column(name="pay_pal_mail")
     private String paypalMail;
     @Column(name ="role", nullable = false)
     private String role;

@@ -13,11 +13,12 @@
     <div v-if="this.$store.getters.sign_in_form" class="form" ref="enter_form">
       <v-form
         ref="form"
+        class="form_write"
         v-model="valid"
         lazy-validation
       >
 
-        <v-text-field
+        <v-text-field class="form_write"
           v-model="email_sign"
           :rules="emailRules"
           label="E-mail"
@@ -39,7 +40,7 @@
       <div class="form_buttons">
         <v-btn rounded 
           :disabled="!valid"
-          color="rgba(1, 61, 21)"
+          color="rgba(1, 24, 12)"
           class="mr-4 white--text"
           @click="validate_s()"
         >
@@ -47,7 +48,7 @@
         </v-btn>
 
         <v-btn rounded
-          color="rgb(120, 1, 1)"
+          color="rgb(33, 1, 1)"
           class="mr-4 white--text"
           @click="cancel()"
         >
@@ -114,9 +115,8 @@
 
         <v-alert
           :value="artist_check"
-          color="blue"
+          color="black"
           dark
-          border="top"
           icon="mdi-brush"
           transition="scale-transition"
         >
@@ -124,6 +124,7 @@
         </v-alert>
         
         <v-checkbox
+          color="black"
           v-model="artist_check"
           label="Ja sam umjetnik"
         ></v-checkbox>
@@ -131,7 +132,7 @@
       <div class="form_buttons">
         <v-btn rounded
           :disabled="!valid"
-          color="rgba(1, 61, 21)"
+          color="rgba(1, 24, 12)"
           class="mr-4 white--text"
           @click="validate_r()"
         >
@@ -139,7 +140,7 @@
         </v-btn>
 
         <v-btn rounded
-          color="rgba(120, 1, 1)"
+          color="rgba(33, 1, 1)"
           class="mr-4 white--text"
           @click="cancel()"
         >
@@ -173,27 +174,28 @@
             <v-expand-transition>
               <div
                 v-if="hover"
-                class="d-flex transition-fast-in-fast-out orange darken-2 v-card--reveal display-3 white--text"
-                style="height: 100%;"
+                class="d-flex transition-fast-in-fast-out darken-2 v-card--reveal display-3"
+                :class="!$store.getters.mode ? 'hover_light white--text' : 'hover_dark'"
+                style="height: 50%;"
               >
-              <div class="izl">
-                <p>Izložba {{n}}</p> <br>
-                Traje do: 1{{n}}.11.2020
-              </div>
+                <div class="izl">
+                  <!-- <p>Izložba {{n}}</p> <br>
+                  Traje do: 1{{n}}.11.2020 -->
+                  <div class="izl_author"><i><b> Jerolim Miše </b></i></div>
+                  <div class="izl_name"><i> -Od buntovnika do barda </i></div>
+                </div>
               </div>
             </v-expand-transition>
               <v-card-title class="align-end fill-height" primary-title>
                 <v-tooltip bottom>
                   <template v-slot:activator="{ on: tooltip }">
                     <v-btn icon
-                      color="black" 
-                      class="img_btn" 
-                      :class="{ 'show-btns': hover }"
                       v-bind="attrs"
                       v-on="{ ...tooltip, ...menu }"
                       :disabled="!$store.getters.logged_in"
-                      to="/izlozba">
-                      <v-icon>mdi-door-open</v-icon>
+                      to="/izlozba"
+                      >
+                      <v-icon :color="!$store.getters.mode ? 'white' : 'black'">mdi-door-open</v-icon>
                     </v-btn>
                   </template>
                   <span>Posjeti izložbu</span>
@@ -227,12 +229,13 @@
             <v-expand-transition>
               <div
                 v-if="hover"
-                class="d-flex transition-fast-in-fast-out orange darken-2 v-card--reveal display-3 white--text"
-                style="height: 100%;"
+                class="d-flex transition-fast-in-fast-out darken-2 v-card--reveal display-3"
+                :class="{'hover_light white--text': !$store.getters.mode, 'hover_dark':$store.getters.mode}"
+                style="height: 50%;"
               >
                 <div class="izl">
-                  <p>Izložba {{n}}</p> <br>
-                  Traje do: 1{{n}}.11.2020
+                  <div class="izl_author"><i><b>Jerolim Miše</b></i></div>
+                  <div class="izl_name"><i>-Od buntovnika do barda</i></div>
                 </div>
               </div>
             </v-expand-transition>
@@ -240,22 +243,19 @@
                 <v-tooltip bottom>
                   <template v-slot:activator="{ on: tooltip }">
                     <v-btn icon
-                      color="black" 
-                      class="img_btn" 
-                      :class="{ 'show-btns': hover }"
                       v-bind="attrs"
                       v-on="{ ...tooltip, ...menu }"
                       :disabled="!$store.getters.logged_in"
-                      to="/izlozba"
-                      >
-                      <v-icon>mdi-door-open</v-icon>
+                      to="/izlozba">
+                      <v-icon v-if="$store.getters.mode" color="black">mdi-door-open</v-icon>
+                      <v-icon v-else color="white">mdi-door-open</v-icon>
                     </v-btn>
                   </template>
                   <span>Posjeti izložbu</span>
                 </v-tooltip>
               </v-card-title>
 
-              <template v-slot:placeholder>
+              <!-- <template v-slot:placeholder>
                 <v-row
                   class="fill-height ma-0"
                   align="center"
@@ -266,7 +266,7 @@
                     color="grey lighten-5"
                   ></v-progress-circular>
                 </v-row>
-              </template>
+              </template> -->
             </v-img>
           </v-card>
         </v-hover>
@@ -394,9 +394,10 @@ export default {
         this.$refs.form.validate()
         let email = this.email_sign
         let password = this.password_sign
-        this.$store.dispatch('login', { email, password })
-       .then(() => this.sign_success())
-       .catch(err => console.log(err))
+         this.$store.dispatch('login', { email, password })
+        .then(() => this.sign_success())
+        .catch(err => console.log(err))
+       // this.sign_success()
 
     },
 
@@ -460,6 +461,8 @@ export default {
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@100;400&display=swap');
+
 .front_page {
   background-color: rgb(214, 136, 46);
   /* background-color:#f08989; */
@@ -467,13 +470,18 @@ export default {
 
 .light {
   /* background-color: rgb(214, 136, 46); */
-  background-color: rgb(93, 202, 166);
-  color: #2c3e50;
+  /* background-color: rgb(93, 202, 166); */
+  background-color: white;
+  /* color: #2c3e50; */
+  color: black;
 }
 
 .dark {
-  background-color: rgb(22, 5, 12);
-  color: #016b4b;
+  /* background-color: rgb(22, 5, 12);
+  color: #016b4b; */
+  /* background-color:rgb(22, 20, 20); */
+  background-color: black;
+  color: white;
 }
 
 .prijava {
@@ -486,8 +494,20 @@ export default {
   margin-top: 2%;
   max-width: 50%;
   padding: 2%;
+  /* border-style: solid;
+  border-width: 1px;
+  border-color: black; */
+  border: 1px solid black;
   border-radius: 50px;
   background-color: white;
+}
+
+.form::placeholder {
+  color: black;
+}
+
+.form_write::placeholder {
+  color: black;
 }
 
 .form_buttons {
@@ -503,13 +523,14 @@ export default {
   /* font-family:  Georgia; */
   font-family: Georgia;
   margin-left: 2.5%;
-  margin-top: 12%;
+  margin-top: 10%;
+  font-family: 'Work Sans', sans-serif;
 }
 
 .exh_text {
   font-size: 50px;
-  font-family:  Georgia;
-  margin-left: 2.5%;
+  font-family:  'Work Sans', sans-serif;
+  margin-left: 2%;
   margin-top: 5%;
 }
 
@@ -517,9 +538,17 @@ export default {
   align-items: center;
   bottom: 0;
   justify-content: center;
-  opacity: 0.5;
+  opacity: 0.8;
   position: absolute;
   width: 100%;
+}
+
+.hover_light {
+  background-color: black;
+}
+
+.hover_dark {
+  background-color: rgba(255, 255, 255, 1);
 }
 
 .images {
@@ -539,18 +568,32 @@ export default {
 }
 
 .img {
-  margin: 7%;
+  margin: 5%;
   border-radius: 50px;
 }
 
 .izl {
-  align-content: center;
+  /* align-content: left;
+  margin-top: -50px; */
+  font-size: 60%;
+  font-family: 'Work Sans', sans-serif;
   /* margin-left: 15%; */
 }
 
-.img_btn {
-  background-color:rgb(209, 74, 74, 0.3);  
-  /* background-color: rgb(22, 5, 12, 0.3); */
-  /* opacity: 0.8; */
+.izl_author {
+  margin-top: -28%;
+  margin-left: -4%;
 }
+
+.izl_name {
+  margin-top: -5%;
+  margin-left: -4%;
+  font-weight: 100;
+}
+
+/*.img_btn {
+  /* background-color:rgb(209, 74, 74, 0.3);   */
+  /* color: blue; */
+  /* background-color: rgb(22, 5, 12, 0.3); */
+  /* opacity: 0.8; }*/
 </style>
