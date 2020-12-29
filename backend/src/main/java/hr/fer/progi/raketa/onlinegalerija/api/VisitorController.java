@@ -6,6 +6,7 @@ import hr.fer.progi.raketa.onlinegalerija.model.Collection;
 import hr.fer.progi.raketa.onlinegalerija.model.Style;
 import hr.fer.progi.raketa.onlinegalerija.repository.ArtistRepository;
 import hr.fer.progi.raketa.onlinegalerija.repository.CollectionRepository;
+import hr.fer.progi.raketa.onlinegalerija.repository.Roles;
 import hr.fer.progi.raketa.onlinegalerija.repository.VisitorRepository;
 import hr.fer.progi.raketa.onlinegalerija.model.Visitor;
 import org.springframework.http.HttpHeaders;
@@ -49,12 +50,12 @@ public class VisitorController {
             if(visitorDTO.isFlag()){
                 Artist artist = new Artist(visitorDTO.getName(), visitorDTO.getSurname(), visitorDTO.getEmail(),
                         visitorDTO.getPassword(), visitorDTO.getPaypalMail(), file.getBytes());
-                artist.setRole("artist");
+                artist.setRole(Roles.ARTIST.toString().toLowerCase());
                 artistRepository.save(artist);
             } else {
                 Visitor visitor = new Visitor(visitorDTO.getName(), visitorDTO.getSurname(), visitorDTO.getEmail(),
                         visitorDTO.getPassword(), visitorDTO.getPaypalMail());
-                visitor.setRole("visitor");
+                visitor.setRole(Roles.VISITOR.toString().toLowerCase());
                 visitorRepository.save(visitor);
             }
         }
