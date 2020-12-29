@@ -1,5 +1,6 @@
 package hr.fer.progi.raketa.onlinegalerija.security;
 
+import hr.fer.progi.raketa.onlinegalerija.repository.VisitorRepository;
 import hr.fer.progi.raketa.onlinegalerija.security.jwt.JWTAuthenticationFilter;
 import hr.fer.progi.raketa.onlinegalerija.security.jwt.JWTAuthorizationFilter;
 import hr.fer.progi.raketa.onlinegalerija.service.UserDetailsServiceImpl;
@@ -31,9 +32,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable().authorizeRequests()
                 .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
-                .anyRequest().authenticated()
                 .and()
-                .addFilter(new JWTAuthenticationFilter(authenticationManager()))
+                .addFilter(new JWTAuthenticationFilter(authenticationManager(), this.userDetailsService))
                 .addFilter(new JWTAuthorizationFilter(authenticationManager()))
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }

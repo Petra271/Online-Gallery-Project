@@ -394,10 +394,10 @@ export default {
         this.$refs.form.validate()
         let email = this.email_sign
         let password = this.password_sign
-      //   this.$store.dispatch('login', { email, password })
-      //  .then(() => this.sign_success())
-      //  .catch(err => console.log(err))
-        this.sign_success()
+         this.$store.dispatch('login', { email, password })
+        .then(() => this.sign_success())
+        .catch(err => console.log(err))
+       // this.sign_success()
 
     },
 
