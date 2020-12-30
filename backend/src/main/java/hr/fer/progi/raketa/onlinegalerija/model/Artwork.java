@@ -8,6 +8,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import java.io.File;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -31,6 +32,10 @@ public class Artwork {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name="collection_id", nullable = false)
     private Collection collection;
+
+    @OneToMany(mappedBy = "artwork", fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
+    private Set<Comment> comments;
 
     public Artwork(){
         this.id = UUID.randomUUID();
@@ -94,6 +99,18 @@ public class Artwork {
 //            e.printStackTrace();
 //        }
 //    }
+
+    public void addComment(Comment comment) {
+        comments.add(comment);
+    }
+
+    public Set<Comment> getComments() {
+        return comments;
+    }
+
+    public void removeComment(Comment comment) {
+        comments.remove(comment);
+    }
 
     public byte[] getImageInBytes() {
         return imageInBytes;

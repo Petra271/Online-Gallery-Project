@@ -2,15 +2,14 @@ package hr.fer.progi.raketa.onlinegalerija.api;
 
 import hr.fer.progi.raketa.onlinegalerija.model.Artwork;
 import hr.fer.progi.raketa.onlinegalerija.model.Collection;
+import hr.fer.progi.raketa.onlinegalerija.model.Comment;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class service {
@@ -36,6 +35,15 @@ public class service {
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
+    public ResponseEntity<Map<UUID, String>> produceComments(Set<Comment> commentSet) {
+        Map<UUID, String> commentMap = new HashMap<>();
+        for (Comment c : commentSet) {
+            commentMap.put(c.getCommentId(), produceCommentJson(c));
+        }
+        System.out.println("Velicin ampae je : " + commentMap.size());
+        return new ResponseEntity<>(commentMap, HttpStatus.OK);
+    }
+
     private String produceCollectionJson(Collection c){
         StringBuilder sb = new StringBuilder();
         sb.append("{");
@@ -58,4 +66,16 @@ public class service {
         System.out.println(sb.toString());
         return sb.toString();
     }
+
+    private String produceCommentJson(Comment c) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{");
+        sb.append("\"name\": \"").append(c.getVisitor().getName()).append("\",");
+        sb.append("\"surname\": \"").append(c.getVisitor().getSurname()).append("\",");
+        sb.append("\"content\": \"").append(c.getContent());
+        sb.append("}");
+        return sb.toString();
+    }
+
+
 }
