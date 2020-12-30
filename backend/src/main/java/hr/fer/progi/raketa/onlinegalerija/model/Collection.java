@@ -10,6 +10,7 @@ import java.util.UUID;
 @Table(name="collection")
 public class Collection {
     @Id
+    @Column(name ="id")
     private final UUID id;
     @Column(name="name", nullable = false)
     private String name;
@@ -18,7 +19,7 @@ public class Collection {
     @Column(name="style", nullable = false)
     private Style style;
     @OneToMany(mappedBy = "collection", fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL)
+            cascade = CascadeType.MERGE)
     private Set<Artwork> artworks;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -43,6 +44,18 @@ public class Collection {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public Set<Artwork> getArtworks() {
+        return artworks;
+    }
+
+    public Artist getArtist() {
+        return artist;
     }
 
     public String getDescription() {

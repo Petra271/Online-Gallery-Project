@@ -32,7 +32,11 @@ public class Artwork {
     @JoinColumn(name="collection_id", nullable = false)
     private Collection collection;
 
-    public Artwork(UUID id, String name, String description, Style style, double price,
+    public Artwork(){
+        this.id = UUID.randomUUID();
+    }
+
+    public Artwork(String name, String description, Style style, double price,
                    byte[] imageInBytes, Collection collection) {
         this.id = UUID.randomUUID();
         this.name = name;
