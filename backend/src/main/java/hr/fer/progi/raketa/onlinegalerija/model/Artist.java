@@ -1,5 +1,7 @@
 package hr.fer.progi.raketa.onlinegalerija.model;
 
+import com.sun.istack.NotNull;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -13,6 +15,7 @@ import java.util.UUID;
 @Table(name="artist")
 public class Artist extends Visitor {
     @Column(name ="portfolio")
+    @NotNull
     private byte[] portfolio;
 
     @OneToMany(mappedBy = "artist", fetch = FetchType.LAZY,

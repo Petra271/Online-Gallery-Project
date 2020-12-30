@@ -8,9 +8,12 @@ import hr.fer.progi.raketa.onlinegalerija.repository.ArtworkRepository;
 import hr.fer.progi.raketa.onlinegalerija.repository.CollectionRepository;
 import hr.fer.progi.raketa.onlinegalerija.repository.Roles;
 import hr.fer.progi.raketa.onlinegalerija.repository.VisitorRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,7 +22,7 @@ import java.util.List;
 
 import static hr.fer.progi.raketa.onlinegalerija.security.WebSecurityConfiguration.loggedInUsers;
 
-@RestController
+@Controller
 @RequestMapping("/visitor")
 public class VisitorController {
 
@@ -28,6 +31,8 @@ public class VisitorController {
     private CollectionRepository collectionRepository;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     private ArtworkRepository artworkRepository;
+    @Autowired
+    private service service;
 
     public VisitorController(VisitorRepository visitorRepository, ArtistRepository artistRepository,
                              CollectionRepository collectionRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
@@ -37,6 +42,7 @@ public class VisitorController {
         this.collectionRepository = collectionRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.artworkRepository = artworkRepository;
+        this.service = new service();
     }
 
     @PostMapping(value="/registration", consumes={"multipart/form-data"})
@@ -107,6 +113,7 @@ public class VisitorController {
 
         if(artist == null)
             return new ResponseEntity<String>("Artist was not found in the repository", HttpStatus.NOT_FOUND);
+
         List<Collection> collectionList = collectionRepository
                 .findByArtist(artist);
 
@@ -132,35 +139,24 @@ public class VisitorController {
         return ResponseEntity.ok().body("test results");
     }
 
-    @PostMapping(value="/test", consumes={"multipart/form-data"})
-    public ResponseEntity<?> test(@RequestPart("json") ArtworkDTO artworkDTO, @RequestPart("file") MultipartFile file) throws IOException{
-
+    @GetMapping(value="/getCollections")
+    @ResponseBody
+    public ResponseEntity<?> getCollections(){
         Artist artist = artistRepository.findByEmail(loggedInUsers.get(BearerTokenUtil.getBearerTokenHeader()));
 
         if(artist == null)
             return new ResponseEntity<String>("Artist was not found in the repository", HttpStatus.NOT_FOUND);
+
         List<Collection> collectionList = collectionRepository
                 .findByArtist(artist);
 
-        Artwork artwork = null;
-        for(Collection c : collectionList)
-            if(c.getName().equals(artworkDTO.getCollectionName())) {
-                artwork = new Artwork(
-                        artworkDTO.getName(),
-                        artworkDTO.getDescription(),
-                        Style.valueOf(artworkDTO.getStyle()),
-                        Double.parseDouble(artworkDTO.getPrice()),
-                        file.getBytes(),
-                        c
-                );
-                c.addArtwork(artwork);
-            }
+        return service.produceCollections(collectionList);
+    }
 
-        if(artwork == null)
-            return new ResponseEntity<String>("This artist does not contain the collection this artwork is supposed be inserted in.", HttpStatus.NOT_ACCEPTABLE);
+    @GetMapping(value="/test")
+    @ResponseBody
+    public ResponseEntity<?> test(){
+        return service.testMapReturn();
 
-        artworkRepository.save(artwork);
-
-        return ResponseEntity.ok().body("test results");
     }
 }
