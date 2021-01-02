@@ -10,7 +10,6 @@
 				\item Umjetnici				
 				\item Registrirani posjetitelji
 				\item Administratori
-				\item Baza podataka
 				
 			\end{packed_enum}
 			
@@ -137,7 +136,7 @@
 					\noindent \underbar{\textbf{UC2 - Registracija umjetnika}}
 					\begin{packed_item}
 						
-						\item \textbf{Glavni sudionik: } Umjetnik
+						\item \textbf{Glavni sudionik: } Neregistrirani korisnik
 						\item  \textbf{Cilj:}  Registracija umjetnika na platformu
 						\item  \textbf{Sudionici:}  Baza podataka
 						\item  \textbf{Preduvjet:}  -
@@ -172,7 +171,7 @@
 					\noindent \underbar{\textbf{UC3 - Prijava u sustav}}
 					\begin{packed_item}
 						
-						\item \textbf{Glavni sudionik: } Posjetitelj
+						\item \textbf{Glavni sudionik: } Posjetitelj, umjetnik, administrator
 						\item  \textbf{Cilj:}  Dobivanje pristupa korisničkom sučelju
 						\item  \textbf{Sudionici:}  Baza podataka
 						\item  \textbf{Preduvjet:}  Registracija
@@ -346,7 +345,7 @@
 					\begin{packed_item}
 	
 						\item \textbf{Glavni sudionik: }Administrator
-						\item  \textbf{Cilj:} Stvorranje natječaja za umjetnike
+						\item  \textbf{Cilj:} Stvaranje natječaja za umjetnike
 						\item  \textbf{Sudionici:} Baza podataka
 						\item  \textbf{Preduvjet:} Korisnik je registriran i dodijeljena su mu prava administratora
 						\item  \textbf{Opis osnovnog tijeka:}
@@ -581,7 +580,7 @@
 					}}
 					\begin{packed_item}
 						
-						\item \textbf{Glavni sudionik: }Posjetitelj
+						\item \textbf{Glavni sudionik: }Posjetitelj, umjetnik
 						\item  \textbf{Cilj:} Pregled svih vlastitih izvršenih transakcija						
 						\item  \textbf{Sudionici:} Baza podataka
 						\item  \textbf{Preduvjet:} Korisnik je prijavljen
@@ -674,7 +673,7 @@
 						\item \textbf{Glavni sudionik: }Administrator
 						\item  \textbf{Cilj:} Brisanje komentara
 						\item  \textbf{Sudionici:} Baza podataka
-						\item  \textbf{Preduvjet:} Korisnik je registriran i dodijeljena su mu prava administratora
+						\item  \textbf{Preduvjet:} Korisnik je registriran, dodijeljena su mu prava administratora i postoji komentar
 						\item  \textbf{Opis osnovnog tijeka:}
 						
 						\item[] \begin{packed_enum}
