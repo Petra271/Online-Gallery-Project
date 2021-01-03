@@ -110,7 +110,6 @@
         <div style="padding: 6px; font-size: 18px;">
           Ime: Mato <br><br>
           Prezime: Lovrak <br><br>
-          
           Adresa: {{street}}, {{postcode}}, {{town}} <br><br>
           Broj mobitela: {{phone}} <br><br>
           Dostava se očekuje unutar 3 do 5 radnih dana <br><br>
