@@ -50,7 +50,15 @@
 
         <v-text-field
           v-model="postcode"
+          :rules="postRules"
           label="Poštanski broj"
+          required
+        ></v-text-field>
+
+        <v-text-field
+          v-model="phone"
+          :rules="phoneRules"
+          label="Broj mobitela"
           required
         ></v-text-field>
 
@@ -75,7 +83,8 @@
       </v-form>
     </div>
 
-    <div v-else class="art_data"
+  <v-row v-else>
+    <div class="art_data"
                 :class="$store.getters.mode ? 'art_data_bl' : 'art_data_bd'">
       <v-card class="art_data_card" 
               :class="$store.getters.mode ? 'white--text' : 'black--text'"
@@ -88,27 +97,43 @@
           Dimenzije: 180 x 220 <br><br>
           Iznos: 56 552 HRK <br><br>
           PDV: 14 138 HRK <br><br>
-          Adresa: {{street}}, {{postcode}}, {{town}} <br><br>
-          Dostava se očekuje unutar 3 do 5 radnih dana <br><br>
-        </div>
-        <div class="buy_btns" style="padding: 5px;">
-          <v-btn rounded
-          color="rgb(33, 1, 1)"
-          class="mr-4 white--text"
-          @click="delivery = false"
-        >
-          Natrag
-        </v-btn>
-
-        <v-btn rounded 
-          :disabled="!buy_valid"
-          color="rgba(1, 24, 12)"
-          class="mr-4 white--text"
-        >
-          Kupi
-        </v-btn>
         </div>
       </v-card>
+    </div>
+    <div class="art_data"
+                :class="$store.getters.mode ? 'art_data_bl' : 'art_data_bd'"
+                style="margin-left: -22%;">
+      <v-card class="art_data_card" 
+              :class="$store.getters.mode ? 'white--text' : 'black--text'"
+              v-bind:style= "[$store.getters.mode ? {'background-color': 'black'} : {'background-color': 'white'}]"
+              :elevation="0">
+        <div style="padding: 6px; font-size: 18px;">
+          Ime: Mato <br><br>
+          Prezime: Lovrak <br><br>
+          
+          Adresa: {{street}}, {{postcode}}, {{town}} <br><br>
+          Broj mobitela: {{phone}} <br><br>
+          Dostava se očekuje unutar 3 do 5 radnih dana <br><br>
+        </div>
+      </v-card>
+    </div>
+  </v-row>
+  <div  v-if="delivery" class="buy_btns" style="padding: 5px;">
+      <v-btn rounded
+      color="rgb(33, 1, 1)"
+      class="mr-4 white--text"
+      @click="delivery = false"
+    >
+      Natrag
+    </v-btn>
+
+    <v-btn rounded 
+      :disabled="!buy_valid"
+      color="rgba(1, 24, 12)"
+      class="mr-4 white--text"
+    >
+      Potvrdi
+    </v-btn>
     </div>
   </div>
 </v-app>
@@ -127,10 +152,19 @@ export default {
         authorOrigi: 'Jerolim Miše',
         author: 'Jerolim Miše',
         artwork: require('@/assets/mise_untitled.jpg'),
+        postRules: [
+        v => !!v || 'Potrebno je upisati poštanski broj',
+        v => /.*[0-9]/.test(v) || 'Poštanski broj mora biti valjan',
+        ],
+        phoneRules: [
+        v => !!v || 'Potrebno je upisati broj mobitela',
+        v => /.*[0-9]/.test(v) || 'Broj mora biti valjan',
+        ],
         buy_valid: false,
         street: '',
         town: '',
         postcode: '',
+        phone: '',
         delivery: false,
      }
   },
@@ -163,7 +197,7 @@ export default {
 .art_buy {
   margin: auto;
   margin-top: 3%;
-  margin-bottom: 5%;
+  margin-bottom: 3%;
   /* margin-left: 24%; */
 }
 
@@ -193,8 +227,8 @@ export default {
 .art_data {
   margin: auto;
   /* border-left: 2px solid white; */
-  margin-bottom: 10%;
-  max-width: 22%;
+  margin-bottom: 2%;
+  max-width: 20%;
 }
 
 .art_data_bl {
@@ -204,8 +238,15 @@ export default {
 .art_data_bd {
   border-left: 2px solid black;
 }
+
+.buy_btns {
+  text-align: center;
+  margin-bottom: 5%;
+}
+
 .art_data_card {
   /* border: 1px solid black;
   border-radius: 50px; */
+  height: 320px;
 }
 </style>
