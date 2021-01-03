@@ -24,8 +24,9 @@
         <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
 
         <!-- <v-toolbar-title><v-btn text rounded class="home">onlinegalerija</v-btn></v-toolbar-title> -->
-        <v-toolbar-title 
+        <v-toolbar-title @click="home()"
           :class="{'tool_title': !$store.getters.mode, 'tool_title black--text': $store.getters.mode}"
+          style="cursor: pointer;"
           >
           onlinegalerija
         </v-toolbar-title>
@@ -134,6 +135,10 @@ export default {
   },
 
   methods: {
+    home() {
+      this.$router.push('/')
+    },
+
     sign_in() {
       //this.sign_att = true;
       //this.sign_in_form = true;
