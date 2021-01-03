@@ -66,7 +66,7 @@ export default new Vuex.Store({
     login({commit}, user){
       return new Promise((resolve, reject) => {
         commit('auth_request')
-        axios({url: 'http://localhost:8080/login', data: user, method: 'POST' })
+        axios({url: `${process.env.VUE_APP_BACKEND_URI}/login`, data: user, method: 'POST' })
         .then(resp => {
           const token = resp.data.token
           const user = resp.data.user
@@ -86,7 +86,7 @@ export default new Vuex.Store({
     register({commit}, user){
       return new Promise((resolve, reject) => {
         commit('auth_request')
-        axios({url: 'http://localhost:8080/visitor/registration', data: user, method: 'POST' })
+        axios({url: `${process.env.VUE_APP_BACKEND_URI}/visitor/registration`, data: user, method: 'POST' })
         .then(resp => {
           const token = resp.data.token
           const user = resp.data.user

@@ -1,16 +1,11 @@
 package hr.fer.progi.raketa.onlinegalerija.api;
 
-import hr.fer.progi.raketa.onlinegalerija.dao.CollectionDTO;
 import hr.fer.progi.raketa.onlinegalerija.dao.ArtworkDTO;
+import hr.fer.progi.raketa.onlinegalerija.dao.CollectionDTO;
 import hr.fer.progi.raketa.onlinegalerija.model.*;
-import hr.fer.progi.raketa.onlinegalerija.repository.ArtistRepository;
-import hr.fer.progi.raketa.onlinegalerija.repository.ArtworkRepository;
-import hr.fer.progi.raketa.onlinegalerija.repository.CollectionRepository;
-import hr.fer.progi.raketa.onlinegalerija.repository.Roles;
-import hr.fer.progi.raketa.onlinegalerija.repository.VisitorRepository;
+import hr.fer.progi.raketa.onlinegalerija.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
