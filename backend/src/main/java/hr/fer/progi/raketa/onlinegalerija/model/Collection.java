@@ -1,10 +1,7 @@
 package hr.fer.progi.raketa.onlinegalerija.model;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name="collection")
@@ -12,12 +9,16 @@ public class Collection {
     @Id
     @Column(name ="id")
     private final UUID id;
+
     @Column(name="name", nullable = false)
     private String name;
+
     @Column(name="description", nullable = false)
     private String description;
+
     @Column(name="style", nullable = false)
     private Style style;
+
     @OneToMany(mappedBy = "collection", fetch = FetchType.LAZY,
             cascade = CascadeType.MERGE)
     private Set<Artwork> artworks;
@@ -25,6 +26,14 @@ public class Collection {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "artist_id", nullable = false)
     private Artist artist;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "contest_application_id", nullable = true)
+    private ContestApplication contestApplication;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "exhibition_id", nullable = true)
+    private Exhibition exhibition;
 
     public Collection(){
         this.id = UUID.randomUUID();
@@ -76,5 +85,44 @@ public class Collection {
 
     public boolean addArtwork(Artwork artwork){
         return artworks.add(artwork);
+    }
+
+    public void setArtist(Artist artist) {
+        this.artist = artist;
+    }
+
+    public void setArtworks(Set<Artwork> artworks) {
+        this.artworks = artworks;
+
+    }
+
+    public ContestApplication getContestApplication() {
+        return contestApplication;
+    }
+
+    public void setContestApplication(ContestApplication contestApplication) {
+        this.contestApplication = contestApplication;
+    }
+
+    public Exhibition getExhibition() {
+        return exhibition;
+    }
+
+    public void setExhibition(Exhibition exhibition) {
+        this.exhibition = exhibition;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Collection that = (Collection) o;
+        return name.equals(that.name) &&
+                artist.equals(that.artist);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, artist);
     }
 }

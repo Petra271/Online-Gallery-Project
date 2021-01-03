@@ -1,4 +1,4 @@
-package hr.fer.progi.raketa.onlinegalerija.api;
+package hr.fer.progi.raketa.onlinegalerija.dao;
 
 import com.sun.istack.NotNull;
 import org.springframework.context.annotation.Bean;

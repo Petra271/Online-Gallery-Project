@@ -1,5 +1,6 @@
 package hr.fer.progi.raketa.onlinegalerija.api;
 
+import hr.fer.progi.raketa.onlinegalerija.dao.ApplicationDTO;
 import hr.fer.progi.raketa.onlinegalerija.dao.CollectionDTO;
 import hr.fer.progi.raketa.onlinegalerija.dao.ArtworkDTO;
 import hr.fer.progi.raketa.onlinegalerija.dao.VisitorDTO;
@@ -15,64 +16,30 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 import static hr.fer.progi.raketa.onlinegalerija.security.WebSecurityConfiguration.loggedInUsers;
 
 @Controller
-@RequestMapping("/visitor")
-public class VisitorController {
+@RequestMapping("/artist")
 
+public class ArtistController {
     @Autowired
     private VisitorRepository visitorRepository;
+    @Autowired
     private ArtistRepository artistRepository;
+    @Autowired
     private CollectionRepository collectionRepository;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
     private ArtworkRepository artworkRepository;
     @Autowired
     private AdminRepository adminRepository;
     @Autowired
+    private ContestRepository contestRepository;
+    @Autowired
     private service service;
-
-    public VisitorController(VisitorRepository visitorRepository, ArtistRepository artistRepository,
-                             CollectionRepository collectionRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
-                             ArtworkRepository artworkRepository) {
-        this.visitorRepository = visitorRepository;
-        this.artistRepository = artistRepository;
-        this.collectionRepository = collectionRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.artworkRepository = artworkRepository;
-        this.service = new service();
-    }
-
-    @PostMapping(value="/registration", consumes={"multipart/form-data"})
-    public ResponseEntity<?> registerNewVisitor(@RequestPart("json") VisitorDTO visitorDTO, @RequestPart(name="file", required = false) MultipartFile file) throws IOException {
-
-        visitorDTO.setPassword(bCryptPasswordEncoder.encode(visitorDTO.getPassword()));
-
-        if (!visitorRepository.existsByEmail(visitorDTO.getEmail())){
-            if(visitorDTO.isFlag()){
-                Artist artist = new Artist(visitorDTO.getName(), visitorDTO.getSurname(), visitorDTO.getEmail(),
-                        visitorDTO.getPassword(), visitorDTO.getPaypalMail(), file.getBytes());
-                artist.setRole(Roles.ARTIST.toString().toLowerCase());
-                artistRepository.save(artist);
-            } else {
-                Visitor visitor = new Visitor(visitorDTO.getName(), visitorDTO.getSurname(), visitorDTO.getEmail(),
-                        visitorDTO.getPassword(), visitorDTO.getPaypalMail());
-                visitor.setRole(Roles.VISITOR.toString().toLowerCase());
-                visitorRepository.save(visitor);
-            }
-        }
-
-        else{
-            return new ResponseEntity<String>("This E-mail is taken", HttpStatus.FORBIDDEN);
-        }
-
-        return ResponseEntity.ok()
-                .body("Successful registration");
-    }
 
     @PostMapping("/createCollection")
     public ResponseEntity<?> createCollection(@RequestBody CollectionDTO collectionDTO){
@@ -96,18 +63,9 @@ public class VisitorController {
             return new ResponseEntity<String>("Style does not exist", HttpStatus.NOT_ACCEPTABLE);
         }
         Collection collection = new Collection(collectionDTO.getName(), collectionDTO.getDescription(), style, artist);
-
         collectionRepository.save(collection);
         return ResponseEntity.ok().body("Successful collection creation");
     }
-
-    @PostMapping("/logout")
-    public ResponseEntity<?> logout(){
-
-        loggedInUsers.remove(BearerTokenUtil.getBearerTokenHeader());
-        return ResponseEntity.ok().body("Logout successful");
-    }
-
 
     @PostMapping(value="/addArtwork", consumes={"multipart/form-data"})
     public ResponseEntity<?> addArtwork(@RequestPart("json") ArtworkDTO artworkDTO, @RequestPart("file") MultipartFile file) throws IOException{
@@ -139,7 +97,7 @@ public class VisitorController {
 
         artworkRepository.save(artwork);
 
-        return ResponseEntity.ok().body("successfully added artwork");
+        return ResponseEntity.ok().body("Artwork successfully added");
     }
 
     @GetMapping(value="/getCollections")
@@ -150,19 +108,34 @@ public class VisitorController {
         if(artist == null)
             return new ResponseEntity<String>("Artist was not found in the repository", HttpStatus.NOT_FOUND);
 
-        Set<Collection> collectionSet = artist.getCollections();
-                //collectionRepository.findByArtist(artist);
+        Set<Collection> collections = artist.getCollections();
+        //collectionRepository.findByArtist(artist);
 
-        return service.produceCollections(collectionSet);
+        return service.produceCollections(collections);
     }
 
-    @PostMapping(value="/test")
-    @ResponseBody
-    public ResponseEntity<?> test(){
-        //adminRepository.deleteById(UUID.fromString("8bf731e0-4249-4e50-83a7-0671294d814f"));
-        adminRepository.save(new Admin("admin", "admin", "admin1@gmail.com", bCryptPasswordEncoder.encode("password"), "nekimail"));
+    @PostMapping("/applyToContest")
+    public ResponseEntity<?> applyToContest(@RequestBody ApplicationDTO applicationDTO){
+        Artist artist = artistRepository.findByEmail(loggedInUsers.get(BearerTokenUtil.getBearerTokenHeader()));
 
-        return ResponseEntity.ok().body("test results");
+        Contest contest = contestRepository.findByWorkingName(applicationDTO.getContestName());
+        if(contest == null)
+            return new ResponseEntity<String>("No contest of name " + applicationDTO.getContestName() + " exists", HttpStatus.NOT_FOUND);
 
+        ContestApplication ca = new ContestApplication(artist, contest);
+        Set<Collection> collectionSetApplied = new HashSet<>();
+        ca.setCollections(collectionSetApplied);
+        String[] collectionNames = applicationDTO.getCollections();
+
+        for(int i = 0; i < collectionNames.length; i++)
+            for(Collection c : artist.getCollections())
+                if(c.getName().equals(collectionNames[i])) {
+                    collectionSetApplied.add(c);
+                    c.setContestApplication(ca);
+                }
+
+        contest.addApplication(ca);
+
+        return ResponseEntity.ok().body("Successfully applied to contest");
     }
 }

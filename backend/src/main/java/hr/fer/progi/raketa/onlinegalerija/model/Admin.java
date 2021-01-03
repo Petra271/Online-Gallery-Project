@@ -10,9 +10,10 @@ public class Admin extends Visitor {
 
     public Admin(){};
 
-    public Admin(UUID id, String name, String surname, String email,
+    public Admin(String name, String surname, String email,
                  String password, String paypalMail) {
         super(name, surname, email, password, paypalMail);
+        super.setRole("admin");
     }
 
 }

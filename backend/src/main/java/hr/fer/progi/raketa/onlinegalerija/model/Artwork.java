@@ -17,14 +17,19 @@ public class Artwork {
     @Id
     @Column(name ="id", nullable = false)
     private final UUID id;
+
     @Column(name="name", nullable = false)
     private String name;
+
     @Column(name="description", nullable = false)
     private String description;
+
     @Column(name="style", nullable = false)
     private Style style;
+
     @Column(name="price", nullable = false)
     private double price;
+
     @Column(name="image", nullable = false)
     private byte[] imageInBytes;
     //private BufferedImage image;
@@ -57,6 +62,10 @@ public class Artwork {
         this.collection = collection;
     }
 
+    public UUID getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
     }
@@ -72,6 +81,18 @@ public class Artwork {
 //    public BufferedImage getImage() {
 //        return image;
 //    }
+
+    public Collection getCollection() {
+        return collection;
+    }
+
+    public void setCollection(Collection collection) {
+        this.collection = collection;
+    }
+
+    public void setComments(Set<Comment> comments) {
+        this.comments = comments;
+    }
 
     public void setDescription(String description) {
         this.description = description;

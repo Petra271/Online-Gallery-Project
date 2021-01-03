@@ -1,6 +1,7 @@
 package hr.fer.progi.raketa.onlinegalerija.model;
 
 import javax.persistence.*;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -9,16 +10,22 @@ public class Visitor {
     @Id
     @Column(name ="id")
     private final UUID id;
+
     @Column(name="name")
     private String name;
+
     @Column(name="surname")
     private String surname;
+
     @Column(name="email", nullable = false, unique = true)
     private String email;
+
     @Column(name="password", nullable = false)
     private String password;
+
     @Column(name="pay_pal_mail")
     private String paypalMail;
+
     @Column(name ="role", nullable = false)
     private String role;
 
@@ -87,13 +94,17 @@ public class Visitor {
         this.paypalMail = paypalMail;
     }
 
-    public boolean changePassword(String pass){
-        if(pass == null)
-            throw new IllegalArgumentException("Password cannot be null");
-        if(pass.equals(this.password)) {
-            setPassword(pass);
-            return true;
-        }
-        return false;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Visitor)) return false;
+        Visitor visitor = (Visitor) o;
+        return id.equals(visitor.id) &&
+                email.equals(visitor.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email);
     }
 }
