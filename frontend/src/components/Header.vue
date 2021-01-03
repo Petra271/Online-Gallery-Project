@@ -24,9 +24,8 @@
         <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
 
         <!-- <v-toolbar-title><v-btn text rounded class="home">onlinegalerija</v-btn></v-toolbar-title> -->
-        <v-toolbar-title @click="home()"
+        <v-toolbar-title 
           :class="{'tool_title': !$store.getters.mode, 'tool_title black--text': $store.getters.mode}"
-          style="cursor: pointer;"
           >
           onlinegalerija
         </v-toolbar-title>
@@ -53,16 +52,17 @@
                     v-on="{ ...tooltip, ...menu }"
                   >
                     <v-icon v-if="$store.getters.mode" color="black">mdi-account</v-icon>
-                    <v-icon v-else>mdi-account</v-icon>
+                    <v-icon v-else>mdi-menu</v-icon>
                   </v-btn>
                 </template>
-                <span>Moj Profil</span>
+                <span>Izbornik</span>
               </v-tooltip>
             </template>
 
             <v-list>
               <v-list-item link> Transakcije <v-spacer></v-spacer> <v-icon>mdi-cash-multiple</v-icon> </v-list-item>
-              <v-list-item to="/moj_profil" link> Osobni Podaci <v-spacer></v-spacer> <v-icon>mdi-account-details</v-icon> </v-list-item>
+              <v-list-item to="/moj_profil" link> Moj profil <v-spacer></v-spacer> <v-icon>mdi-account-details</v-icon> </v-list-item>
+              <v-list-item to="/natjecaji" link> Natječaji <v-spacer></v-spacer> <v-icon>mdi-medal-outline</v-icon> </v-list-item>
               <v-list-item link v-on:click="sign_out()"> Odjava <v-spacer></v-spacer> <v-icon>mdi-exit-to-app</v-icon> </v-list-item>
             </v-list>
           </v-menu>
@@ -135,10 +135,6 @@ export default {
   },
 
   methods: {
-    home() {
-      this.$router.push('/')
-    },
-
     sign_in() {
       //this.sign_att = true;
       //this.sign_in_form = true;

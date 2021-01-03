@@ -7,39 +7,32 @@
     <h1 class="te">Moj profil</h1>
     <div class="mk">Moje kolekcije</div>
   </div>
-  <div class="block">
-    <div class="col left">
-        <v-btn icon
-        color="black" 
-        class="img_btn" 
-        :class="{ 'show-btns': hover }"
-        v-bind="attrs"
-        v-on="{ ...tooltip, ...menu }"
-        @click="overlay = !overlay"
-        >
-        <v-icon>mdi-folder-edit-outline</v-icon>
-        </v-btn>
-    </div>
-
-    <div class="col right">
-        <h2>Dodaj novu kolekciju</h2>
-    </div>
+  <div class="add_coll">
+    <v-btn text
+    color="black" 
+    class="img_btn" 
+    :class="{ 'show-btns': hover }"
+    v-bind="attrs"
+    v-on="{ ...tooltip, ...menu }"
+    @click="dialog=true"
+    >
+    <v-icon>mdi-folder-edit-outline</v-icon>
+    Dodaj novu kolekciju
+    </v-btn>
   </div>
 
-  <div  v-if="overlay">
-    <div class="overlay"></div>
-    <div class="modal">
-      <v-card-actions>
-        <v-spacer class="d-flex justify-space-between align-end" />
-        <v-btn outlined
-          elevation="7"
-          @click="overlay = !overlay"
-          >
-          <v-icon>mdi-window-close</v-icon>
-        </v-btn>
-      </v-card-actions>
-      <div class="form">
-      <v-form
+  <v-row justify="center">
+    <v-dialog
+      v-model="dialog"
+      persistent
+      max-width="500"
+    >
+      <v-card>
+        <v-card-title class="headline">
+          Dodajte novo djelo
+        </v-card-title>
+        <v-card-text>
+          <v-form
         ref="form"
         v-model="valid"
         lazy-validation
@@ -64,27 +57,33 @@
           :rules="[v => !!v || 'Potrebno je unijeti opis kolekcije']"
           label="Opis kolekcije"
           required 
-        ></v-text-field>
-
-      <div class="form_buttons">
-        <v-btn
-          :disabled="!valid"
-          color="success"
-          class="mr-4"
-          @click="validate()"
-        >
-          Dodaj
-        </v-btn>
-
-      </div>
+        ></v-text-field>      
       </v-form>
-    </div>
-    </div>
-  </div>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="green darken-1"
+            text
+            @click="dialog = false"
+          >
+            PREKID
+          </v-btn>
+          <v-btn
+            color="green darken-1"
+            text
+            @click="add_coll"
+          >
+            DODAJ
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-row>
 
   <v-row>
       <v-col
-        v-for="n in k"
+        v-for="(status, n) in colls" 
         :key="n"
         class="d-flex child-flex text"
         cols="3"
@@ -95,12 +94,12 @@
             :class="{ 'on-hover': hover }"
           >
             <v-img
-              :src="`https://thumbs.worthpoint.com/zoom/images1/1/0717/08/signed-pablo-picasso-art-drawing_1_b334bdf84d37091e6c77f53ec272f23d.jpg`"
-              :lazy-src="`https://picsum.photos/10/6?image=${n * 4}`"
+              :src="`https://picsum.photos/500/300?image=${n * 3 + 10}`"
+              :lazy-src="`https://picsum.photos/10/6?image=${n * 3 + 10}`"
               aspect-ratio="1"
               class="grey lighten-2 img"
             >
-            <v-expand-transition>
+            <!-- <v-expand-transition>
               <div
                 v-if="hover"
                 class="d-flex transition-fast-in-fast-out orange darken-2 v-card--reveal display-3 white--text"
@@ -110,7 +109,7 @@
                 <p>Stil {{n}}</p> <br>
               </div>
               </div>
-            </v-expand-transition>
+            </v-expand-transition> -->
             <v-card-title class="align-end fill-height" primary-title>
                 <v-tooltip bottom>
                   <template v-slot:activator="{ on: tooltip }">
@@ -120,7 +119,7 @@
                       :class="{ 'show-btns': hover }"
                       v-bind="attrs"
                       v-on="{ ...tooltip, ...menu }"
-                      @click="k = k - 1"
+                      @click="delete_coll(n)"
                       >
                       <v-icon>mdi-folder-remove-outline</v-icon>
                     </v-btn>
@@ -130,7 +129,7 @@
               </v-card-title>
             </v-img>
             <v-btn text to="/moj_profil/djela">
-                <p class="naziv">Kolekcija {{n}}</p>
+                <p class="naziv">{{colls[n]}}</p>
             </v-btn>
           </v-card>
         </v-hover>
@@ -167,6 +166,10 @@ export default {
         'ulje na platnu',
         'mješoviti',
       ],
+      colls: [
+        'Kolekcija 1', 'Kolekcija 2', 'Kolekcija 3'
+      ],
+      dialog: false,
     }
   },
   
@@ -179,6 +182,13 @@ export default {
         this.overlay = false;
         this.k++;
     },
+    add_coll() {
+      this.colls.push(this.name)
+      this.dialog = false
+    },
+    delete_coll(n) {
+      this.colls.splice(n, 1)
+    }
   }
 }
 
@@ -190,11 +200,10 @@ export default {
  margin-top: 200px;
 }
 .mk {
-  font-size: 40px;
-  margin-left: 2.5%;
-  margin-top: 5%;
-  background-color: white;
-  width: fit-content;
+  font-size: 50px;
+  font-family:  'Work Sans', sans-serif;
+  margin-left: 2%;
+  margin-top: 3%;
 }
 .images {
   align-content: right;
@@ -205,7 +214,7 @@ export default {
   height: 0%;
   width: 95%;
   /* background-color: rgb(214, 136, 46); */
-  border-radius: 50px;
+  /* border-radius: 50px; */
   text-align: center;
 }
 .naziv{
@@ -214,12 +223,13 @@ export default {
 }
 .te {
   font-size: 80px;
+  font-family:  'Work Sans', sans-serif;
+  margin-left: 2%;
+  margin-top: 2%;
 }
-.block {
-    background: none repeat scroll 0 0;
-    display: block;
-    overflow: auto;
-    width: fit-content;
+.add_coll {
+  margin-left: 1%;
+  margin-top: 2%;
 }
 .overlay {
     position: absolute;
@@ -240,5 +250,8 @@ export default {
     border-radius: 5px;
     /*text-align: center;*/
     z-index: 11; /* 1px higher than the overlay layer */
+}
+.v-btn {
+  text-transform:none !important;
 }
 </style>

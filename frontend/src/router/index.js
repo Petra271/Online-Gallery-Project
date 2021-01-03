@@ -34,6 +34,11 @@ const routes = [
     name: 'Djela',
     component: () => import('../views/Djela.vue')
   },
+  {
+    path: '/natjecaji',
+    name: 'Natječaji',
+    component: () => import('../views/Natjecaji.vue')
+  },
   // {
   //   path: '/about',
   //   name: 'About',

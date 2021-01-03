@@ -7,14 +7,7 @@
       </div>
 
 
-  <div class="gal_title text-center"
-      style="cursor: pointer"
-      @mouseover="descIn()" @mouseleave="descOut()"
-      >
-      Dobrodošli u online galeriju
-  </div>
-  <div class="gal_desc">{{description}}
-  </div>
+  <div class="gal_title text-center">Dobrodošli u online galeriju</div>
   
   <!-- ---------------- PRIJAVA ------------------------- -->
     <div v-if="this.$store.getters.sign_in_form" class="form" ref="enter_form">
@@ -49,7 +42,7 @@
           :disabled="!valid"
           color="rgba(1, 24, 12)"
           class="mr-4 white--text"
-          @click="validate_s()"
+          @click="sign_success()"
         >
           Prijava
         </v-btn>
@@ -113,9 +106,7 @@
           @click:append="show_reg = !show_reg"
         ></v-text-field>
 
-        <v-file-input v-if="artist_check"
-          type="file"
-          v-model="pdf"
+        <v-file-input v-if="artist_check"  
           :rules="[v => !!v || 'Potrebno je priložiti datoteku']"
           small-chips    
           accept="application/pdf"
@@ -281,149 +272,10 @@
         </v-hover>
       </v-col>
     </v-row>
-
-    <!-- ---------- FILTERI ---------- -->
-    <v-row justify="center">
-      <v-dialog
-        transition="dialog-bottom-transition"
-        v-model="filters"
-        persistent
-        max-width="630"
-      >
-        <v-card>
-          <v-card-title class="text-left justify-center py-6"
-                        style="font-size: 100%;">
-                        <!-- border-bottom: 1px solid black"> -->
-            <div class="display-3"
-            style="margin-right: auto; margin-bottom: 2%;">
-              Prikaz
-            </div>
-            <div>
-            Sortirajte izložbe prema odgovarajućem stilu, 
-            pripadajućim umjetnicima i razdoblju trajanja
-            <!-- {{tab}} {{tehnike[radioGroup - 1]}} {{selectedArtists}} -->
-            </div>
-          </v-card-title>
-
-          <v-tabs
-            v-model="tab"
-            background-color="transparent"
-            color="black"
-            grow
-          >
-            <v-tab
-              v-for="filter in filter_types"
-              :key="filter"
-            >
-              {{ filter }}
-            </v-tab>
-          </v-tabs>
-
-          <v-tabs-items v-model="tab">
-            <v-tab-item>
-              <v-card flat>
-              
-                <v-card-text class="black--text">ovo je tehnika nepismene seljačine al dobro ajde</v-card-text>
-                <v-radio-group class="technique" v-model="radioGroup">
-                  <v-radio
-                    v-for="(teh, i) in tehnike.length"
-                    :key="teh"
-                    :label="tehnike[i]"
-                    :value="teh"
-                    color="black"
-                  ></v-radio>
-                </v-radio-group>
-              </v-card>
-            </v-tab-item>
-            <v-tab-item>
-              <v-card flat>
-                <v-card-text class="black--text">Odaberite jednog ili više umjetnika čije izložbe želite prikazati</v-card-text>
-                <v-autocomplete
-                  v-model="selectedArtists"
-                  :items="artists"
-                  class="mx-4"
-                  multiple
-                  small-chips
-                  deletable-chips
-                  clearable
-                  label="Umjetnici"
-                  color="black"
-                ></v-autocomplete>
-              </v-card>
-            </v-tab-item>
-            <v-tab-item>
-              <v-card flat>
-                <div class="calendar">
-                  <v-date-picker
-                    v-model="exh_dates"
-                    scrollable
-                    range
-                    locale="hr"
-                    :elevation="1"
-                    :first-day-of-week="1"
-                    selected-items-text="Željeni raspon"
-                    color="black"
-                  ></v-date-picker>
-                </div>
-              </v-card>
-            </v-tab-item>
-          </v-tabs-items>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn
-              color="black"
-              text
-              @click="filters = false"
-            >
-              Natrag
-            </v-btn>
-            <v-btn
-              color="black"
-              text
-              @click="dialog = false"
-            >
-              Primijeni
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </v-row>
-    <v-btn fab 
-          :dark="!$store.getters.mode" 
-          :color="$store.getters.mode ? 'white' : 'rgb(0, 0, 0, 0.9)'"
-          fixed right bottom
-          @click="filters = true"
-          >
-      <v-icon>mdi-sort</v-icon>
-    </v-btn>
-
-    <v-row>
-      <v-col
-        cols="12"
-        sm="6"
-      >
-        <!-- <v-date-picker
-          v-model="exh_dates"
-          scrollable
-          range
-          locale="hr"
-          :first-day-of-week="1"
-          color="black"
-        ></v-date-picker>
-      </v-col>
-      <v-col
-        cols="12"
-        sm="6"
-      >
-        <v-text-field
-          v-model="dateRangeText"
-          label="Date range"
-          prepend-icon="mdi-calendar"
-          readonly
-        ></v-text-field>  -->
-        <!-- model: {{ exh_dates }} -->
-      </v-col>
-    </v-row>
+  <div>
+    {{sign_in_JSON}}
+    
+  </div>
   </div>
 
     <!-- <v-main>
@@ -435,22 +287,17 @@
 <script>
 import HelloWorld from '../components/HelloWorld';
 import Header from '@/components/Header'
-//import emptyPDF from '@/assets/pdf/empty.pdf'
 
 export default {
   name: 'App',
 
   components: {
     HelloWorld,
-    Header,
-    //emptyPDF
+    Header
   },
 
   data: () => {
     return {
-      description: '',
-      hovered: false,
-      timer: null,
       sign_att: false,
       register_att: false,
       form: false,
@@ -459,13 +306,13 @@ export default {
       enter_exh: false,
       artist_check: false,
 
+      colors: ['deep-purple accent-4', 'error', 'teal darken-1'],
       valid: true,
       name: '',
       surname: '',
       payPal: '',
       password_sign: '',
       password_reg: '',
-      pdf: 'empty_file',
       nameRules: [
         v => !!v || 'Name is required',
         // v => (v && v.length <= 10) || 'Name must be less than 10 characters',
@@ -490,25 +337,6 @@ export default {
           emailMatch: () => (`The email and password you entered don't match`),
         },
       is_admin: false,
-      exh_dates: ['2020-12-10', '2020-12-20'],
-      filters: false,
-      tab: null,
-      filter_types: ['Stil', 'Umjetnici', 'Datum'],
-      radioGroup: 0,
-      tehnike: ['Akvarel', 'Mozaik', 'Tempera', 'Ulje na platnu'],
-      artists: [
-        'Mersad Berber',
-        'Edo Murtić',
-        'Jerolim Miše',
-        'Vlaho Bukovac',
-        'Vasko Lipovac',
-        'Ivan Rabuzin',
-        'Oton Iveković'
-      ],
-      selectedArtists: [],
-      hasSaved: false,
-      model: null,
-        
     }
   },
 
@@ -524,21 +352,6 @@ export default {
     },
 
   methods: {
-    descIn() {
-      this.timer = setTimeout(() => { 
-        this.description = `Online galerija osnovana je 2020. godine s ciljem promicanja kulture i umjetnosti. 
-      Plod mladih i britkih umova online galerija stremi podizanju svijesti i javnog mnijenja o umjetnosti te širenju iste među mladima, 
-      pogotovo ferovcima`;
-      }, 450);
-    },
-
-    descOut() {
-      setTimeout(() => { 
-        this.description = '';
-        clearTimeout(this.timer);
-      }, 300);
-    },
-
     sign_in() {
       //this.sign_att = true;
       // this.sign_in_form = true;
@@ -581,10 +394,10 @@ export default {
         this.$refs.form.validate()
         let email = this.email_sign
         let password = this.password_sign
-        this.$store.dispatch('login', { email, password })
-       .then(() => this.sign_success())
-       .catch(err => console.log(err))
-        //  this.sign_success()
+         this.$store.dispatch('login', { email, password })
+        .then(() => this.sign_success())
+        .catch(err => console.log(err))
+       // this.sign_success()
 
     },
 
@@ -609,31 +422,10 @@ export default {
           surname: this.surname,
           email: this.email,
           password: this.password_reg,
-          paypalMail: this.payPal,
-          flag: false
+          paypalMail: this.payPal
           // is_admin: this.is_admin
         }
-        data = JSON.stringify(data)
-        let formData = new FormData()
-        formData.append('file', this.pdf)
-        formData.append('json', new Blob([
-            data
-        ], {
-            type: "application/json"
-        }))
-        console.log(data)
-        console.log(formData)
-        // for (var pair of formData.entries()) {
-        //     console.log(pair[0]+ ', ' + pair[1]); 
-        // }
-        // for (var pair of formData.values()) {
-        //     console.log(pair[0]+ ', ' + pair[1]); 
-        // }
-        for (let [key, value] of formData) {
-          console.log(`${key}: ${value}`)
-        }
-
-        this.$store.dispatch('register', formData)
+        this.$store.dispatch('register', data)
        .then(() => this.validate_success())
        .catch(err => console.log(err))
     },
@@ -663,31 +455,8 @@ export default {
       this.$store.commit('register', false)
     },
 
-    // customFilter (item, queryText, itemText) {
-    //   const textOne = item.toLowerCase()
-    //   const textTwo = item.toLowerCase()
-    //   const searchText = queryText.toLowerCase()
-    //   return textOne.indexOf(searchText) > -1 ||
-    //     textTwo.indexOf(searchText) > -1
-    // },
-
-    // save () {
-    //   this.hasSaved = true
-    // }
-
-  },
-
-  computed: {
-      dateRangeText () {
-        return this.exh_dates.join(' ~ ')
-      }
-    },
-
-     watch: {
-      search (val) {
-        val && val !== this.select && this.querySelections(val)
-      },
-    }
+  }
+  
 };
 </script>
 
@@ -722,7 +491,7 @@ export default {
 .form {
   align-content: center;
   margin: auto;
-  margin-top: -3%;
+  margin-top: 2%;
   max-width: 50%;
   padding: 2%;
   /* border-style: solid;
@@ -745,16 +514,6 @@ export default {
   align-content: center;
   margin-right: auto;
   margin-left: auto;
-}
-
-.gal_desc {
-  margin: auto;
-  text-align: center;
-  margin-top: 2%;
-  margin-bottom: 8%;
-  /* margin-left: 2.5%; */
-  max-width: 60%;
-  font-size: 26px;
 }
 
 .gal_title {
@@ -832,15 +591,6 @@ export default {
   font-weight: 100;
 }
 
-.technique {
-  margin-left: 2%;
-}
-
-.calendar {
-  text-align: center;
-  margin-top: 4%;
-  margin-bottom: 1%;
-}
 /*.img_btn {
   /* background-color:rgb(209, 74, 74, 0.3);   */
   /* color: blue; */
