@@ -168,7 +168,8 @@
         v-for="n in 8"
         :key="n"
         class="d-flex child-flex"
-        cols="4"
+        cols="12"
+        sm="4"
       >
         <v-hover v-slot="{ hover }" open-delay="200">
           <v-card class="images"

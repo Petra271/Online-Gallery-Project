@@ -92,7 +92,8 @@
         v-for="(status, n) in pictures" 
         :key="n"
         class="d-flex child-flex text"
-        cols="3"
+        cols="12"
+        sm="3"
       >
         <v-hover v-slot="{ hover }" open-delay="200">
           <v-card class="images"

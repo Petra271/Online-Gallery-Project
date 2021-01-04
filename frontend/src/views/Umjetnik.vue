@@ -86,7 +86,8 @@
         v-for="(status, n) in colls" 
         :key="n"
         class="d-flex child-flex text"
-        cols="3"
+        cols="12"
+        sm="3"
       >
         <v-hover v-slot="{ hover }" open-delay="200">
           <v-card class="images"
@@ -175,15 +176,16 @@ export default {
   
   methods: {
     validate() {
-        this.$refs.form.validate()
-        if (this.valid) {
-          this.$store.commit('show_tool', false)
-        }
-        this.overlay = false;
-        this.k++;
+      this.$refs.form.validate()
+      if (this.valid) {
+        this.$store.commit('show_tool', false)
+      }
+      this.overlay = false;
+      this.k++;
     },
     add_coll() {
       this.colls.push(this.name)
+      this.$store.commit('name', this.name)
       this.dialog = false
     },
     delete_coll(n) {

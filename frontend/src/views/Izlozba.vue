@@ -24,7 +24,8 @@
         v-for="n in 6"
         :key="n"
         class="d-flex child-flex"
-        cols="4"
+        cols="12"
+        sm="3"
       >
         <v-hover v-slot="{ hover }" open-delay="200">
           <v-card class="images"
