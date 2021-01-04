@@ -360,9 +360,9 @@ export default {
   margin-left: 1%;
   margin-top: 2%;
 }
-/* .col {
-  background-color: rgba(138, 139, 139, 0.219);
-} */
+.col {
+    table-layout: fixed;
+}
 .col td{
   padding: 10px;
   padding-top: 15px;

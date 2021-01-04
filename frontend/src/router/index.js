@@ -39,6 +39,11 @@ const routes = [
     name: 'Natječaji',
     component: () => import('../views/Natjecaji.vue')
   },
+  {
+    path: '/transakcije',
+    name: 'Transakcije',
+    component: () => import('../views/Transakcije.vue')
+  },
   // {
   //   path: '/about',
   //   name: 'About',
