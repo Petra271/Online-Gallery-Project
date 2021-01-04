@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import Vuex from 'vuex'
+import Vuex, { Store } from 'vuex'
 import createPersistedState from "vuex-persistedstate";
 import auth from './modules/auth';
 import axios from 'axios';
@@ -14,7 +14,7 @@ export default new Vuex.Store({
     mode: false,
     admin: false,
     status: '',
-    token: localStorage.getItem('token') || '',
+    token: sessionStorage.getItem('token') || '',
     user : {}
     //register_in_form: false
   },
@@ -58,6 +58,10 @@ export default new Vuex.Store({
       state.status = ''
       state.token = ''
     },
+
+    set_user(state, user) {
+      state.user = user
+    }
     // change(state, register_in_form) {
     //   state.register_in_form = register_in_form
     // }
@@ -66,18 +70,19 @@ export default new Vuex.Store({
     login({commit}, user){
       return new Promise((resolve, reject) => {
         commit('auth_request')
+        console.log(user)
         axios({url: `${process.env.VUE_APP_BACKEND_URI}/login`, data: user, method: 'POST' })
-        .then(resp => {
-          const token = resp.data.token
-          const user = resp.data.user
-          localStorage.setItem('token', token)
-          axios.defaults.headers.common['Authorization'] = token
+        .then(function(resp) {
+          // console.log('data ' + resp.data)
+          const token = resp.data
+          //const user = resp.data.user
+          sessionStorage.setItem('token', token)
           commit('auth_success', token, user)
           resolve(resp)
         })
         .catch(err => {
           commit('auth_error')
-          localStorage.removeItem('token')
+          sessionStorage.removeItem('token')
           reject(err)
         })
       })
@@ -88,30 +93,48 @@ export default new Vuex.Store({
         commit('auth_request')
         axios({url: `${process.env.VUE_APP_BACKEND_URI}/visitor/registration`, data: user, method: 'POST' })
         .then(resp => {
-          const token = resp.data.token
+          // const token = resp.data.token
           const user = resp.data.user
-          localStorage.setItem('token', token)
-          axios.defaults.headers.common['Bearer '] = token
-          commit('auth_success', token, user)
+          // localStorage.setItem('token', token)
+          // axios.defaults.headers.common['Authorization'] = token
+          // commit('auth_success', token, user)
           resolve(resp)
         })
         .catch(err => {
           commit('auth_error', err)
-          localStorage.removeItem('token')
+          sessionStorage.removeItem('token')
+          reject(err)
+        })
+      })
+    },
+
+    logout({commit}){
+      return new Promise((resolve, reject) => {
+        // commit('logout')
+        // console.log('bef ' + localStorage.getItem('token') + ' ' + Store.state.token)
+        console.log('aft ' + sessionStorage.getItem('token'))
+        axios({url: `${process.env.VUE_APP_BACKEND_URI}/visitor/logout`, 
+              headers: {
+                'Authorization':  `Bearer ${sessionStorage.getItem('token')}`
+              }, 
+              data: {}, 
+              method: 'POST' 
+            })
+        .then(resp => {
+          console.log('aft1 ' + sessionStorage.getItem('token'))
+          sessionStorage.removeItem('token')
+          delete axios.defaults.headers.common['Authorization']
+          resolve(resp)
+        })
+        .catch(err => {
+          commit('auth_error', err)
+          sessionStorage.removeItem('token')
           reject(err)
         })
       })
     },
   },
 
-  logout({commit}){
-    return new Promise((resolve, reject) => {
-      commit('logout')
-      localStorage.removeItem('token')
-      delete axios.defaults.headers.common['Authorization']
-      resolve()
-    })
-  },
   modules: {
   },
   getters: {
@@ -122,6 +145,7 @@ export default new Vuex.Store({
     admin: state =>  state.admin,
     isLoggedIn: state => !!state.token,
     authStatus: state => state.status,
-    user: state => state.user
+    user: state => state.user,
+    token: state => state.token
   }
 })

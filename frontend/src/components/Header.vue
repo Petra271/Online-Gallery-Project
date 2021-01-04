@@ -37,13 +37,20 @@
           <v-btn text rounded @click="sign_in()" :class="{'black--text': $store.getters.mode}">prijava</v-btn>
           <v-btn text rounded @click="register()" :class="{'black--text': $store.getters.mode}">registracija</v-btn>
           <v-btn icon @click="mode()">
-            <v-icon v-if="$store.getters.mode" color="black">mdi-coach-lamp</v-icon>
-            <v-icon v-else>mdi-coach-lamp</v-icon>
+            <v-icon :color="!$store.getters.mode ? 'white' : 'black'">mdi-coach-lamp</v-icon>
           </v-btn>
         </div>
 
         
         <div v-else>
+          
+          <v-btn icon @click="mode()">
+            <v-icon :color="!$store.getters.mode ? 'white' : 'black'">mdi-coach-lamp</v-icon>
+          </v-btn>
+          <v-btn icon @click="home()">
+            <v-icon :color="!$store.getters.mode ? 'white' : 'black'">mdi-home-roof</v-icon>
+          </v-btn>
+
           <v-menu rounded="b-xl">
             <template v-slot:activator="{ on: menu, attrs }">
               <v-tooltip bottom>
@@ -52,8 +59,7 @@
                     v-bind="attrs"
                     v-on="{ ...tooltip, ...menu }"
                   >
-                    <v-icon v-if="$store.getters.mode" color="black">mdi-account</v-icon>
-                    <v-icon v-else>mdi-menu</v-icon>
+                    <v-icon :color="!$store.getters.mode ? 'white' : 'black'">mdi-menu</v-icon>
                   </v-btn>
                 </template>
                 <span>Izbornik</span>
@@ -67,17 +73,21 @@
               <v-list-item link v-on:click="sign_out()"> Odjava <v-spacer></v-spacer> <v-icon>mdi-exit-to-app</v-icon> </v-list-item>
             </v-list>
           </v-menu>
-          <v-btn icon @click="home()">
-            <v-icon v-if="$store.getters.mode" color="black">mdi-home-roof</v-icon>
-            <v-icon v-else>mdi-home-roof</v-icon>
-          </v-btn>
-          <v-btn icon @click="mode()">
-            <v-icon v-if="$store.getters.mode" color="black">mdi-coach-lamp</v-icon>
-            <v-icon v-else>mdi-coach-lamp</v-icon>
-          </v-btn>
         </div>
       </v-app-bar>   
     </v-card>
+
+    <v-snackbar
+      timeout="3000"
+      :value="snackOut"
+      outlined
+      multi-line
+    >
+      <p style="text-align: center; margin-bottom: -1%; font-size: 16px;">      
+        Uspješno ste se odjavili.
+      </p>
+    </v-snackbar>
+
     <div id="nav">
       <!-- <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link> |
@@ -94,6 +104,7 @@ export default {
 
   data: () => {
     return {
+      snackOut: false,
       sign_att: false,
       register_att: false,
       form: false,
@@ -140,6 +151,12 @@ export default {
       this.$router.push('/')
     },
 
+    snackbar() {
+      setTimeout(() => { 
+        this.snackOut = false;        
+      }, 3000);
+    },
+
     sign_in() {
       //this.sign_att = true;
       //this.sign_in_form = true;
@@ -169,14 +186,14 @@ export default {
       // this.sign_in_form = false;
       // this.register_form = false;
       // this.enter_exh = false;
-      this.$store.commit('show_tool', false)
-      this.$store.commit('sign_in', false)
-      this.$store.commit('register', false)
-      this.$router.push('/')
-      // this.$store.dispatch('logout')
-      //   .then(() => {
-      //     this.$router.push('/')
-      //   })
+      // this.$store.commit('show_tool', false)
+      // this.$store.commit('sign_in', false)
+      // this.$store.commit('register', false)
+      // this.$router.push('/')
+      console.log('sign out')
+      this.$store.dispatch('logout')
+        .then(() => this.sign_out_success())
+        .catch(err => console.log(err))
       // this.$store.commit('show_tool', false)
       // this.$store.commit('sign_in', false)
       // this.$store.commit('register', false)
@@ -186,6 +203,8 @@ export default {
       this.$store.commit('show_tool', false)
       this.$store.commit('sign_in', false)
       this.$store.commit('register', false)
+      this.snackOut = true
+      this.$router.push('/')
     },
 
     validate() {
@@ -216,11 +235,6 @@ export default {
       //    this.$store.commit('theme', true)
       // }
       this.$store.getters.mode ? this.$store.commit('theme', false) : this.$store.commit('theme', true)
-    },
-
-    iconColor(mode) {
-    	let color = (mode === true) ? 'white' : 'black';
-    	return 'color: '+ color;
     }
   }
 }

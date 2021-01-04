@@ -4,21 +4,16 @@
     <div>
       <Header/>
     </div>
-    <h1 class="te">Moj profil</h1>
-    <div class="mk">Kolekcija X</div>
+    <h1 class="ted">Moj profil</h1>
+    <div class="mkd">Kolekcija X</div>
   </div>
-  <div class="add_coll">
+  <div class="add_coll_d">
     <v-btn text
     color="black" 
-    class="img_btn"
-    text-transform: none 
-    :class="{ 'show-btns': hover }"
-    v-bind="attrs"
-    v-on="{ ...tooltip, ...menu }"
     @click="dialog=true"
     >
     <v-icon>mdi-image-plus</v-icon>
-    Dodaj novo djelo
+    Dodajte novo djelo
     </v-btn>
   </div>
   
@@ -55,7 +50,7 @@
 
         <v-flex xs12 class="text-xs-center text-sm-center text-md-center text-lg-center">
           <img :src="imageUrl" height="150" v-if="imageUrl"/>
-          <v-text-field label="Select Image" @click='pickFile' v-model='imageName'></v-text-field>
+          <v-text-field label="Odaberite sliku" @click='pickFile' v-model='imageName'></v-text-field>
           <input
             type="file"
             style="display: none"
@@ -69,18 +64,18 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn
-            color="green darken-1"
+            color="black"
             text
             @click="dialog = false"
           >
-            PREKID
+            Poništi
           </v-btn>
           <v-btn
-            color="green darken-1"
+            color="black"
             text
             @click="add_art"
           >
-            DODAJ
+            Dodaj
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -89,21 +84,16 @@
 
   <v-row>
       <v-col
-        v-for="(status, n) in pictures" 
+        v-for="n in pictures.length" 
         :key="n"
-        class="d-flex child-flex text"
-        cols="12"
-        sm="3"
+        class="d-flex child-flex"
+        cols="3"
       >
-        <v-hover v-slot="{ hover }" open-delay="200">
-          <v-card class="images"
-            :elevation="hover ? 12 : 2"
-            :class="{ 'on-hover': hover }"
-            v-model="image"
-          >
+        <!-- <v-hover v-slot="{ hover }" open-delay="200"> -->
+          <v-card class="images_d">
             <v-img
-              :src="pictures[n]"
-              :lazy-src="pictures[n]"
+              :src="pictures[n - 1]"
+              :lazy-src="pictures[n - 1]"
               aspect-ratio="1"
               class="grey lighten-2 img"
             >
@@ -112,11 +102,9 @@
                   <template v-slot:activator="{ on: tooltip }">
                     <v-btn icon
                       color="black" 
-                      class="img_btn" 
-                      :class="{ 'show-btns': hover }"
                       v-bind="attrs"
-                      v-on="{ ...tooltip, ...menu }"
-                      @click="delete_art(n)"
+                      v-on="tooltip"
+                      @click="delete_art(n - 1)"
                       >
                       <v-icon>mdi-image-edit-outline</v-icon>
                     </v-btn>
@@ -125,9 +113,9 @@
                 </v-tooltip>
               </v-card-title>
             </v-img>
-            <p class="naziv">{{names[n]}}</p>
+            <p class="naziv_d">{{names[n - 1]}}</p>
           </v-card>
-        </v-hover>
+        <!-- </v-hover> -->
       </v-col>
     </v-row>
   </v-app>
@@ -250,7 +238,7 @@ export default {
 .comp {
  margin-top: 200px;
 }
-.images {
+.images_d {
   align-content: right;
   justify-content: center;
   margin: auto;
@@ -262,11 +250,11 @@ export default {
   /* border-radius: 50px; */
   text-align: center;
 }
-.naziv{
+.naziv_d {
   font-size: 20px;
   font-style: oblique;
 }
-.te {
+.ted {
   font-size: 80px;
   font-family:  'Work Sans', sans-serif;
   margin-left: 2%;
@@ -283,12 +271,12 @@ export default {
     width: 50%;
     float: center;
 }*/
-.block {
+/* .block {
   background: none repeat scroll 0 0;
   display: block;
   overflow: auto;
   width: fit-content;
-}
+} */
 .col {
   width: fit-content;
   float: left;
@@ -325,16 +313,14 @@ export default {
   text-align: center;
   z-index: 11; /* 1px higher than the overlay layer */
 }
-.v-btn {
-  text-transform:none !important;
-}
-.mk {
+
+.mkd {
   font-size: 50px;
   font-family:  'Work Sans', sans-serif;
   margin-left: 2%;
   margin-top: 3%;
 }
-.add_coll {
+.add_coll_d {
   margin-left: 1%;
   margin-top: 2%;
 }
