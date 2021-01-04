@@ -19,5 +19,7 @@ public class SecurityConstants {
     public static final String ADD_EXHIBITION="/admin/createExhibition";
 
     public static final String GET_EXHIBITION="/admin/getExhibition";
-
+    public static final String ADD_TRANSACTION="/transaction/addTransaction";
+    public static final String GET_ALL_TRANSACTIONS="/transaction/getAllTransactions";
+    public static final String GET_ALL_TRANSACTIONS_BY_USER="/transaction/getAllTransactionsByUser";
 }
