@@ -1,9 +1,8 @@
-package hr.fer.progi.raketa.onlinegalerija.api;
-
+package hr.fer.progi.raketa.onlinegalerija.api;import hr.fer.progi.raketa.onlinegalerija.model.Artwork;
 import com.fasterxml.jackson.databind.util.JSONPObject;
-import hr.fer.progi.raketa.onlinegalerija.model.Artwork;
 import hr.fer.progi.raketa.onlinegalerija.model.Collection;
 import hr.fer.progi.raketa.onlinegalerija.model.Comment;
+import hr.fer.progi.raketa.onlinegalerija.model.Transaction;
 import org.apache.tomcat.util.json.JSONParser;
 import org.json.JSONException;
 import org.springframework.context.annotation.Bean;
@@ -31,6 +30,14 @@ public class service {
         return new ResponseEntity<>(retMap, HttpStatus.OK);
     }
 
+    public ResponseEntity<Map<String, Map<String, String>>> testMapReturn(){
+        Map<String, Map<String, String>> map = new HashMap<>();
+        Map<String, String> subMap = new HashMap<>();
+        subMap.put("SubKey", "subValue");
+        map.put("testKey", subMap);
+        return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+
     public ResponseEntity<Map<UUID, String>> produceComments(Set<Comment> commentSet) {
         Map<UUID, String> commentMap = new HashMap<>();
         for (Comment c : commentSet) {
@@ -38,6 +45,15 @@ public class service {
         }
         System.out.println("Velicin ampae je : " + commentMap.size());
         return new ResponseEntity<>(commentMap, HttpStatus.OK);
+    }
+
+    public ResponseEntity<List<String>> produceTransactions(List<Transaction> transactions) {
+        List<String> transactionJsonList = new ArrayList<>();
+        for (Transaction t : transactions) {
+            transactionJsonList.add(produceTransactionJson(t));
+        }
+        System.out.println("Velicina liste je: " + transactionJsonList.size());
+        return new ResponseEntity<>(transactionJsonList, HttpStatus.OK);
     }
 
     private JSONObject produceCollectionJson(Collection c) throws JSONException {
@@ -72,6 +88,19 @@ public class service {
         sb.append("\"name\": \"").append(c.getVisitor().getName()).append("\",");
         sb.append("\"surname\": \"").append(c.getVisitor().getSurname()).append("\",");
         sb.append("\"content\": \"").append(c.getContent());
+        sb.append("}");
+        return sb.toString();
+    }
+
+    private String produceTransactionJson(Transaction t) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{");
+        sb.append("\"payerName\": \"").append(t.getPayer().getName()).append("\",");
+        sb.append("\"payerSurname\": \"").append(t.getPayer().getSurname()).append("\",");
+        sb.append("\"receiverName\": \"").append(t.getReceiver().getName()).append("\",");
+        sb.append("\"receiverSurname\": \"").append(t.getReceiver().getSurname()).append("\",");
+        sb.append("\"amountToArtist\": \"").append(t.getAmountToArtist()).append("\",");
+        sb.append("\"provisionAmount\": \"").append(t.getProvisionAmount());
         sb.append("}");
         return sb.toString();
     }
