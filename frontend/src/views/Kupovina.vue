@@ -108,8 +108,8 @@
               v-bind:style= "[$store.getters.mode ? {'background-color': 'black'} : {'background-color': 'white'}]"
               :elevation="0">
         <div style="padding: 6px; font-size: 18px;">
-          Ime: Mato <br><br>
-          Prezime: Lovrak <br><br>
+          Ime: Mato {{$store.getters.user.name}}<br><br>
+          Prezime: Lovrak {{$store.getters.user.surname}}<br><br>
           Adresa: {{street}}, {{postcode}}, {{town}} <br><br>
           Broj mobitela: {{phone}} <br><br>
           Dostava se očekuje unutar 3 do 5 radnih dana <br><br>

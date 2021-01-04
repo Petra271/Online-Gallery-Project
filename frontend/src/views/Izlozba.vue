@@ -145,10 +145,10 @@
             <v-row>
             <!-- DISABLED AKO JE VEĆ KUPLJENO -->
             <div>
-              <v-btn rounded color="rgb(33, 1, 1)" @click="overlay=false">Natrag</v-btn>  
+              <v-btn color="rgb(33, 1, 1)" @click="overlay=false">Natrag</v-btn>  
             </div>
             <div style="padding-left: 30px;">
-              <v-btn rounded color="rgba(1, 24, 12)" to="/kupovina">Kupnja</v-btn>
+              <v-btn color="rgba(1, 24, 12)" to="/kupovina">Kupnja</v-btn>
             </div>
             </v-row>
           </div>

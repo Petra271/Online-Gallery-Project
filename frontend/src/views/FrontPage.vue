@@ -13,9 +13,9 @@
       >
       Dobrodošli u online galeriju
   </div>
+  <!-- <v-btn @click="snackReg = !snackReg">snack</v-btn> -->
   <div class="gal_desc">{{description}}
   </div>
-
   
   <!-- ---------------- PRIJAVA ------------------------- -->
     <div v-if="this.$store.getters.sign_in_form" class="form" ref="enter_form">
@@ -50,7 +50,7 @@
           :disabled="!valid"
           color="rgba(1, 24, 12)"
           class="mr-4 white--text"
-          @click="sign_success()"
+          @click="validate_s()"
         >
           Prijava
         </v-btn>
@@ -324,8 +324,7 @@
           <v-tabs-items v-model="tab">
             <v-tab-item>
               <v-card flat>
-              
-                <v-card-text class="black--text">ovo je tehnika nepismene seljačine al dobro ajde</v-card-text>
+                <v-card-text class="black--text">Odaberite tehniku izložbi koje želite prikazati</v-card-text>
                 <v-radio-group class="technique" v-model="radioGroup">
                   <v-radio
                     v-for="(teh, i) in tehnike.length"
@@ -399,6 +398,17 @@
       <v-icon>mdi-sort</v-icon>
     </v-btn>
 
+    <v-snackbar
+      timeout="3000"
+      :value="snackReg"
+      outlined
+      multi-line
+    >
+      <p style="text-align: center; margin-bottom: -1%; font-size: 16px;">      
+      Registracija uspješna. Molimo <br>
+      prijavite se ukoliko želite nastaviti.</p>
+    </v-snackbar>    
+
     <v-row>
       <v-col
         cols="12"
@@ -449,9 +459,9 @@ export default {
   data: () => {
     return {
       description: '',
+      snackReg: false,
       sign_att: false,
       register_att: false,
-      hovered: false,
       timer: null,
       form: false,
       sign_in_form: false,
@@ -564,7 +574,7 @@ export default {
       this.$store.commit('register', false)
       this.$store.dispatch('logout')
         .then(() => {
-          this.$router.push('/')
+          this.sign_out_success()
         })
       // this.$store.commit('show_tool', false)
       // this.$store.commit('sign_in', false)
@@ -575,12 +585,14 @@ export default {
       this.$store.commit('show_tool', false)
       this.$store.commit('sign_in', false)
       this.$store.commit('register', false)
+      this.$router.push('/')
     },
 
     validate_s() {
         this.$refs.form.validate()
         let email = this.email_sign
         let password = this.password_sign
+        console.log('login' + email + ' ' + password)
         this.$store.dispatch('login', { email, password })
        .then(() => this.sign_success())
        .catch(err => console.log(err))
@@ -598,8 +610,10 @@ export default {
         if (this.$store.getters.logged_in) {
           this.enter_exh = true;
         }
-        this.sign_in_form = false;
-        this.register_form = false;
+        // this.sign_in_form = false;
+        // this.register_form = false;
+        this.$store.commit('sign_in', false)
+        this.$store.commit('register', false)
         this.$router.push('/')
     },
 
@@ -610,9 +624,10 @@ export default {
           email: this.email,
           password: this.password_reg,
           paypalMail: this.payPal,
-          flag: false
+          flag: this.pdf == 'empty_file' ? false : true
           // is_admin: this.is_admin
         }
+        this.$store.commit('set_user', data)
         data = JSON.stringify(data)
         let formData = new FormData()
         formData.append('file', this.pdf)
@@ -629,9 +644,9 @@ export default {
         // for (var pair of formData.values()) {
         //     console.log(pair[0]+ ', ' + pair[1]); 
         // }
-        for (let [key, value] of formData) {
-          console.log(`${key}: ${value}`)
-        }
+        // for (let [key, value] of formData) {
+        //   console.log(`${key}: ${value}`)
+        // }
 
         this.$store.dispatch('register', formData)
        .then(() => this.validate_success())
@@ -640,17 +655,20 @@ export default {
 
     validate_success() {
       this.$refs.form.validate()
-      if (this.valid) {
-          // this.form = true;
-          this.$store.commit('show_tool', true)
-          this.$store.commit('sign_in', false)
-          this.$store.commit('register', false)
-        }
-        if (this.$store.getters.logged_in) {
-          this.enter_exh = true;
-        }
-        this.sign_in_form = false;
-        this.register_form = false;
+      // if (this.valid) {
+      //     // this.form = true;
+      //     this.$store.commit('show_tool', true)
+      //     this.$store.commit('sign_in', false)
+      //     this.$store.commit('register', false)
+      //   }
+      //   if (this.$store.getters.logged_in) {
+      //     this.enter_exh = true;
+      //   }
+        // this.sign_in_form = false;
+        // this.register_form = false;
+        this.snackReg = true
+        this.$store.commit('sign_in', false)
+        this.$store.commit('register', false)
         this.$router.push('/')
         
     },
@@ -683,11 +701,10 @@ export default {
       }
     },
 
-     watch: {
+  watch: {
       search (val) {
         val && val !== this.select && this.querySelections(val)
-      },
-
+      }
   }
   
 };
@@ -802,7 +819,7 @@ export default {
 
 .img {
   margin: 5%;
-  border-radius: 50px;
+  /* border-radius: 50px; */
 }
 
 .izl {

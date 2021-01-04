@@ -7,18 +7,11 @@
     <h1 class="te">Moj profil</h1>
     <div class="mk">Moje kolekcije</div>
   </div>
-  <div class="add_coll">
-    <v-btn text
-    color="black" 
-    class="img_btn" 
-    :class="{ 'show-btns': hover }"
-    v-bind="attrs"
-    v-on="{ ...tooltip, ...menu }"
-    @click="dialog=true"
-    >
-    <v-icon>mdi-folder-edit-outline</v-icon>
+  <div class="add_col">
+    <div style="cursor: pointer;" @click="dialog=true">
+    <v-icon color="black">mdi-folder-edit-outline</v-icon>
     Dodaj novu kolekciju
-    </v-btn>
+    </div>
   </div>
 
   <v-row justify="center">
@@ -63,18 +56,18 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn
-            color="green darken-1"
+            color="black"
             text
             @click="dialog = false"
           >
-            PREKID
+            Poništi
           </v-btn>
           <v-btn
-            color="green darken-1"
+            color="black"
             text
             @click="add_coll"
           >
-            DODAJ
+            Dodaj
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -83,17 +76,13 @@
 
   <v-row>
       <v-col
-        v-for="(status, n) in colls" 
+        v-for="n in colls.length" 
         :key="n"
-        class="d-flex child-flex text"
-        cols="12"
-        sm="3"
+        class="d-flex child-flex"
+        cols="3"
       >
-        <v-hover v-slot="{ hover }" open-delay="200">
-          <v-card class="images"
-            :elevation="hover ? 12 : 2"
-            :class="{ 'on-hover': hover }"
-          >
+        <!-- <v-hover v-slot="{ hover }" open-delay="200"> -->
+          <v-card class="images_u">
             <v-img
               :src="`https://picsum.photos/500/300?image=${n * 3 + 10}`"
               :lazy-src="`https://picsum.photos/10/6?image=${n * 3 + 10}`"
@@ -120,7 +109,7 @@
                       :class="{ 'show-btns': hover }"
                       v-bind="attrs"
                       v-on="{ ...tooltip, ...menu }"
-                      @click="delete_coll(n)"
+                      @click="delete_coll(n - 1)"
                       >
                       <v-icon>mdi-folder-remove-outline</v-icon>
                     </v-btn>
@@ -129,12 +118,12 @@
                 </v-tooltip>
               </v-card-title>
             </v-img>
-            <v-btn text to="/moj_profil/djela">
-                <p class="naziv">{{colls[n]}}</p>
-            </v-btn>
+            <div @click="djela()" style="cursor: pointer;">
+                <p class="naziv">{{colls[n - 1]}}</p>
+            </div>
           </v-card>
-        </v-hover>
-      </v-col>
+        <!-- </v-hover> -->
+      </v-col> 
     </v-row>
   </v-app>
 </template>
@@ -151,7 +140,6 @@ export default {
 
   data: () => {
     return {
-      overlay: false,
       valid: true,
       form: false,
       add_form: false,
@@ -168,7 +156,7 @@ export default {
         'mješoviti',
       ],
       colls: [
-        'Kolekcija 1', 'Kolekcija 2', 'Kolekcija 3'
+        'Kolekcija 1', 'Kolekcija 2', 'Kolekcija 3', 'Kolekcija 4'
       ],
       dialog: false,
     }
@@ -183,11 +171,17 @@ export default {
       this.overlay = false;
       this.k++;
     },
+
+    djela() {
+      this.$router.push('/moj_profil/djela')
+    },
+
     add_coll() {
       this.colls.push(this.name)
       this.$store.commit('name', this.name)
       this.dialog = false
     },
+
     delete_coll(n) {
       this.colls.splice(n, 1)
     }
@@ -198,20 +192,20 @@ export default {
 
 <style>
 
-.comp {
+/* .comp {
  margin-top: 200px;
-}
+} */
 .mk {
   font-size: 50px;
   font-family:  'Work Sans', sans-serif;
-  margin-left: 2%;
+  margin-left: 1%;
   margin-top: 3%;
 }
-.images {
+.images_u {
   align-content: right;
   justify-content: center;
   margin: auto;
-  margin-top: 5%;
+  margin-top: 0%;
   margin-bottom: 5%;
   height: 0%;
   width: 95%;
@@ -226,14 +220,16 @@ export default {
 .te {
   font-size: 80px;
   font-family:  'Work Sans', sans-serif;
-  margin-left: 2%;
-  margin-top: 2%;
-}
-.add_coll {
   margin-left: 1%;
   margin-top: 2%;
 }
-.overlay {
+.add_col {
+  margin-left: 1.5%;
+  margin-top: 1%;
+  font-size: 22px;
+  color: black;
+}
+/* .overlay {
     position: absolute;
     top: 0;
     left: 0;
@@ -241,8 +237,8 @@ export default {
     width: 100%;
     background-color: rgba(0,0,0,0.5);
     z-index: 10;
-}
-.modal {
+} */
+/* .modal {
     width: 60%;
     height: 60%;
     position: fixed;
@@ -250,10 +246,8 @@ export default {
     left: 15%;
     background-color: white;
     border-radius: 5px;
-    /*text-align: center;*/
-    z-index: 11; /* 1px higher than the overlay layer */
-}
-.v-btn {
-  text-transform:none !important;
-}
+    text-align: center;
+    z-index: 11; 1px higher than the overlay layer
+} */
+
 </style>
