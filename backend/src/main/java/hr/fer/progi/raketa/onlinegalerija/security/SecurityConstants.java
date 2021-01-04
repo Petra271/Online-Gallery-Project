@@ -6,6 +6,7 @@ public class SecurityConstants {
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String HEADER_STRING = "Authorization";
     public static final String SIGN_UP_URL = "/visitor/registration";
+    public static final String LOGOUT = "/visitor/logout";
     public static final String COLLECTION_CREATION = "/artist/createCollection";
     public static final String ADD_ARTWORK = "/artist/addArtwork";
     public static final String GET_COLLECTIONS = "/artist/getCollections";

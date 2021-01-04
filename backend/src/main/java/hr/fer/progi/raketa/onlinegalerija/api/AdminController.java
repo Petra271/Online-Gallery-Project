@@ -72,7 +72,7 @@ public class AdminController {
 
     @GetMapping("/getExhibition")
     public ResponseEntity<?> getExhibition(@RequestBody ExhibitionDTO exhibitionDTO) throws JSONException {
-        System.out.println(exhibitionDTO.getExName());
+
         if(!exhibitionRepository.existsByName(exhibitionDTO.getExName()))
             return new ResponseEntity<String>("No exhibition with this name exists", HttpStatus.NOT_FOUND);
 
@@ -86,6 +86,13 @@ public class AdminController {
                                   @RequestPart("exName") String exName,
                                   @RequestPart("exDesc") String exDesc,
                                   @RequestPart("desc") String accepted) throws JsonProcessingException {
+
+        String currentUsername = loggedInUsers.get(BearerTokenUtil.getBearerTokenHeader());
+
+        if(!adminRepository.existsByEmail(currentUsername))
+            return new ResponseEntity<String>("No admin with this username exists", HttpStatus.NOT_FOUND);
+
+
         Map<String, String[]> acceptedCollections = new ObjectMapper().readValue(accepted, new  TypeReference<Map<String, String[]>>(){});
 
         Set<Artist> artists = new HashSet<>();

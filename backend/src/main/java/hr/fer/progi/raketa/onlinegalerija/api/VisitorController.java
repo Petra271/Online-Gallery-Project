@@ -27,24 +27,22 @@ public class VisitorController {
 
     @Autowired
     private VisitorRepository visitorRepository;
+    @Autowired
     private ArtistRepository artistRepository;
+    @Autowired
     private CollectionRepository collectionRepository;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
     private ArtworkRepository artworkRepository;
+
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired
     private AdminRepository adminRepository;
     @Autowired
     private service service;
 
-    public VisitorController(VisitorRepository visitorRepository, ArtistRepository artistRepository,
-                             CollectionRepository collectionRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
-                             ArtworkRepository artworkRepository) {
-        this.visitorRepository = visitorRepository;
-        this.artistRepository = artistRepository;
-        this.collectionRepository = collectionRepository;
+    public VisitorController(BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.artworkRepository = artworkRepository;
-        this.service = new service();
+
     }
 
     @PostMapping(value="/registration", consumes={"multipart/form-data"})
@@ -74,86 +72,11 @@ public class VisitorController {
                 .body("Successful registration");
     }
 
-    @PostMapping("/createCollection")
-    public ResponseEntity<?> createCollection(@RequestBody CollectionDTO collectionDTO){
-
-        String currentUsername = loggedInUsers.get(BearerTokenUtil.getBearerTokenHeader());
-
-        Artist artist = artistRepository.findByEmail(currentUsername);
-        if(artist == null)
-            return new ResponseEntity<String>("Artist was not found in the repository", HttpStatus.NOT_FOUND);
-
-        List<Collection> collectionList = collectionRepository
-                .findByArtist(artist);
-        for(Collection c : collectionList)
-            if(c.getName().equals(collectionDTO.getName()))
-                return new ResponseEntity<String>("Artist already has a collection of the same name", HttpStatus.NOT_ACCEPTABLE);
-        //System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
-        Style style;
-        try{
-            style = Style.valueOf(collectionDTO.getStyle());
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<String>("Style does not exist", HttpStatus.NOT_ACCEPTABLE);
-        }
-        Collection collection = new Collection(collectionDTO.getName(), collectionDTO.getDescription(), style, artist);
-
-        collectionRepository.save(collection);
-        return ResponseEntity.ok().body("Successful collection creation");
-    }
-
     @PostMapping("/logout")
     public ResponseEntity<?> logout(){
 
         loggedInUsers.remove(BearerTokenUtil.getBearerTokenHeader());
         return ResponseEntity.ok().body("Logout successful");
-    }
-
-
-    @PostMapping(value="/addArtwork", consumes={"multipart/form-data"})
-    public ResponseEntity<?> addArtwork(@RequestPart("json") ArtworkDTO artworkDTO, @RequestPart("file") MultipartFile file) throws IOException{
-
-        Artist artist = artistRepository.findByEmail(loggedInUsers.get(BearerTokenUtil.getBearerTokenHeader()));
-
-        if(artist == null)
-            return new ResponseEntity<String>("Artist was not found in the repository", HttpStatus.NOT_FOUND);
-
-        List<Collection> collectionList = collectionRepository
-                .findByArtist(artist);
-
-        Artwork artwork = null;
-        for(Collection c : collectionList)
-            if(c.getName().equals(artworkDTO.getCollectionName())) {
-                artwork = new Artwork(
-                        artworkDTO.getName(),
-                        artworkDTO.getDescription(),
-                        Style.valueOf(artworkDTO.getStyle()),
-                        Double.parseDouble(artworkDTO.getPrice()),
-                        file.getBytes(),
-                        c
-                );
-                c.addArtwork(artwork);
-            }
-
-        if(artwork == null)
-            return new ResponseEntity<String>("This artist does not contain the collection this artwork is supposed be inserted in.", HttpStatus.NOT_ACCEPTABLE);
-
-        artworkRepository.save(artwork);
-
-        return ResponseEntity.ok().body("successfully added artwork");
-    }
-
-    @GetMapping(value="/getCollections")
-    @ResponseBody
-    public ResponseEntity<?> getCollections() throws JSONException {
-        Artist artist = artistRepository.findByEmail(loggedInUsers.get(BearerTokenUtil.getBearerTokenHeader()));
-
-        if(artist == null)
-            return new ResponseEntity<String>("Artist was not found in the repository", HttpStatus.NOT_FOUND);
-
-        Set<Collection> collectionSet = artist.getCollections();
-                //collectionRepository.findByArtist(artist);
-
-        return service.produceCollections(collectionSet);
     }
 
     @PostMapping(value="/test")
