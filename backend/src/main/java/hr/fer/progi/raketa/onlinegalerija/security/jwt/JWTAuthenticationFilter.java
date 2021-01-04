@@ -89,6 +89,11 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 //           System.out.println("Is anon");
        loggedInUsers.put(token, ((User) authResult.getPrincipal()).getUsername());
        response.addHeader(HEADER_STRING, TOKEN_PREFIX + token);
+        try {
+            response.getWriter().write(token);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
