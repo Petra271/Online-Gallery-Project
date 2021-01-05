@@ -526,11 +526,26 @@ export default {
         // Set the default value of this.item based on what's in the store
         this.sign_in_form = this.$store.getters.sign_in_form
         //this.enter_exh = this.$store.getters.logged_in
-        if (this.$store.getters.logged_in) {
-          this.enter_exh = true;
-        } else {
-          this.enter_exh = false;
-        }
+        //localStorage.setItem('logged_in', false)
+        console.log('mounted ' + localStorage.getItem('logged_in'))
+        // console.log('mounted2 ' + logged)
+        // console.log('type ' + typeof(logged))
+        // if (logged) {
+        //   console.log('DA')
+        //   console.log('log ' + logged)
+        //   this.$store.commit('show_tool', true)
+        // } else {
+        //   console.log('NE')
+        //   console.log('log ' + logged)
+        //   this.$store.commit('show_tool', false)
+        // }
+        var logged = (localStorage.getItem('logged_in') === 'true');
+        this.$store.commit('show_tool', logged ? true : false)
+        // if (this.$store.getters.logged_in) {
+        //   this.enter_exh = true;
+        // } else {
+        //   this.enter_exh = false;
+        // }
     },
 
   methods: {
@@ -770,9 +785,6 @@ export default {
   align-content: center;
   justify-content: center;
   font-size: 100px;
-  /* font-family:  Georgia; */
-  font-family: Georgia;
-  margin-left: 2.5%;
   margin-top: 10%;
   font-family: 'Work Sans', sans-serif;
 }

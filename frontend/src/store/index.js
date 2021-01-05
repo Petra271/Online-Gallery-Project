@@ -28,6 +28,8 @@ export default new Vuex.Store({
     },
 
     show_tool(state, logged_in) {
+      console.log('showtool ' + logged_in)
+      localStorage.setItem('logged_in', logged_in)
       state.logged_in = logged_in
     },
 
@@ -76,6 +78,8 @@ export default new Vuex.Store({
           // console.log('data ' + resp.data)
           const token = resp.data
           //const user = resp.data.user
+          localStorage.setItem('logged_in', true)
+          console.log('login ' + localStorage.getItem('logged_in'))
           sessionStorage.setItem('token', token)
           commit('auth_success', token, user)
           resolve(resp)
@@ -123,6 +127,8 @@ export default new Vuex.Store({
         .then(resp => {
           console.log('aft1 ' + sessionStorage.getItem('token'))
           sessionStorage.removeItem('token')
+          localStorage.setItem('logged_in', false)
+          console.log('logout ' + localStorage.getItem('logged_in'))
           delete axios.defaults.headers.common['Authorization']
           resolve(resp)
         })

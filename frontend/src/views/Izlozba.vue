@@ -351,6 +351,11 @@ bit će pokazana u Galeriji umjetnina u Splitu, od 11. veljače do 28. ožujka 2
     }
   },
 
+  mounted() {
+    var logged = (localStorage.getItem('logged_in') === 'true');
+    this.$store.commit('show_tool', logged ? true : false)
+  },
+
   methods: {
 
     informIn() {

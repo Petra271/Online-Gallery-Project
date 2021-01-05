@@ -168,6 +168,11 @@ export default {
      }
   },
 
+  mounted() {
+    var logged = (localStorage.getItem('logged_in') === 'true');
+    this.$store.commit('show_tool', logged ? true : false)
+  },
+
   methods: {
     validate() {
       this.$refs.form.validate()
