@@ -1,5 +1,6 @@
 package hr.fer.progi.raketa.onlinegalerija.api;import hr.fer.progi.raketa.onlinegalerija.model.Artwork;
 import com.fasterxml.jackson.databind.util.JSONPObject;
+import hr.fer.progi.raketa.onlinegalerija.model.Artwork;
 import hr.fer.progi.raketa.onlinegalerija.model.Collection;
 import hr.fer.progi.raketa.onlinegalerija.model.Comment;
 import hr.fer.progi.raketa.onlinegalerija.model.Transaction;
@@ -16,11 +17,11 @@ import java.util.*;
 
 @Service
 public class service {
-    public ResponseEntity<Map<JSONObject, Map<JSONObject, byte[]>>> produceCollections(Set<Collection> collections) throws JSONException {
-        Map<JSONObject, Map<JSONObject, byte[]>> retMap = new HashMap<>();
+    public ResponseEntity<Map<String, Map<String, byte[]>>> produceCollections(Set<Collection> collections) throws JSONException {
+        Map<String, Map<String, byte[]>> retMap = new HashMap<>();
 
         for(Collection c : collections){
-            Map<JSONObject, byte[]> collMap = new HashMap<>();
+            Map<String, byte[]> collMap = new HashMap<>();
             for(Artwork a : c.getArtworks())
                 collMap.put(produceArtworkJson(a), a.getImageInBytes());
 
@@ -30,12 +31,30 @@ public class service {
         return new ResponseEntity<>(retMap, HttpStatus.OK);
     }
 
-    public ResponseEntity<Map<String, Map<String, String>>> testMapReturn(){
-        Map<String, Map<String, String>> map = new HashMap<>();
-        Map<String, String> subMap = new HashMap<>();
-        subMap.put("SubKey", "subValue");
-        map.put("testKey", subMap);
-        return new ResponseEntity<>(map, HttpStatus.OK);
+    public ResponseEntity<Map<String, Map<String, byte[]>>> produceCollectionsSingles(Set<Collection> collections) throws JSONException {
+        Map<String, Map<String, byte[]>> retMap = new HashMap<>();
+
+        for(Collection c : collections){
+            Map<String, byte[]> collMap = new HashMap<>();
+
+            if(c.getArtworks().iterator().hasNext()) {
+                Artwork a = c.getArtworks().iterator().next();
+                collMap.put(produceArtworkJson(a), a.getImageInBytes());
+            }
+
+            retMap.put(produceCollectionJson(c), collMap);
+        }
+
+        return new ResponseEntity<>(retMap, HttpStatus.OK);
+    }
+
+    public ResponseEntity<Map<String, String>> produceCollectionsList(Set<Collection> collections) throws JSONException{
+        Map<String, String> collectionList = new HashMap<>();
+
+        for(Collection c : collections)
+            collectionList.put(c.getName(), produceCollectionJson(c));
+
+        return new ResponseEntity<>(collectionList, HttpStatus.OK);
     }
 
     public ResponseEntity<Map<UUID, String>> produceComments(Set<Comment> commentSet) {
@@ -56,20 +75,20 @@ public class service {
         return new ResponseEntity<>(transactionJsonList, HttpStatus.OK);
     }
 
-    private JSONObject produceCollectionJson(Collection c) throws JSONException {
+    private String produceCollectionJson(Collection c) throws JSONException {
         StringBuilder sb = new StringBuilder();
         sb.append("{");
         sb.append("\"name\": \"").append(c.getName()).append("\",");
         sb.append("\"description\": \"").append(c.getDescription()).append("\",");
         sb.append("\"style\": \"").append(c.getStyle().toString()).append("\"");
         sb.append("}");
-        JSONObject json = new JSONObject(sb.toString());
+        
 
-        System.out.println(json);
-        return json;
+        System.out.println(sb.toString());
+        return sb.toString();
     }
 
-    private JSONObject produceArtworkJson(Artwork a) throws JSONException {
+    private String produceArtworkJson(Artwork a) throws JSONException {
         StringBuilder sb = new StringBuilder();
         sb.append("{");
         sb.append("\"id\": \"").append(a.getId()).append("\",");
@@ -79,7 +98,7 @@ public class service {
         sb.append("\"price\": \"").append(a.getPrice()).append("\"");
         sb.append("}");
         System.out.println(sb.toString());
-        return new JSONObject(sb.toString());
+        return sb.toString();
     }
 
     private String produceCommentJson(Comment c) {

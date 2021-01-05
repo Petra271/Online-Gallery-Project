@@ -9,8 +9,11 @@ public class SecurityConstants {
     public static final String LOGOUT = "/visitor/logout";
     public static final String COLLECTION_CREATION = "/artist/createCollection";
     public static final String ADD_ARTWORK = "/artist/addArtwork";
+    public static final String REMOVE_ARTWORK = "/artist/removeArtwork";
+    public static final String REMOVE_COLLECTION = "/artist/removeCollection";
     public static final String GET_COLLECTIONS = "/artist/getCollections";
-    public static final String TEST = "/admin/test";
+    public static final String GET_COLLECTIONS_LIST = "/artist/getCollectionsList";
+    public static final String TEST = "/visitor/test";
     public static final String ADD_COMMENT ="/comment/add";
     public static final String GET_COMMENTS="/comment/get";
     public static final String DELETE_COMMENT="/comment/remove";

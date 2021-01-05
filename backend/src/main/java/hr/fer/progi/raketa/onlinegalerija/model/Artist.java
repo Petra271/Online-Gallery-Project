@@ -24,7 +24,7 @@ public class Artist extends Visitor {
             cascade = CascadeType.ALL)
     private List<ContestApplication> applications;
 
-    @ManyToMany(cascade = CascadeType.MERGE)
+    @ManyToMany(cascade = CascadeType.MERGE) //MERGE
     @JoinTable(name = "artist_exhibition",
             joinColumns = @JoinColumn(name = "artist_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "exhibition_id", referencedColumnName = "id"))

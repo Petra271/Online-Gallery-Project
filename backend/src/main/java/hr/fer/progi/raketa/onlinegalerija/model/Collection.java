@@ -20,7 +20,7 @@ public class Collection {
     private Style style;
 
     @OneToMany(mappedBy = "collection", fetch = FetchType.LAZY,
-            cascade = CascadeType.MERGE)
+            cascade = CascadeType.MERGE)//MERGE
     private Set<Artwork> artworks;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

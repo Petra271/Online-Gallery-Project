@@ -17,7 +17,7 @@ public class ContestApplication {
     private Artist artist;
 
     @OneToMany(mappedBy = "contestApplication", fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL)
+            cascade = CascadeType.MERGE)
     private Set<Collection> collections;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

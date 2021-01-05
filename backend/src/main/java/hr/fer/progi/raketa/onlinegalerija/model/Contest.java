@@ -35,7 +35,7 @@ public class Contest {
     private double provision;
 
     @OneToMany(mappedBy = "contest", fetch = FetchType.LAZY,
-            cascade = CascadeType.MERGE)
+            cascade = CascadeType.ALL)
     private Set<ContestApplication> applications;
 
     public Contest() {
@@ -115,5 +115,6 @@ public class Contest {
 
     public void addApplication(ContestApplication ca){
         applications.add(ca);
+        ca.setContest(this);
     }
 }

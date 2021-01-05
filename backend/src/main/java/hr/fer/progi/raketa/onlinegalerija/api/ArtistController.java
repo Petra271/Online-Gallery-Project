@@ -1,9 +1,6 @@
 package hr.fer.progi.raketa.onlinegalerija.api;
 
-import hr.fer.progi.raketa.onlinegalerija.dao.ApplicationDTO;
-import hr.fer.progi.raketa.onlinegalerija.dao.CollectionDTO;
-import hr.fer.progi.raketa.onlinegalerija.dao.ArtworkDTO;
-import hr.fer.progi.raketa.onlinegalerija.dao.VisitorDTO;
+import hr.fer.progi.raketa.onlinegalerija.dao.*;
 import hr.fer.progi.raketa.onlinegalerija.model.*;
 import hr.fer.progi.raketa.onlinegalerija.repository.*;
 import org.json.JSONException;
@@ -25,6 +22,7 @@ import static hr.fer.progi.raketa.onlinegalerija.security.WebSecurityConfigurati
 @Controller
 @RequestMapping("/artist")
 
+
 public class ArtistController {
     @Autowired
     private VisitorRepository visitorRepository;
@@ -38,6 +36,8 @@ public class ArtistController {
     private AdminRepository adminRepository;
     @Autowired
     private ContestRepository contestRepository;
+    @Autowired
+    private ContestApplicationRepository contestApplicationRepository;
     @Autowired
     private service service;
 
@@ -81,6 +81,9 @@ public class ArtistController {
         Artwork artwork = null;
         for(Collection c : collectionList)
             if(c.getName().equals(artworkDTO.getCollectionName())) {
+                for(Artwork a : c.getArtworks())
+                    if (a.getName().equals(artworkDTO.getName()))
+                        return new ResponseEntity<>("An artwork of the same name already exists", HttpStatus.NOT_ACCEPTABLE);
                 artwork = new Artwork(
                         artworkDTO.getName(),
                         artworkDTO.getDescription(),
@@ -90,6 +93,7 @@ public class ArtistController {
                         c
                 );
                 c.addArtwork(artwork);
+
             }
 
         if(artwork == null)
@@ -100,9 +104,46 @@ public class ArtistController {
         return ResponseEntity.ok().body("Artwork successfully added");
     }
 
+    @PostMapping("/removeCollection")
+    public ResponseEntity<?> removeArtwork(@RequestBody String collName){
+        Artist artist = artistRepository.findByEmail(loggedInUsers.get(BearerTokenUtil.getBearerTokenHeader()));
+
+        if(artist == null)
+            return new ResponseEntity<String>("Artist was not found in the repository", HttpStatus.NOT_FOUND);
+
+        for(Collection c : artist.getCollections())
+            if (c.getName().equals(collName)) {
+                for (Artwork a : c.getArtworks())
+                    artworkRepository.delete(a);
+                collectionRepository.deleteById(c.getId());
+                return new ResponseEntity<String>("Collection successfully removed", HttpStatus.OK);
+            }
+
+        return new ResponseEntity<String>("Collection not found", HttpStatus.NOT_FOUND);
+    }
+
+
+    @PostMapping(value="/removeArtwork")
+    public ResponseEntity<?> removeArtwork(@RequestBody RemArtDTO remArtDTO){
+        Artist artist = artistRepository.findByEmail(loggedInUsers.get(BearerTokenUtil.getBearerTokenHeader()));
+
+        if(artist == null)
+            return new ResponseEntity<String>("Artist was not found in the repository", HttpStatus.NOT_FOUND);
+
+        for(Collection c : artist.getCollections())
+            if (c.getName().equals(remArtDTO.getCollName()))
+                for (Artwork a : c.getArtworks())
+                    if (a.getName().equals(remArtDTO.getArtworkName())) {
+                        artworkRepository.delete(a);
+                        return new ResponseEntity<String>("Artwork successfully removed", HttpStatus.OK);
+                    }
+
+        return new ResponseEntity<String>("Artwork not found", HttpStatus.NOT_FOUND);
+    }
+
     @GetMapping(value="/getCollections")
     @ResponseBody
-    public ResponseEntity<?> getCollections() throws JSONException {
+    public ResponseEntity<?> getCollections(@RequestBody String collNum) throws JSONException {
         Artist artist = artistRepository.findByEmail(loggedInUsers.get(BearerTokenUtil.getBearerTokenHeader()));
 
         if(artist == null)
@@ -110,13 +151,30 @@ public class ArtistController {
 
         Set<Collection> collections = artist.getCollections();
         //collectionRepository.findByArtist(artist);
+        System.out.println(collNum);
+        return collNum.equals("all") ? service.produceCollections(collections) : service.produceCollectionsSingles(collections);
+    }
 
-        return service.produceCollections(collections);
+    @GetMapping("/getCollectionsList")
+    @ResponseBody
+    public ResponseEntity<?> getCollectionList() throws JSONException {
+
+        Artist artist = artistRepository.findByEmail(loggedInUsers.get(BearerTokenUtil.getBearerTokenHeader()));
+
+        if(artist == null)
+            return new ResponseEntity<String>("Artist was not found in the repository", HttpStatus.NOT_FOUND);
+
+        Set<Collection> collections = artist.getCollections();
+
+        return service.produceCollectionsList(collections);
     }
 
     @PostMapping("/applyToContest")
     public ResponseEntity<?> applyToContest(@RequestBody ApplicationDTO applicationDTO){
         Artist artist = artistRepository.findByEmail(loggedInUsers.get(BearerTokenUtil.getBearerTokenHeader()));
+
+        if(artist == null)
+            return new ResponseEntity<String>("Artist was not found in the repository", HttpStatus.NOT_FOUND);
 
         Contest contest = contestRepository.findByWorkingName(applicationDTO.getContestName());
         if(contest == null)
@@ -130,11 +188,13 @@ public class ArtistController {
         for(int i = 0; i < collectionNames.length; i++)
             for(Collection c : artist.getCollections())
                 if(c.getName().equals(collectionNames[i])) {
+                    System.out.println("Applying " + c.getName() +" to contest");
                     collectionSetApplied.add(c);
                     c.setContestApplication(ca);
                 }
 
         contest.addApplication(ca);
+        //contestApplicationRepository.save(ca);
 
         return ResponseEntity.ok().body("Successfully applied to contest");
     }
