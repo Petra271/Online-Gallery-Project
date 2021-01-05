@@ -1,5 +1,6 @@
 package hr.fer.progi.raketa.onlinegalerija.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import hr.fer.progi.raketa.onlinegalerija.dao.*;
 import hr.fer.progi.raketa.onlinegalerija.model.*;
 import hr.fer.progi.raketa.onlinegalerija.repository.*;
@@ -143,7 +144,7 @@ public class ArtistController {
 
     @GetMapping(value="/getCollections")
     @ResponseBody
-    public ResponseEntity<?> getCollections(@RequestParam("type") String collNum) throws JSONException {
+    public ResponseEntity<?> getCollections(@RequestParam("type") String collNum) throws JSONException, JsonProcessingException {
         Artist artist = artistRepository.findByEmail(loggedInUsers.get(BearerTokenUtil.getBearerTokenHeader()));
 
         if(artist == null)

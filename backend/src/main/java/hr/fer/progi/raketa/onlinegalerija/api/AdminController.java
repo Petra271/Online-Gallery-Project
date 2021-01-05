@@ -72,7 +72,7 @@ public class AdminController {
 
 
     @GetMapping("/getExhibition")
-    public ResponseEntity<?> getExhibition(@RequestBody ExhibitionDTO exhibitionDTO) throws JSONException {
+    public ResponseEntity<?> getExhibition(@RequestBody ExhibitionDTO exhibitionDTO) throws JSONException, JsonProcessingException {
 
         if(!exhibitionRepository.existsByName(exhibitionDTO.getExName()))
             return new ResponseEntity<String>("No exhibition with this name exists", HttpStatus.NOT_FOUND);

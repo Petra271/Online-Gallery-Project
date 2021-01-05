@@ -1,4 +1,8 @@
-package hr.fer.progi.raketa.onlinegalerija.api;import hr.fer.progi.raketa.onlinegalerija.model.Artwork;
+package hr.fer.progi.raketa.onlinegalerija.api;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import hr.fer.progi.raketa.onlinegalerija.model.Artwork;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import hr.fer.progi.raketa.onlinegalerija.model.Artwork;
 import hr.fer.progi.raketa.onlinegalerija.model.Collection;
@@ -17,32 +21,32 @@ import java.util.*;
 
 @Service
 public class service {
-    public ResponseEntity<Map<Map<String, String>, Map<Map<String, String>, byte[]>>> produceCollections(Set<Collection> collections) throws JSONException {
-        Map<Map<String, String>, Map<Map<String, String>, byte[]>> retMap = new HashMap<>();
+    public ResponseEntity<Map<String, Map<String, byte[]>>> produceCollections(Set<Collection> collections) throws JSONException, JsonProcessingException {
+        Map<String, Map<String, byte[]>> retMap = new HashMap<>();
 
         for(Collection c : collections){
-            Map<Map<String, String>, byte[]> collMap = new HashMap<>();
+            Map<String, byte[]> collMap = new HashMap<>();
             for(Artwork a : c.getArtworks())
-                collMap.put(artToMap(a), a.getImageInBytes());
+                collMap.put(artToMapJson(a), a.getImageInBytes());
 
-            retMap.put(collToMap(c), collMap);
+            retMap.put(collToMapJson(c), collMap);
         }
 
         return new ResponseEntity<>(retMap, HttpStatus.OK);
     }
 
-    public ResponseEntity<Map<Map<String, String>, Map<Map<String, String>, byte[]>>> produceCollectionsSingles(Set<Collection> collections) throws JSONException {
-        Map<Map<String, String>, Map<Map<String, String>, byte[]>> retMap = new HashMap<>();
+    public ResponseEntity<Map<String, Map<String, byte[]>>> produceCollectionsSingles(Set<Collection> collections) throws JSONException, JsonProcessingException {
+        Map<String, Map<String, byte[]>> retMap = new HashMap<>();
 
         for(Collection c : collections){
-            Map<Map<String, String>, byte[]> collMap = new HashMap<>();
+            Map<String, byte[]> collMap = new HashMap<>();
 
             if(c.getArtworks().iterator().hasNext()) {
                 Artwork a = c.getArtworks().iterator().next();
-                collMap.put(artToMap(a), a.getImageInBytes());
+                collMap.put(artToMapJson(a), a.getImageInBytes());
             }
 
-            retMap.put(collToMap(c), collMap);
+            retMap.put(collToMapJson(c), collMap);
         }
 
         return new ResponseEntity<>(retMap, HttpStatus.OK);
@@ -88,22 +92,22 @@ public class service {
         return sb.toString();
     }
 
-    private Map<String, String> collToMap(Collection collection){
+    private String collToMapJson(Collection collection) throws JsonProcessingException {
         Map<String, String> res = new HashMap<>();
         res.put("Author", collection.getArtist().getName());
         res.put("Name", collection.getName());
         res.put("Description", collection.getDescription());
         res.put("Style", collection.getStyle().toString());
         res.put("Number of artworks", String.valueOf(collection.getArtworks().size()));
-        return res;
+        return new ObjectMapper().writeValueAsString(res);
     }
 
-    private Map<String, String> artToMap(Artwork artwork){
+    private String artToMapJson(Artwork artwork) throws JsonProcessingException {
         Map<String, String> res = new HashMap<>();
         res.put("Name", artwork.getName());
         res.put("Description", artwork.getDescription());
         res.put("Style", artwork.getStyle().toString());
-        return res;
+        return new ObjectMapper().writeValueAsString(res);
     }
 
     private String produceArtworkJson(Artwork a) throws JSONException {
