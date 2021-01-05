@@ -311,6 +311,11 @@ export default {
       dialogDate: "",
      }
   },
+
+  mounted() {
+    var logged = (localStorage.getItem('logged_in') === 'true');
+    this.$store.commit('show_tool', logged ? true : false)
+  },
   // computed: {
   //   sortedList: function() {
   //     return this.allScores.slice().sort(function(a, b) {

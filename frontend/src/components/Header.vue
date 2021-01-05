@@ -43,7 +43,6 @@
 
         
         <div v-else>
-          
           <v-btn icon @click="mode()">
             <v-icon :color="!$store.getters.mode ? 'white' : 'black'">mdi-coach-lamp</v-icon>
           </v-btn>
@@ -203,6 +202,7 @@ export default {
       this.$store.commit('show_tool', false)
       this.$store.commit('sign_in', false)
       this.$store.commit('register', false)
+      //localStorage.setItem('logged_in', false)
       this.snackOut = true
       this.$router.push('/')
     },
