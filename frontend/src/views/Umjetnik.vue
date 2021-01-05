@@ -79,7 +79,8 @@
         v-for="n in colls.length" 
         :key="n"
         class="d-flex child-flex"
-        cols="3"
+        cols="12"
+        sm="3"
       >
         <!-- <v-hover v-slot="{ hover }" open-delay="200"> -->
           <v-card class="images_u">
@@ -151,9 +152,13 @@ export default {
       odabrani_stil: 'stil',
 
       items: [
-        'fotografije',
-        'ulje na platnu',
-        'mješoviti',
+        'FOTOGRAFIJE',
+        'ULJE_NA_PLATNU',
+        'MJESOVITI',
+        'AKVAREL',
+        'KOLAZ',
+        'OLOVKA',
+        'PASTELE'
       ],
       colls: [
         'Kolekcija 1', 'Kolekcija 2', 'Kolekcija 3', 'Kolekcija 4'
@@ -182,8 +187,18 @@ export default {
     },
 
     add_coll() {
+      let data = {
+        name: this.name,
+        description: this.opis,
+        style: this.stil
+      }
+      this.$store.commit('set_collectionData', data)
+      data = JSON.stringify(data)
+      this.$store.dispatch('create_collection', data)
+       .catch(err => console.log(err))
+
       this.colls.push(this.name)
-      this.$store.commit('name', this.name)
+      // this.$store.commit('name', this.name)
       this.dialog = false
     },
 
