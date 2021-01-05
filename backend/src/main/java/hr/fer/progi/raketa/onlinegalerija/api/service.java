@@ -17,32 +17,32 @@ import java.util.*;
 
 @Service
 public class service {
-    public ResponseEntity<Map<String, Map<String, byte[]>>> produceCollections(Set<Collection> collections) throws JSONException {
-        Map<String, Map<String, byte[]>> retMap = new HashMap<>();
+    public ResponseEntity<Map<Map<String, String>, Map<Map<String, String>, byte[]>>> produceCollections(Set<Collection> collections) throws JSONException {
+        Map<Map<String, String>, Map<Map<String, String>, byte[]>> retMap = new HashMap<>();
 
         for(Collection c : collections){
-            Map<String, byte[]> collMap = new HashMap<>();
+            Map<Map<String, String>, byte[]> collMap = new HashMap<>();
             for(Artwork a : c.getArtworks())
-                collMap.put(produceArtworkJson(a), a.getImageInBytes());
+                collMap.put(artToMap(a), a.getImageInBytes());
 
-            retMap.put(produceCollectionJson(c), collMap);
+            retMap.put(collToMap(c), collMap);
         }
 
         return new ResponseEntity<>(retMap, HttpStatus.OK);
     }
 
-    public ResponseEntity<Map<String, Map<String, byte[]>>> produceCollectionsSingles(Set<Collection> collections) throws JSONException {
-        Map<String, Map<String, byte[]>> retMap = new HashMap<>();
+    public ResponseEntity<Map<Map<String, String>, Map<Map<String, String>, byte[]>>> produceCollectionsSingles(Set<Collection> collections) throws JSONException {
+        Map<Map<String, String>, Map<Map<String, String>, byte[]>> retMap = new HashMap<>();
 
         for(Collection c : collections){
-            Map<String, byte[]> collMap = new HashMap<>();
+            Map<Map<String, String>, byte[]> collMap = new HashMap<>();
 
             if(c.getArtworks().iterator().hasNext()) {
                 Artwork a = c.getArtworks().iterator().next();
-                collMap.put(produceArtworkJson(a), a.getImageInBytes());
+                collMap.put(artToMap(a), a.getImageInBytes());
             }
 
-            retMap.put(produceCollectionJson(c), collMap);
+            retMap.put(collToMap(c), collMap);
         }
 
         return new ResponseEntity<>(retMap, HttpStatus.OK);
@@ -86,6 +86,24 @@ public class service {
 
         System.out.println(sb.toString());
         return sb.toString();
+    }
+
+    private Map<String, String> collToMap(Collection collection){
+        Map<String, String> res = new HashMap<>();
+        res.put("Author", collection.getArtist().getName());
+        res.put("Name", collection.getName());
+        res.put("Description", collection.getDescription());
+        res.put("Style", collection.getStyle().toString());
+        res.put("Number of artworks", String.valueOf(collection.getArtworks().size()));
+        return res;
+    }
+
+    private Map<String, String> artToMap(Artwork artwork){
+        Map<String, String> res = new HashMap<>();
+        res.put("Name", artwork.getName());
+        res.put("Description", artwork.getDescription());
+        res.put("Style", artwork.getStyle().toString());
+        return res;
     }
 
     private String produceArtworkJson(Artwork a) throws JSONException {

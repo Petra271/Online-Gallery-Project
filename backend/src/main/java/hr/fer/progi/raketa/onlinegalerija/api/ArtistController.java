@@ -143,7 +143,7 @@ public class ArtistController {
 
     @GetMapping(value="/getCollections")
     @ResponseBody
-    public ResponseEntity<?> getCollections(@RequestBody String collNum) throws JSONException {
+    public ResponseEntity<?> getCollections(@RequestParam("type") String collNum) throws JSONException {
         Artist artist = artistRepository.findByEmail(loggedInUsers.get(BearerTokenUtil.getBearerTokenHeader()));
 
         if(artist == null)
