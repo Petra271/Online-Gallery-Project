@@ -277,11 +277,17 @@ export default {
       score: "", 
       allScores: [],
       opis: "",
+      stil: "",
+      provizija: "",
     
       items: [
-        'fotografije',
-        'ulje na platnu',
-        'mješoviti',
+        'FOTOGRAFIJE',
+        'ULJE_NA_PLATNU',
+        'MJESOVITI',
+        'AKVAREL',
+        'KOLAZ',
+        'OLOVKA',
+        'PASTELE'
       ],
       collections: [
         'Kolekcija 1',
@@ -319,6 +325,20 @@ export default {
       this.duration = new Date(parts2[0], parts2[1] - 1, parts2[2]) - new Date(parts1[0], parts1[1] - 1, parts1[2]);
       this.duration = this.duration / 86400000;
       this.allScores.push({ name: this.name, date1: this.date1, duration: this.duration, opis:this.opis, stil: this.stil, provizija: this.provizija});
+      
+      let data = {
+        beginDateTime: this.date1 + " 00:00",
+        duration: "P" + this.duration + "DT0H0M",
+        name: this.name,
+        description: this.opis,
+        style: this.stil,
+        privision: parseFloat(this.provizija)
+      }
+      this.$store.commit('set_contestData', data)
+      data = JSON.stringify(data)
+      this.$store.dispatch('create_contest', data)
+       .catch(err => console.log(err))
+
       this.clearForm(); 
       this.dialog = false;
     },

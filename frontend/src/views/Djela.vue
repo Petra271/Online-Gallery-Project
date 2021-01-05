@@ -87,7 +87,8 @@
         v-for="n in pictures.length" 
         :key="n"
         class="d-flex child-flex"
-        cols="3"
+        cols="12"
+        sm="3"
       >
         <!-- <v-hover v-slot="{ hover }" open-delay="200"> -->
           <v-card class="images_d">
@@ -226,6 +227,26 @@ export default {
         this.imageUrl = fr.result
         this.pictures.push(this.imageUrl);
         this.names.push(this.name)
+        let data = {
+          collectionName: 'DA',
+          name: this.name,
+          description: 'da',
+          style: 'FOTOGRAFIJE',
+          price: this.price
+        }
+        this.$store.commit('set_artworkData', data)
+        data = JSON.stringify(data)
+        let formData = new FormData()
+        formData.append('file', this.imageFile)
+        formData.append('json', new Blob([
+            data
+        ], {
+            type: "application/json"
+        }))
+        console.log(data)
+        console.log(formData)
+        this.$store.dispatch('add_artwork', formData)
+       .catch(err => console.log(err))
       })
       this.dialog = false
     }

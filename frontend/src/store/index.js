@@ -15,7 +15,10 @@ export default new Vuex.Store({
     admin: false,
     status: '',
     token: sessionStorage.getItem('token') || '',
-    user : {}
+    user : {},
+    collectionData: {},
+    artworkData: {},
+    contestData: {}
     //register_in_form: false
   },
   mutations: {
@@ -37,6 +40,18 @@ export default new Vuex.Store({
 
     log_admin(state, admin) {
       state.admin = admin
+    },
+
+    set_collectionData(state, collectionData) {
+      state.collectionData = collectionData
+    },
+
+    set_artworkData(state, artworkData) {
+      state.artworkData = artworkData
+    },
+
+    set_contestData(state, contestData) {
+      state.contestData = contestData
     },
 
     //AUTHENTICATION
@@ -129,6 +144,72 @@ export default new Vuex.Store({
         .catch(err => {
           commit('auth_error', err)
           sessionStorage.removeItem('token')
+          reject(err)
+        })
+      })
+    },
+    create_collection({commit}, collectionData){
+      return new Promise((resolve, reject) => {
+        console.log('aft ' + sessionStorage.getItem('token'))
+        console.log(collectionData)
+        axios({url: `${process.env.VUE_APP_BACKEND_URI}/artist/createCollection`, 
+              headers: {
+                'Authorization':  `Bearer ${sessionStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+              }, 
+              data: collectionData, 
+              method: 'POST' 
+            })
+        .then(resp => {
+          resolve(resp)
+        })
+        .catch(err => {
+          commit('auth_error', err)
+          // sessionStorage.removeItem('token')
+          reject(err)
+        })
+      })
+    },
+    add_artwork({commit}, artworkData){
+      return new Promise((resolve, reject) => {
+        console.log('aft ' + sessionStorage.getItem('token'))
+        console.log(artworkData)
+        axios({url: `${process.env.VUE_APP_BACKEND_URI}/artist/addArtwork`, 
+              headers: {
+                'Authorization':  `Bearer ${sessionStorage.getItem('token')}`,
+                // 'Content-Type': 'application/json'
+              }, 
+              data: artworkData, 
+              method: 'POST' 
+            })
+        .then(resp => {
+          resolve(resp)
+        })
+        .catch(err => {
+          commit('auth_error', err)
+          // sessionStorage.removeItem('token')
+          reject(err)
+        })
+      })
+    },
+    create_contest({commit}, contestData){
+      return new Promise((resolve, reject) => {
+        console.log('aft ' + sessionStorage.getItem('token'))
+        console.log(contestData)
+        axios({url: `${process.env.VUE_APP_BACKEND_URI}/admin/createContest`, 
+              headers: {
+                'Authorization':  `Bearer ${sessionStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+              }, 
+              data: contestData, 
+              method: 'POST' 
+            })
+        .then(resp => {
+          resolve(resp)
+        })
+        .catch(err => {
+          commit('auth_error', err)
+          // sessionStorage.removeItem('token')
           reject(err)
         })
       })

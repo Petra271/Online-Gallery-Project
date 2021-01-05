@@ -187,6 +187,20 @@ export default {
  margin-top: 200px;
 }
 
+.exh_author {
+  margin-top: 2.5%;
+  margin-bottom: -3%;
+  margin-left: 2%;
+  font-size: 80px;
+}
+
+.exh_name {
+  /* margin-top: 4%; */
+  margin-left: 2%;
+  font-size: 80px;
+  font-weight: 100;
+}
+
 .art_info {
   margin-top: 2%;
   margin-left: 1.5%;
