@@ -80,6 +80,9 @@ public class AdminController {
 
         String currentUsername = loggedInUsers.get(BearerTokenUtil.getBearerTokenHeader());
 
+        if(exhibitionRepository.existsByName(exName))
+            return new ResponseEntity<>("An exhibition of the same name already exists", HttpStatus.NOT_ACCEPTABLE);
+
         if(!adminRepository.existsByEmail(currentUsername))
             return new ResponseEntity<String>("No admin with this username exists", HttpStatus.NOT_FOUND);
 

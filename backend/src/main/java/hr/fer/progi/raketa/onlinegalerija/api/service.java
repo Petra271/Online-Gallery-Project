@@ -137,7 +137,16 @@ public class service {
         res.put("BeginDate", exhibition.getBeginDateTime().toString());
         res.put("Duration", exhibition.getDuration().toString());
         res.put("Provision", String.valueOf(exhibition.getProvision()));
+        res.put("Artists", artistsByComma(exhibition.getArtists()));
         return new ObjectMapper().writeValueAsString(res);
+    }
+
+    private String artistsByComma(Set<Artist> artists){
+        StringBuilder sb = new StringBuilder();
+        for(Artist a : artists)
+            sb.append(a.getName() + " " + a.getSurname()).append(',');
+        sb.deleteCharAt(sb.length() - 1);
+        return sb.toString();
     }
 
 //    private String produceArtworkJson(Artwork a) throws JSONException {
