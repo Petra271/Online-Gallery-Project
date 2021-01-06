@@ -65,22 +65,12 @@ public class AdminController {
                 contestDTO.getDescription(),
                 contestDTO.getProvision()
                 );
+        System.out.println(contestDTO.getProvision());
 
         contestRepository.save(contest);
         return ResponseEntity.ok().body("Successful contest creation");
     }
 
-
-    @GetMapping("/getExhibition")
-    public ResponseEntity<?> getExhibition(@RequestBody ExhibitionDTO exhibitionDTO) throws JSONException, JsonProcessingException {
-
-        if(!exhibitionRepository.existsByName(exhibitionDTO.getExName()))
-            return new ResponseEntity<String>("No exhibition with this name exists", HttpStatus.NOT_FOUND);
-
-        Exhibition ex = exhibitionRepository.findByName(exhibitionDTO.getExName());
-
-        return service.produceCollections(ex.getCollections());
-    }
 
     @PostMapping("/createExhibition")
     public ResponseEntity<?> createExhibition(@RequestPart("contestName") String contestName,
@@ -111,6 +101,7 @@ public class AdminController {
                 exDesc,
                 contest.getProvision()
         );
+        System.out.println(contest.getProvision());
 
         for(Map.Entry<String, String[]> e : acceptedCollections.entrySet()){
             Artist artist = artistRepository.findByEmail(e.getKey());

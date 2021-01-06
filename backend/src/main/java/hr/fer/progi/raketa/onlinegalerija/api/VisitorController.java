@@ -1,5 +1,6 @@
 package hr.fer.progi.raketa.onlinegalerija.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import hr.fer.progi.raketa.onlinegalerija.dao.CollectionDTO;
 import hr.fer.progi.raketa.onlinegalerija.dao.ArtworkDTO;
 import hr.fer.progi.raketa.onlinegalerija.dao.VisitorDTO;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -35,6 +37,8 @@ public class VisitorController {
     private ArtworkRepository artworkRepository;
 
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    private ExhibitionRepository exhibitionRepository;
     @Autowired
     private AdminRepository adminRepository;
     @Autowired
@@ -77,6 +81,26 @@ public class VisitorController {
 
         loggedInUsers.remove(BearerTokenUtil.getBearerTokenHeader());
         return ResponseEntity.ok().body("Logout successful");
+    }
+
+    @GetMapping("/getExhibition")
+    public ResponseEntity<?> getExhibition(@RequestParam("exName") String exName) throws JsonProcessingException {
+        String currentUsername = loggedInUsers.get(BearerTokenUtil.getBearerTokenHeader());
+
+        if(!visitorRepository.existsByEmail(currentUsername))
+            return new ResponseEntity<String>("No visitor with this username exists", HttpStatus.NOT_FOUND);
+
+        if(!exhibitionRepository.existsByName(exName))
+            return new ResponseEntity<String>("No exhibition with this name exists", HttpStatus.NOT_FOUND);
+
+        Exhibition ex = exhibitionRepository.findByName(exName);
+
+        return service.produceExhibition(ex);
+    }
+
+    @GetMapping("/getExhibitionSingles")
+    public ResponseEntity<?> getExhibitionSingles()throws JsonProcessingException {
+        return service.produceExhibitionSingles(new HashSet<>(exhibitionRepository.findAll()));
     }
 
     @PostMapping(value="/test")

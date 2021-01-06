@@ -2,32 +2,25 @@ package hr.fer.progi.raketa.onlinegalerija.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hr.fer.progi.raketa.onlinegalerija.model.Artwork;
-import com.fasterxml.jackson.databind.util.JSONPObject;
+import hr.fer.progi.raketa.onlinegalerija.model.*;
 import hr.fer.progi.raketa.onlinegalerija.model.Artwork;
 import hr.fer.progi.raketa.onlinegalerija.model.Collection;
-import hr.fer.progi.raketa.onlinegalerija.model.Comment;
-import hr.fer.progi.raketa.onlinegalerija.model.Transaction;
-import org.apache.tomcat.util.json.JSONParser;
 import org.json.JSONException;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.json.JSONObject;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
 @Service
 public class service {
-    public ResponseEntity<Map<String, Map<String, byte[]>>> produceCollections(Set<Collection> collections) throws JSONException, JsonProcessingException {
-        Map<String, Map<String, byte[]>> retMap = new HashMap<>();
+    public ResponseEntity<Map<String, Map<String, String>>> produceCollections(Set<Collection> collections) throws JsonProcessingException {
+        Map<String, Map<String, String>> retMap = new HashMap<>();
 
         for(Collection c : collections){
-            Map<String, byte[]> collMap = new HashMap<>();
+            Map<String, String> collMap = new HashMap<>();
             for(Artwork a : c.getArtworks())
-                collMap.put(artToMapJson(a), a.getImageInBytes());
+                collMap.put(artToMapJson(a), Base64.getEncoder().encodeToString(a.getImageInBytes()));
 
             retMap.put(collToMapJson(c), collMap);
         }
@@ -35,30 +28,55 @@ public class service {
         return new ResponseEntity<>(retMap, HttpStatus.OK);
     }
 
-    public ResponseEntity<Map<String, Map<String, byte[]>>> produceCollectionsSingles(Set<Collection> collections) throws JSONException, JsonProcessingException {
-        Map<String, Map<String, byte[]>> retMap = new HashMap<>();
+    public ResponseEntity<Map<String, String>> produceCollectionsSingles(Set<Collection> collections) throws JsonProcessingException {
+        Map<String, String> retMap = new HashMap<>();
 
         for(Collection c : collections){
-            Map<String, byte[]> collMap = new HashMap<>();
-
+            String image64 = "";
             if(c.getArtworks().iterator().hasNext()) {
                 Artwork a = c.getArtworks().iterator().next();
-                collMap.put(artToMapJson(a), a.getImageInBytes());
+                image64 = Base64.getEncoder().encodeToString(a.getImageInBytes());
             }
 
-            retMap.put(collToMapJson(c), collMap);
+            retMap.put(collToMapJson(c), image64);
         }
 
         return new ResponseEntity<>(retMap, HttpStatus.OK);
     }
 
-    public ResponseEntity<Map<String, String>> produceCollectionsList(Set<Collection> collections) throws JSONException{
+    public ResponseEntity<Map<String, String>> produceCollectionsList(Set<Collection> collections) throws JSONException, JsonProcessingException {
         Map<String, String> collectionList = new HashMap<>();
 
         for(Collection c : collections)
-            collectionList.put(c.getName(), produceCollectionJson(c));
+            collectionList.put(c.getName(), collToMapJson(c));
 
         return new ResponseEntity<>(collectionList, HttpStatus.OK);
+    }
+
+    public ResponseEntity<AbstractMap.SimpleEntry<String, Map<String, Map<String, String>>>> produceExhibition(Exhibition exhibition) throws JsonProcessingException {
+        String exDesc = exToMapJson(exhibition);
+
+        return new ResponseEntity<>(new AbstractMap.SimpleEntry<>(
+                exDesc,
+                produceCollections(exhibition.getCollections()).getBody()
+        ), HttpStatus.OK);
+    }
+
+    public ResponseEntity<Map<String, String>> produceExhibitionSingles(Set<Exhibition> exhibitions) throws JsonProcessingException {
+        Map<String, String> retMap = new HashMap<>();
+
+        for(Exhibition e : exhibitions){
+            String image64 = "";
+            if(e.getCollections().iterator().hasNext()) {
+                if(e.getCollections().iterator().next().getArtworks().iterator().hasNext()) {
+                    Artwork a = e.getCollections().iterator().next().getArtworks().iterator().next();
+                    image64 = Base64.getEncoder().encodeToString(a.getImageInBytes());
+                }
+            }
+            retMap.put(exToMapJson(e), image64);
+        }
+
+        return new ResponseEntity<>(retMap, HttpStatus.OK);
     }
 
     public ResponseEntity<Map<UUID, String>> produceComments(Set<Comment> commentSet) {
@@ -79,18 +97,18 @@ public class service {
         return new ResponseEntity<>(transactionJsonList, HttpStatus.OK);
     }
 
-    private String produceCollectionJson(Collection c) throws JSONException {
-        StringBuilder sb = new StringBuilder();
-        sb.append("{");
-        sb.append("\"name\": \"").append(c.getName()).append("\",");
-        sb.append("\"description\": \"").append(c.getDescription()).append("\",");
-        sb.append("\"style\": \"").append(c.getStyle().toString()).append("\"");
-        sb.append("}");
-        
-
-        System.out.println(sb.toString());
-        return sb.toString();
-    }
+//    private String produceCollectionJson(Collection c) throws JSONException {
+//        StringBuilder sb = new StringBuilder();
+//        sb.append("{");
+//        sb.append("\"name\": \"").append(c.getName()).append("\",");
+//        sb.append("\"description\": \"").append(c.getDescription()).append("\",");
+//        sb.append("\"style\": \"").append(c.getStyle().toString()).append("\"");
+//        sb.append("}");
+//
+//
+//        System.out.println(sb.toString());
+//        return sb.toString();
+//    }
 
     private String collToMapJson(Collection collection) throws JsonProcessingException {
         Map<String, String> res = new HashMap<>();
@@ -98,7 +116,7 @@ public class service {
         res.put("Name", collection.getName());
         res.put("Description", collection.getDescription());
         res.put("Style", collection.getStyle().toString());
-        res.put("Number of artworks", String.valueOf(collection.getArtworks().size()));
+        res.put("NumOfArtworks", String.valueOf(collection.getArtworks().size()));
         return new ObjectMapper().writeValueAsString(res);
     }
 
@@ -107,21 +125,33 @@ public class service {
         res.put("Name", artwork.getName());
         res.put("Description", artwork.getDescription());
         res.put("Style", artwork.getStyle().toString());
+        res.put("fileType", artwork.getFileType());
         return new ObjectMapper().writeValueAsString(res);
     }
 
-    private String produceArtworkJson(Artwork a) throws JSONException {
-        StringBuilder sb = new StringBuilder();
-        sb.append("{");
-        sb.append("\"id\": \"").append(a.getId()).append("\",");
-        sb.append("\"name\": \"").append(a.getName()).append("\",");
-        sb.append("\"description\": \"").append(a.getDescription()).append("\",");
-        sb.append("\"style\": \"").append(a.getStyle().toString()).append("\",");
-        sb.append("\"price\": \"").append(a.getPrice()).append("\"");
-        sb.append("}");
-        System.out.println(sb.toString());
-        return sb.toString();
+    private String exToMapJson(Exhibition exhibition) throws JsonProcessingException {
+        Map<String, String> res = new HashMap<>();
+        res.put("Name", exhibition.getName());
+        res.put("Description", exhibition.getDescription());
+        res.put("Style", exhibition.getStyle().toString());
+        res.put("BeginDate", exhibition.getBeginDateTime().toString());
+        res.put("Duration", exhibition.getDuration().toString());
+        res.put("Provision", String.valueOf(exhibition.getProvision()));
+        return new ObjectMapper().writeValueAsString(res);
     }
+
+//    private String produceArtworkJson(Artwork a) throws JSONException {
+//        StringBuilder sb = new StringBuilder();
+//        sb.append("{");
+//        sb.append("\"id\": \"").append(a.getId()).append("\",");
+//        sb.append("\"name\": \"").append(a.getName()).append("\",");
+//        sb.append("\"description\": \"").append(a.getDescription()).append("\",");
+//        sb.append("\"style\": \"").append(a.getStyle().toString()).append("\",");
+//        sb.append("\"price\": \"").append(a.getPrice()).append("\"");
+//        sb.append("}");
+//        System.out.println(sb.toString());
+//        return sb.toString();
+//    }
 
     private String produceCommentJson(Comment c) {
         StringBuilder sb = new StringBuilder();

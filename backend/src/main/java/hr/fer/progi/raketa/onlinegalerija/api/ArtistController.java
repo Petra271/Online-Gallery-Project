@@ -91,6 +91,7 @@ public class ArtistController {
                         Style.valueOf(artworkDTO.getStyle()),
                         Double.parseDouble(artworkDTO.getPrice()),
                         file.getBytes(),
+                        file.getContentType(),
                         c
                 );
                 c.addArtwork(artwork);
@@ -158,7 +159,7 @@ public class ArtistController {
 
     @GetMapping("/getCollectionsList")
     @ResponseBody
-    public ResponseEntity<?> getCollectionList() throws JSONException {
+    public ResponseEntity<?> getCollectionList() throws JSONException, JsonProcessingException {
 
         Artist artist = artistRepository.findByEmail(loggedInUsers.get(BearerTokenUtil.getBearerTokenHeader()));
 

@@ -34,6 +34,9 @@ public class Artwork {
     private byte[] imageInBytes;
     //private BufferedImage image;
 
+    @Column(name="fileType", nullable = false)
+    private String fileType;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name="collection_id", nullable = false)
     private Collection collection;
@@ -47,7 +50,7 @@ public class Artwork {
     }
 
     public Artwork(String name, String description, Style style, double price,
-                   byte[] imageInBytes, Collection collection) {
+                   byte[] imageInBytes, String fileType, Collection collection) {
         this.id = UUID.randomUUID();
         this.name = name;
         this.description = description;
@@ -59,6 +62,7 @@ public class Artwork {
 //            e.printStackTrace();
 //        }
         this.imageInBytes = imageInBytes;
+        this.fileType = fileType;
         this.collection = collection;
     }
 
@@ -139,5 +143,13 @@ public class Artwork {
 
     public void setImageInBytes(byte[] imageInBytes) {
         this.imageInBytes = imageInBytes;
+    }
+
+    public String getFileType() {
+        return fileType;
+    }
+
+    public void setFileType(String fileType) {
+        this.fileType = fileType;
     }
 }
