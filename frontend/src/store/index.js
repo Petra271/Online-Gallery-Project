@@ -18,7 +18,8 @@ export default new Vuex.Store({
     user : {},
     collectionData: {},
     artworkData: {},
-    contestData: {}
+    contestData: {},
+    collections: []
     //register_in_form: false
   },
   mutations: {
@@ -32,7 +33,7 @@ export default new Vuex.Store({
 
     show_tool(state, logged_in) {
       console.log('showtool ' + logged_in)
-      localStorage.setItem('logged_in', logged_in)
+      sessionStorage.setItem('logged_in', logged_in)
       state.logged_in = logged_in
     },
 
@@ -78,6 +79,10 @@ export default new Vuex.Store({
 
     set_user(state, user) {
       state.user = user
+    },
+
+    set_col(state, collections) {
+      state.collections = collections
     }
     // change(state, register_in_form) {
     //   state.register_in_form = register_in_form
@@ -93,8 +98,8 @@ export default new Vuex.Store({
           // console.log('data ' + resp.data)
           const token = resp.data
           //const user = resp.data.user
-          localStorage.setItem('logged_in', true)
-          console.log('login ' + localStorage.getItem('logged_in'))
+          sessionStorage.setItem('logged_in', true)
+          console.log('login ' + sessionStorage.getItem('logged_in'))
           sessionStorage.setItem('token', token)
           console.log('login ' + sessionStorage.getItem('token'))
           commit('auth_success', token, user)
@@ -143,8 +148,8 @@ export default new Vuex.Store({
         .then(resp => {
           console.log('aft1 ' + sessionStorage.getItem('token'))
           sessionStorage.removeItem('token')
-          localStorage.setItem('logged_in', false)
-          console.log('logout ' + localStorage.getItem('logged_in'))
+          sessionStorage.setItem('logged_in', false)
+          console.log('logout ' + sessionStorage.getItem('logged_in'))
           delete axios.defaults.headers.common['Authorization']
           resolve(resp)
         })
@@ -234,6 +239,7 @@ export default new Vuex.Store({
     isLoggedIn: state => !!state.token,
     authStatus: state => state.status,
     user: state => state.user,
-    token: state => state.token
+    token: state => state.token,
+    collections: state => state.collections
   }
 })

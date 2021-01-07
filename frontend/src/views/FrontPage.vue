@@ -33,7 +33,7 @@
             ></v-img>
           </div>
         </div> -->
-        <div v-for="(artwork, exhDesc) in exhibits" :key="exhDesc">
+        <!-- <div v-for="(artwork, exhDesc) in exhibits" :key="exhDesc">
           key - {{exhDesc}} 
           
             <div v-for="(info, key) in JSON.parse(exhDesc)" :key="key">
@@ -48,8 +48,16 @@
             
           <br>
             -----------------------
-        </div>
-        <div>{{artists}}</div>
+        </div> -->
+        <!-- <div>{{exhibits}}</div> -->
+        <!-- <div>{{artists}}</div>
+        <div>{{selectedArtists}}</div>
+        <div>{{techniques}}</div>
+        <div>{{techniques[selectedTech - 1]}}</div>
+        <div>{{exhibitsFiltered}}</div> 
+        <div>{{collections}}</div>
+        <div>{{exhDescriptions}}</div>
+        <div>{{artSources}}</div> -->
   <!-- <div>
     {{exhibits}}
   </div> -->
@@ -326,7 +334,7 @@
     <div class="exh_text"> Izložbe uživo </div>
     <v-row>
       <v-col
-        v-for="(artwork, exhDesc) in exhibits" :key="exhDesc"
+        v-for="n in noOfExhs" :key="n"
         class="d-flex child-flex"
         cols="12"
         sm="4"
@@ -337,8 +345,8 @@
             :class="{ 'on-hover': hover }"
           >
             <v-img
-              :src="'data:image/jpg;base64,' + artwork"
-              :lazy-src="'data:image/jpg;base64,' + artwork"
+              :src="'data:image/jpg;base64,' + artSources[n - 1]"
+              :lazy-src="'data:image/jpg;base64,' + artSources[n - 1]"
               aspect-ratio="1"
               class="grey lighten-2 img"
             >
@@ -350,14 +358,10 @@
                 style="height: 50%;"
               >
                 <div class="izl">
-                  <!-- <p>Izložba {{n}}</p> <br>
-                  Traje do: 1{{n}}.11.2020 -->
-                  <!-- <div class="izl_author"><i><b> Jerolim Miše </b></i></div>
-                  <div class="izl_name"><i> -Od buntovnika do barda </i></div> -->
-                  <div v-for="(info, key) in JSON.parse(exhDesc)" :key="key">
-                      <div v-if="key == 'Artists'" class="izl_author"><i><b> {{info}} </b></i></div>
-                      <div v-if="key == 'Name'" class="izl_name"><i> -{{info}} </i></div>
-                  </div>
+                  <!-- <div class="izl_author"><i><b> {{exhDescriptions[n - 1]["Artists"]}} </b></i></div>
+                  <div class="izl_name"><i> -{{exhDescriptions[n - 1]["Name"]}} </i></div> -->
+                  <div ><i><b> {{exhDescriptions[n - 1]["Artists"]}} <br> </b></i>
+                  <i> -{{exhDescriptions[n - 1]["Name"]}} </i></div>
                 </div>
               </div>
             </v-expand-transition>
@@ -368,7 +372,8 @@
                       v-bind="attrs"
                       v-on="{ ...tooltip, ...menu }"
                       :disabled="!$store.getters.logged_in"
-                      to="/izlozba"
+                      @click="getExhibition(exhDescriptions[n - 1]['Name'])"
+                     
                       >
                       <v-icon :color="!$store.getters.mode ? 'white' : 'black'">mdi-door-open</v-icon>
                     </v-btn>
@@ -423,12 +428,18 @@
             <v-tab-item>
               <v-card flat>
                 <v-card-text class="black--text">Odaberite tehniku izložbi koje želite prikazati</v-card-text>
-                <v-radio-group class="technique" v-model="radioGroup">
+                <v-radio-group class="technique" v-model="selectedTech">
                   <v-radio
-                    v-for="(teh, i) in tehnike.length"
+                    v-for="(teh, i) in techniques.length"
                     :key="teh"
-                    :label="tehnike[i]"
+                    :label="techniques[i]"
                     :value="teh"
+                    color="black"
+                  ></v-radio>
+                  <v-radio
+                    label="Poništite odabir"
+                    @click="selectedTech = null"
+                    :value="4"
                     color="black"
                   ></v-radio>
                 </v-radio-group>
@@ -439,7 +450,7 @@
                 <v-card-text class="black--text">Odaberite jednog ili više umjetnika čije izložbe želite prikazati</v-card-text>
                 <v-autocomplete
                   v-model="selectedArtists"
-                  :items="artistsTmp"
+                  :items="artists"
                   class="mx-4"
                   multiple
                   small-chips
@@ -479,7 +490,7 @@
             <v-btn
               color="black"
               text
-              @click="dialog = false"
+              @click="applyFilters()"
             >
               Primijeni
             </v-btn>
@@ -615,12 +626,18 @@ export default {
         'Oton Iveković'
       ],
       artists: [],
+      techniques: [],    
       selectedArtists: [],
+      selectedTech: null,
       hasSaved: false,
       model: null,
 
       collections: null,
       exhibits: null,
+      exhibitsFiltered: [],
+      exhDescriptions: [],
+      artSources: [],
+      noOfExhs: 0,
       imgMapVals: null,
       imagesExh: [],
       imagesInfo: [],
@@ -632,13 +649,13 @@ export default {
         // Set the default value of this.item based on what's in the store
         this.sign_in_form = this.$store.getters.sign_in_form
         //this.enter_exh = this.$store.getters.logged_in
-        //localStorage.setItem('logged_in', false)
-        console.log('mounted ' + localStorage.getItem('logged_in'))
-        var logged = (localStorage.getItem('logged_in') === 'true');
+        //sessionStorage.setItem('logged_in', false)
+        console.log('mounted ' + sessionStorage.getItem('logged_in'))
+        var logged = (sessionStorage.getItem('logged_in') === 'true');
         this.$store.commit('show_tool', logged ? true : false)
 
         console.log('mounted')
-        this.getExhibitions()
+        this.getExhibitionSingles()
         //this.getCollections()
     },
 
@@ -817,54 +834,118 @@ export default {
         console.log('data ' + response.data);
         this.collections = response.data;
         console.log('dataexh ' + this.collections)
-        let i = 0
-        for (const val of this.collections.values()) {
-            var colMap = new Map(Object.entries(val));
-            for (const [key, value] of colMap.entries()) {
-                console.log('valf ' + value)
-                //this.bt = btoa(String.fromCharCode.apply(null, new Uint8Array(value)))
-            }
-            this.$store.commit('img_info', colMap.keys())
-            this.imagesExh = colMap.values()
-            this.imagesInfo = colMap.keys()
-            i++
-        }
+        // let i = 0
+        // for (const val of this.collections.values()) {
+        //     var colMap = new Map(Object.entries(val));
+        //     for (const [key, value] of colMap.entries()) {
+        //         console.log('valf ' + value)
+        //         //this.bt = btoa(String.fromCharCode.apply(null, new Uint8Array(value)))
+        //     }
+        //     this.$store.commit('img_info', colMap.keys())
+        //     this.imagesExh = colMap.values()
+        //     this.imagesInfo = colMap.keys()
+        //     i++
+        // }
+      })
+      .catch(err => {
+          console.log(err)
+      });
+    },
+
+    getExhibition(exhName) {
+      console.log('collection ' + sessionStorage.getItem('token'))
+      axios({url: `${process.env.VUE_APP_BACKEND_URI}/visitor/getExhibition`, 
+            headers: {
+              'Authorization':  `Bearer ${sessionStorage.getItem('token')}`
+            },
+            params: {
+              'exName' : exhName
+            },
+            method: 'GET'
+      })
+      .then((response) => {
+        
+        //this.collections = response.data;
+        this.$store.commit('set_col', response.data)
+        console.log('colls ' + this.collections);
+        this.$router.push('/izlozba')
+        
       })
       .catch(err => {
           console.log(err)
       });
     },
     
-    getExhibitions() {
+    getExhibitionSingles() {
       console.log('exhibit ' + sessionStorage.getItem('token'))
       axios({url: `${process.env.VUE_APP_BACKEND_URI}/visitor/getExhibitionSingles`, method: 'GET'})
       .then((response) => {
         this.exhibits = response.data;
         console.log('getExh ' + this.exhibits)
         let i = 0
-        this.artists = this.exhibits
-        var stuff = JSON.parse(response.data)
-        // stuff.forEach(element => {
-        //     this.artists[i] = element
-        //     i++
-        // });
-        for (let description in Object.keys(this.exhibits)) {
-            // this.artists[i] = description
-            // i++
-            // const colMap = JSON.parse(description)
-            // for (let [key, value] in colMap) {
-            //     this.artists[i] = value
-            //     i++
-            // }
-            // var data = JSON.parse(description)
-            // this.artists[i] = data[i].Description
-            // i++
+        let tech = 0
+        
+        for (let [description, value] of Object.entries(this.exhibits)) {
+            this.exhDescriptions[this.noOfExhs] = JSON.parse(description)
+            this.artSources[this.noOfExhs] = value
+            this.noOfExhs++
+            for (let [key, info] of Object.entries(JSON.parse(description))) {
+                if (key == 'Artists') {
+                  if (info.includes(",")) {
+                      var tmp = info.split(",")
+                      for (let j = 0; j < tmp.length; j++) {
+                          this.artists[i] = tmp[j]
+                          i++
+                      }
+                  } else {
+                    this.artists[i] = info
+                    i++
+                  }
+                } else if (key == 'Style') {
+                  this.techniques[tech] = info
+                  tech++
+                }
+            }
         }
+
+        this.artists = [...new Set(this.artists)];
+        this.techniques = [...new Set(this.techniques)];
         
       })
       .catch(err => {
           console.log(err)
       });
+    },
+
+    applyFilters() {
+      let i = 0
+      for (let [description, value] of Object.entries(this.exhibits)) {
+          let include = false
+          var descJSON = JSON.parse(description)
+          for (let [key, info] of Object.entries(JSON.parse(description))) {
+              
+              // if (key == 'Style') {
+              //     if (this.selectedTech == info) {
+              //       include = true
+              //     } else {
+              //       include = false
+              //     }
+              // } else if (key == 'Artists') {
+              //     if (this.selectedArtists != null) {
+              //       for (let i = 0; i < this.selectedArtists; i++) {
+              //           if (this.selectedArtists[i] == info) {
+              //             include = true
+              //           } else {
+              //             include = false
+              //           }
+              //       }
+              //     } 
+              // }
+          }
+          this.exhibitsFiltered[i] = '-----------------'
+          i++
+      }
+      this.filters = false
     }
     
   },
@@ -1002,13 +1083,13 @@ export default {
 }
 
 .izl_author {
-  margin-top: -28%;
-  margin-left: -4%;
+  /* margin-top: -28%;
+  margin-left: -4%; */
 }
 
 .izl_name {
-  margin-top: -5%;
-  margin-left: -4%;
+  /* margin-top: -5%;
+  margin-left: -4%; */
   font-weight: 100;
 }
 
