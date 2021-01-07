@@ -123,6 +123,5 @@ public class VisitorController {
         adminRepository.save(new Admin("admin", "admin", "admin1@gmail.com", bCryptPasswordEncoder.encode("password"), "nekimail"));
 
         return ResponseEntity.ok().body("test results");
-
     }
 }

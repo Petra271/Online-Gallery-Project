@@ -144,10 +144,12 @@ public class service {
 
     private String artToMapJson(Artwork artwork) throws JsonProcessingException {
         Map<String, String> res = new HashMap<>();
+        res.put("id", artwork.getId().toString());
         res.put("Name", artwork.getName());
         res.put("Description", artwork.getDescription());
         res.put("Style", artwork.getStyle().toString());
         res.put("fileType", artwork.getFileType());
+        res.put("Price", String.valueOf(artwork.getPrice()));
         return new ObjectMapper().writeValueAsString(res);
     }
 
@@ -209,6 +211,7 @@ public class service {
     private String produceCommentJson(Comment c) {
         StringBuilder sb = new StringBuilder();
         sb.append("{");
+        sb.append("\"id\": \"").append(c.getCommentId()).append("\",");
         sb.append("\"name\": \"").append(c.getVisitor().getName()).append("\",");
         sb.append("\"surname\": \"").append(c.getVisitor().getSurname()).append("\",");
         sb.append("\"content\": \"").append(c.getContent());
