@@ -69,8 +69,7 @@ public class CommentController {
 
     @GetMapping("/get")
     @ResponseBody
-    public ResponseEntity<?> getCommentsForArtwork(@RequestBody ArtworkIdDTO artworkIdDTO) {
-       UUID artworkId = artworkIdDTO.getArtworkId();
+    public ResponseEntity<?> getCommentsForArtwork(@RequestParam("id") UUID artworkId) {
        if (artworkRepository.existsById(artworkId)) {
            System.out.println("\n\n\nPrimljen zahtjev za dobiti komentare.");
            //return new ResponseEntity<>(new ArrayList<>(artworkRepository.findById(artworkId).get().getComments()), HttpStatus.OK);
