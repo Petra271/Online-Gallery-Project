@@ -8,13 +8,10 @@
     <div class="mkd">Kolekcija X</div>
   </div>
   <div class="add_coll_d">
-    <v-btn text
-    color="black" 
-    @click="dialog=true"
-    >
-    <v-icon>mdi-image-plus</v-icon>
-    Dodajte novo djelo
-    </v-btn>
+    <div style="cursor: pointer; font-size: " @click="dialog=true">
+    <v-icon color="black">mdi-folder-edit-outline</v-icon>
+    Dodaj novu kolekciju
+    </div>
   </div>
   
   <v-row justify="center">
@@ -233,10 +230,10 @@ export default {
         this.pictures.push(this.imageUrl);
         this.names.push(this.name)
         let data = {
-          collectionName: 'DA',
+          collectionName: 'Testna kolekcija 1',
           name: this.name,
           description: 'da',
-          style: 'FOTOGRAFIJE',
+          style: 'ULJE_NA_PLATNU',
           price: this.price
         }
         this.$store.commit('set_artworkData', data)
@@ -268,7 +265,7 @@ export default {
   align-content: right;
   justify-content: center;
   margin: auto;
-  margin-top: 5%;
+  margin-top: 0%;
   margin-bottom: 5%;
   height: 0%;
   width: 95%;
@@ -283,8 +280,8 @@ export default {
 .ted {
   font-size: 80px;
   font-family:  'Work Sans', sans-serif;
-  margin-left: 2%;
-  margin-top: 2%;
+  margin-left: 1%;
+  margin-top: 1%;
 }
 .gumbi {
   display: flex;
@@ -343,11 +340,13 @@ export default {
 .mkd {
   font-size: 50px;
   font-family:  'Work Sans', sans-serif;
-  margin-left: 2%;
+  margin-left: 1%;
   margin-top: 3%;
 }
 .add_coll_d {
-  margin-left: 1%;
-  margin-top: 2%;
+  margin-left: 1.5%;
+  margin-top: 1%;
+  font-size: 22px;
+  color: black;
 }
 </style>

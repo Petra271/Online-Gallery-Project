@@ -96,6 +96,7 @@ export default new Vuex.Store({
           localStorage.setItem('logged_in', true)
           console.log('login ' + localStorage.getItem('logged_in'))
           sessionStorage.setItem('token', token)
+          console.log('login ' + sessionStorage.getItem('token'))
           commit('auth_success', token, user)
           resolve(resp)
         })

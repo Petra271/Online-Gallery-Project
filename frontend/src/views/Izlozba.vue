@@ -458,9 +458,10 @@ bit će pokazana u Galeriji umjetnina u Splitu, od 11. veljače do 28. ožujka 2
 }
 
 .art_name {
+  margin-top: -2%;
   margin-bottom: auto;
   margin-right: auto;
-  font-size: 100%;
+  font-size: 70%;
   padding: 2%;
 }
 

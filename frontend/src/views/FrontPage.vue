@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <!-- <div class="front_page"> -->
-      <div :class="{ 'light': !$store.getters.mode, 'dark': $store.getters.mode }">
+    <div :class="{ 'light': !$store.getters.mode, 'dark': $store.getters.mode }">
       <div>
         <Header/>
       </div>
@@ -13,10 +13,46 @@
       >
       Dobrodošli u online galeriju
   </div>
+  <!-- <div><v-btn @click="getCollections()">izložbe</v-btn></div> -->
   <!-- <v-btn @click="snackReg = !snackReg">snack</v-btn> -->
   <div class="gal_desc">{{description}}
   </div>
-  
+
+        <!-- <div v-for="(artworks, colDesc) in collections" :key="colDesc">
+          key - {{colDesc}}
+          <div v-for="(artSrc, artInfo) in artworks" :key="artInfo">
+            {{artInfo}}
+            <div v-for="(info, key) in JSON.parse(artInfo)" :key="key">
+            {{key}} = {{info}}
+            </div>
+            <v-img style="height: 200px; width: 200px;"
+              :src="'data:image/jpg;base64,' + artSrc"
+              :lazy-src="'data:image/jpg;base64,' + artSrc"
+              aspect-ratio="1"
+              class="grey lighten-2 img"
+            ></v-img>
+          </div>
+        </div> -->
+        <div v-for="(artwork, exhDesc) in exhibits" :key="exhDesc">
+          key - {{exhDesc}} 
+          
+            <div v-for="(info, key) in JSON.parse(exhDesc)" :key="key">
+            {{key}} = {{info}}
+            </div>
+            <v-img style="height: 200px; width: 200px;"
+              :src="'data:image/jpg;base64,' + artwork"
+              :lazy-src="'data:image/jpg;base64,' + artwork"
+              aspect-ratio="1"
+              class="grey lighten-2 img"
+            ></v-img>
+            
+          <br>
+            -----------------------
+        </div>
+        <div>{{artists}}</div>
+  <!-- <div>
+    {{exhibits}}
+  </div> -->
   <!-- ---------------- PRIJAVA ------------------------- -->
     <div v-if="this.$store.getters.sign_in_form" class="form" ref="enter_form">
       <v-form
@@ -50,6 +86,7 @@
           :disabled="!valid"
           color="rgba(1, 24, 12)"
           class="mr-4 white--text"
+          @keyup.13="validate_s()"
           @click="validate_s()"
         >
           Prijava
@@ -284,6 +321,67 @@
       </v-col>
     </v-row>
 
+
+    <!-- ---------------- IZLOŽBE UŽIVO ---------------- -->
+    <div class="exh_text"> Izložbe uživo </div>
+    <v-row>
+      <v-col
+        v-for="(artwork, exhDesc) in exhibits" :key="exhDesc"
+        class="d-flex child-flex"
+        cols="12"
+        sm="4"
+      >
+        <v-hover v-slot="{ hover }" open-delay="200">
+          <v-card class="images"
+            :elevation="hover ? 12 : 2"
+            :class="{ 'on-hover': hover }"
+          >
+            <v-img
+              :src="'data:image/jpg;base64,' + artwork"
+              :lazy-src="'data:image/jpg;base64,' + artwork"
+              aspect-ratio="1"
+              class="grey lighten-2 img"
+            >
+            <v-expand-transition>
+              <div
+                v-if="hover"
+                class="d-flex transition-fast-in-fast-out darken-2 v-card--reveal display-3"
+                :class="!$store.getters.mode ? 'hover_light white--text' : 'hover_dark'"
+                style="height: 50%;"
+              >
+                <div class="izl">
+                  <!-- <p>Izložba {{n}}</p> <br>
+                  Traje do: 1{{n}}.11.2020 -->
+                  <!-- <div class="izl_author"><i><b> Jerolim Miše </b></i></div>
+                  <div class="izl_name"><i> -Od buntovnika do barda </i></div> -->
+                  <div v-for="(info, key) in JSON.parse(exhDesc)" :key="key">
+                      <div v-if="key == 'Artists'" class="izl_author"><i><b> {{info}} </b></i></div>
+                      <div v-if="key == 'Name'" class="izl_name"><i> -{{info}} </i></div>
+                  </div>
+                </div>
+              </div>
+            </v-expand-transition>
+              <v-card-title class="align-end fill-height" primary-title>
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on: tooltip }">
+                    <v-btn icon
+                      v-bind="attrs"
+                      v-on="{ ...tooltip, ...menu }"
+                      :disabled="!$store.getters.logged_in"
+                      to="/izlozba"
+                      >
+                      <v-icon :color="!$store.getters.mode ? 'white' : 'black'">mdi-door-open</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Posjeti izložbu</span>
+                </v-tooltip>
+              </v-card-title>
+            </v-img>
+          </v-card>
+        </v-hover>
+      </v-col>
+    </v-row>
+
     <!-- ---------- FILTERI ---------- -->
     <v-row justify="center">
       <v-dialog
@@ -341,7 +439,7 @@
                 <v-card-text class="black--text">Odaberite jednog ili više umjetnika čije izložbe želite prikazati</v-card-text>
                 <v-autocomplete
                   v-model="selectedArtists"
-                  :items="artists"
+                  :items="artistsTmp"
                   class="mx-4"
                   multiple
                   small-chips
@@ -447,6 +545,7 @@
 <script>
 import HelloWorld from '../components/HelloWorld';
 import Header from '@/components/Header'
+import axios from 'axios';
 
 export default {
   name: 'App',
@@ -506,7 +605,7 @@ export default {
       filter_types: ['Stil', 'Umjetnici', 'Datum'],
       radioGroup: 0,
       tehnike: ['Akvarel', 'Mozaik', 'Tempera', 'Ulje na platnu'],
-      artists: [
+      artistsTmp: [
         'Mersad Berber',
         'Edo Murtić',
         'Jerolim Miše',
@@ -515,9 +614,16 @@ export default {
         'Ivan Rabuzin',
         'Oton Iveković'
       ],
+      artists: [],
       selectedArtists: [],
       hasSaved: false,
       model: null,
+
+      collections: null,
+      exhibits: null,
+      imgMapVals: null,
+      imagesExh: [],
+      imagesInfo: [],
 
     }
   },
@@ -528,24 +634,12 @@ export default {
         //this.enter_exh = this.$store.getters.logged_in
         //localStorage.setItem('logged_in', false)
         console.log('mounted ' + localStorage.getItem('logged_in'))
-        // console.log('mounted2 ' + logged)
-        // console.log('type ' + typeof(logged))
-        // if (logged) {
-        //   console.log('DA')
-        //   console.log('log ' + logged)
-        //   this.$store.commit('show_tool', true)
-        // } else {
-        //   console.log('NE')
-        //   console.log('log ' + logged)
-        //   this.$store.commit('show_tool', false)
-        // }
         var logged = (localStorage.getItem('logged_in') === 'true');
         this.$store.commit('show_tool', logged ? true : false)
-        // if (this.$store.getters.logged_in) {
-        //   this.enter_exh = true;
-        // } else {
-        //   this.enter_exh = false;
-        // }
+
+        console.log('mounted')
+        this.getExhibitions()
+        //this.getCollections()
     },
 
   methods: {
@@ -708,13 +802,78 @@ export default {
     //   this.hasSaved = true
     // }
 
+    getCollections() {
+      console.log('exhibit ' + sessionStorage.getItem('token'))
+      axios({url: `${process.env.VUE_APP_BACKEND_URI}/artist/getCollections`, 
+            headers: {
+              'Authorization':  `Bearer ${sessionStorage.getItem('token')}`
+            },
+            params: {
+              'type' : 'all'
+            },
+            method: 'GET'
+      })
+      .then((response) => {
+        console.log('data ' + response.data);
+        this.collections = response.data;
+        console.log('dataexh ' + this.collections)
+        let i = 0
+        for (const val of this.collections.values()) {
+            var colMap = new Map(Object.entries(val));
+            for (const [key, value] of colMap.entries()) {
+                console.log('valf ' + value)
+                //this.bt = btoa(String.fromCharCode.apply(null, new Uint8Array(value)))
+            }
+            this.$store.commit('img_info', colMap.keys())
+            this.imagesExh = colMap.values()
+            this.imagesInfo = colMap.keys()
+            i++
+        }
+      })
+      .catch(err => {
+          console.log(err)
+      });
+    },
+    
+    getExhibitions() {
+      console.log('exhibit ' + sessionStorage.getItem('token'))
+      axios({url: `${process.env.VUE_APP_BACKEND_URI}/visitor/getExhibitionSingles`, method: 'GET'})
+      .then((response) => {
+        this.exhibits = response.data;
+        console.log('getExh ' + this.exhibits)
+        let i = 0
+        this.artists = this.exhibits
+        var stuff = JSON.parse(response.data)
+        // stuff.forEach(element => {
+        //     this.artists[i] = element
+        //     i++
+        // });
+        for (let description in Object.keys(this.exhibits)) {
+            // this.artists[i] = description
+            // i++
+            // const colMap = JSON.parse(description)
+            // for (let [key, value] in colMap) {
+            //     this.artists[i] = value
+            //     i++
+            // }
+            // var data = JSON.parse(description)
+            // this.artists[i] = data[i].Description
+            // i++
+        }
+        
+      })
+      .catch(err => {
+          console.log(err)
+      });
+    }
+    
   },
 
   computed: {
       dateRangeText () {
         return this.exh_dates.join(' ~ ')
       }
-    },
+  },
 
   watch: {
       search (val) {
