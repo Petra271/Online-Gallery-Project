@@ -227,7 +227,7 @@ public class service {
         sb.append("\"receiverName\": \"").append(t.getReceiver().getName()).append("\",");
         sb.append("\"receiverSurname\": \"").append(t.getReceiver().getSurname()).append("\",");
         sb.append("\"amountToArtist\": \"").append(t.getAmountToArtist()).append("\",");
-        sb.append("\"provisionAmount\": \"").append(t.getProvisionAmount());
+        sb.append("\"provisionAmount\": \"").append(t.getProvisionAmount()).append("\"");
         sb.append("}");
         return sb.toString();
     }
