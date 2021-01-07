@@ -83,7 +83,7 @@ public class VisitorController {
         return ResponseEntity.ok().body("Logout successful");
     }
 
-    @GetMapping("/getExhibition")
+    @GetMapping(value="/getExhibition", produces = "application/json")
     public ResponseEntity<?> getExhibition(@RequestParam("exName") String exName) throws JsonProcessingException {
         String currentUsername = loggedInUsers.get(BearerTokenUtil.getBearerTokenHeader());
 
@@ -98,7 +98,7 @@ public class VisitorController {
         return service.produceExhibition(ex);
     }
 
-    @GetMapping("/getExhibitionSingles")
+    @GetMapping(value="/getExhibitionSingles", produces = "application/json")
     public ResponseEntity<?> getExhibitionSingles()throws JsonProcessingException {
         return service.produceExhibitionSingles(new HashSet<>(exhibitionRepository.findAll()));
     }

@@ -143,7 +143,7 @@ public class ArtistController {
         return new ResponseEntity<String>("Artwork not found", HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping(value="/getCollections")
+    @GetMapping(value="/getCollections", produces = "application/json")
     @ResponseBody
     public ResponseEntity<?> getCollections(@RequestParam("type") String collNum) throws JSONException, JsonProcessingException {
         Artist artist = artistRepository.findByEmail(loggedInUsers.get(BearerTokenUtil.getBearerTokenHeader()));
@@ -157,7 +157,7 @@ public class ArtistController {
         return collNum.equals("all") ? service.produceCollections(collections) : service.produceCollectionsSingles(collections);
     }
 
-    @GetMapping("/getCollectionsList")
+    @GetMapping(value="/getCollectionsList", produces = "application/json")
     @ResponseBody
     public ResponseEntity<?> getCollectionList() throws JSONException, JsonProcessingException {
 
