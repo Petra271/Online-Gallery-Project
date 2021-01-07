@@ -134,7 +134,7 @@ public class service {
 
     private String collToMapJson(Collection collection) throws JsonProcessingException {
         Map<String, String> res = new HashMap<>();
-        res.put("Author", collection.getArtist().getName());
+        res.put("Author", collection.getArtist().getName() + " " + collection.getArtist().getSurname());
         res.put("Name", collection.getName());
         res.put("Description", collection.getDescription());
         res.put("Style", collection.getStyle().toString());
