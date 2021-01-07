@@ -214,7 +214,7 @@ public class service {
         sb.append("\"id\": \"").append(c.getCommentId()).append("\",");
         sb.append("\"name\": \"").append(c.getVisitor().getName()).append("\",");
         sb.append("\"surname\": \"").append(c.getVisitor().getSurname()).append("\",");
-        sb.append("\"content\": \"").append(c.getContent());
+        sb.append("\"content\": \"").append(c.getContent()).append("\"");
         sb.append("}");
         return sb.toString();
     }
