@@ -62,6 +62,19 @@ public class service {
         ), HttpStatus.OK);
     }
 
+    public ResponseEntity<AbstractMap.SimpleEntry<String, Map<String,String>>> produceCollection(Collection collection)throws JsonProcessingException {
+        String collDesc = collToMapJson(collection);
+        Map<String, String> collMap = new HashMap<>();
+
+        for(Artwork a : collection.getArtworks())
+            collMap.put(artToMapJson(a), Base64.getEncoder().encodeToString(a.getImageInBytes()));
+
+        return new ResponseEntity<>(new AbstractMap.SimpleEntry<>(
+                collDesc,
+                collMap
+        ), HttpStatus.OK);
+    }
+
     public ResponseEntity<Map<String, String>> produceExhibitionSingles(Set<Exhibition> exhibitions) throws JsonProcessingException {
         Map<String, String> retMap = new HashMap<>();
 
@@ -97,6 +110,15 @@ public class service {
         return new ResponseEntity<>(transactionJsonList, HttpStatus.OK);
     }
 
+    public ResponseEntity<Map<String, String>> produceContests(Set<Contest> contests) throws JsonProcessingException {
+        Map<String, String> retMap = new HashMap<>();
+
+        for(Contest c : contests)
+            retMap.put(c.getWorkingName(), contestToMapJson(c));
+
+        return new ResponseEntity<>(retMap, HttpStatus.OK);
+    }
+
 //    private String produceCollectionJson(Collection c) throws JSONException {
 //        StringBuilder sb = new StringBuilder();
 //        sb.append("{");
@@ -122,10 +144,12 @@ public class service {
 
     private String artToMapJson(Artwork artwork) throws JsonProcessingException {
         Map<String, String> res = new HashMap<>();
+        res.put("id", artwork.getId().toString());
         res.put("Name", artwork.getName());
         res.put("Description", artwork.getDescription());
         res.put("Style", artwork.getStyle().toString());
         res.put("fileType", artwork.getFileType());
+        res.put("Price", String.valueOf(artwork.getPrice()));
         return new ObjectMapper().writeValueAsString(res);
     }
 
@@ -141,11 +165,33 @@ public class service {
         return new ObjectMapper().writeValueAsString(res);
     }
 
+    private String contestToMapJson(Contest contest) throws JsonProcessingException {
+        Map<String, String> res = new HashMap<>();
+        res.put("Name", contest.getWorkingName());
+        res.put("Description", contest.getDescription());
+        res.put("Style", contest.getStyle().toString());
+        res.put("BeginDate", contest.getBeginDateTime().toString());
+        res.put("Duration", contest.getDuration().toString());
+        res.put("Provision", String.valueOf(contest.getProvision()));
+        return new ObjectMapper().writeValueAsString(res);
+    }
+
     private String artistsByComma(Set<Artist> artists){
         StringBuilder sb = new StringBuilder();
         for(Artist a : artists)
             sb.append(a.getName() + " " + a.getSurname()).append(',');
         sb.deleteCharAt(sb.length() - 1);
+        return sb.toString();
+    }
+
+    private String removeSlashes(String text){
+        char[] arr = text.toCharArray();
+        StringBuilder sb = new StringBuilder();
+
+        for(char c : arr)
+            if(c != '\\')
+                sb.append(c);
+
         return sb.toString();
     }
 
@@ -165,6 +211,7 @@ public class service {
     private String produceCommentJson(Comment c) {
         StringBuilder sb = new StringBuilder();
         sb.append("{");
+        sb.append("\"id\": \"").append(c.getCommentId()).append("\",");
         sb.append("\"name\": \"").append(c.getVisitor().getName()).append("\",");
         sb.append("\"surname\": \"").append(c.getVisitor().getSurname()).append("\",");
         sb.append("\"content\": \"").append(c.getContent());

@@ -156,6 +156,21 @@ public class ArtistController {
         System.out.println(collNum);
         return collNum.equals("all") ? service.produceCollections(collections) : service.produceCollectionsSingles(collections);
     }
+    @GetMapping(value="/getCollection", produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<?> getCollection(@RequestParam("name") String collName) throws JSONException, JsonProcessingException {
+        Artist artist = artistRepository.findByEmail(loggedInUsers.get(BearerTokenUtil.getBearerTokenHeader()));
+
+        if(artist == null)
+            return new ResponseEntity<String>("Artist was not found in the repository", HttpStatus.NOT_FOUND);
+
+        for(Collection c : artist.getCollections())
+            if(c.getName().equals(collName))
+                return service.produceCollection(c);
+
+        System.out.println(collName);
+        return new ResponseEntity<String>("This artist does not have a collection by the name of " + collName, HttpStatus.NOT_FOUND);
+    }
 
     @GetMapping(value="/getCollectionsList", produces = "application/json")
     @ResponseBody
