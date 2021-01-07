@@ -38,6 +38,8 @@ public class VisitorController {
 
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired
+    private ContestRepository contestRepository;
+    @Autowired
     private ExhibitionRepository exhibitionRepository;
     @Autowired
     private AdminRepository adminRepository;
@@ -101,6 +103,17 @@ public class VisitorController {
     @GetMapping(value="/getExhibitionSingles", produces = "application/json")
     public ResponseEntity<?> getExhibitionSingles()throws JsonProcessingException {
         return service.produceExhibitionSingles(new HashSet<>(exhibitionRepository.findAll()));
+    }
+
+    @GetMapping(value="/getContests", produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<?> getContests() throws JsonProcessingException {
+        String currentUsername = loggedInUsers.get(BearerTokenUtil.getBearerTokenHeader());
+
+        if(!artistRepository.existsByEmail(currentUsername) && !adminRepository.existsByEmail(currentUsername))
+            return new ResponseEntity<String>("No admin or artist with this username exists", HttpStatus.NOT_FOUND);
+
+        return service.produceContests(new HashSet<Contest>(contestRepository.findAll()));
     }
 
     @PostMapping(value="/test")

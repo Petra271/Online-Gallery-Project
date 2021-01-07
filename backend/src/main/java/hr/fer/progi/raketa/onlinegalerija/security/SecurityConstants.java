@@ -12,6 +12,7 @@ public class SecurityConstants {
     public static final String REMOVE_ARTWORK = "/artist/removeArtwork";
     public static final String REMOVE_COLLECTION = "/artist/removeCollection";
     public static final String GET_COLLECTIONS = "/artist/getCollections";
+    public static final String GET_COLLECTION = "/artist/getCollection";
     public static final String GET_COLLECTIONS_LIST = "/artist/getCollectionsList";
     public static final String TEST = "/visitor/test";
     public static final String ADD_COMMENT ="/comment/add";
@@ -19,6 +20,7 @@ public class SecurityConstants {
     public static final String DELETE_COMMENT="/comment/remove";
     public static final String ADD_CONTEST="/admin/createContest";
     public static final String APPLY_TO_CONTEST="/artist/applyToContest";
+    public static final String GET_CONTESTS="/visitor/getContests";
     public static final String ADD_EXHIBITION="/admin/createExhibition";
 
     public static final String GET_EXHIBITION="/visitor/getExhibition";
