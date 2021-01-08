@@ -22,7 +22,7 @@ public class SecurityConstants {
     public static final String APPLY_TO_CONTEST="/artist/applyToContest";
     public static final String GET_CONTESTS="/visitor/getContests";
     public static final String ADD_EXHIBITION="/admin/createExhibition";
-
+    public static final String GET_APPLICATIONS="/admin/getApplications";
     public static final String GET_EXHIBITION="/visitor/getExhibition";
     public static final String GET_EXHIBITION_SINGLES="/visitor/getExhibitionSingles";
     public static final String ADD_TRANSACTION="/transaction/addTransaction";

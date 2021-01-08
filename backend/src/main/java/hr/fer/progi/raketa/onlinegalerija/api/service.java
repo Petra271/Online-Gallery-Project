@@ -5,12 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import hr.fer.progi.raketa.onlinegalerija.model.*;
 import hr.fer.progi.raketa.onlinegalerija.model.Artwork;
 import hr.fer.progi.raketa.onlinegalerija.model.Collection;
+import hr.fer.progi.raketa.onlinegalerija.repository.ContestRepository;
 import org.json.JSONException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class service {
@@ -87,6 +89,18 @@ public class service {
                 }
             }
             retMap.put(exToMapJson(e), image64);
+        }
+
+        return new ResponseEntity<>(retMap, HttpStatus.OK);
+    }
+
+    public ResponseEntity<Map<String, Set<String>>> produceApplications(Contest contest){
+        Map<String, Set<String>> retMap = new HashMap<>();
+
+        System.out.println(contest.getApplications().size());
+
+        for(ContestApplication ca : contest.getApplications()){
+            retMap.put(ca.getArtist().getEmail(), ca.getCollections().stream().map(c -> c.getName()).collect(Collectors.toSet()));
         }
 
         return new ResponseEntity<>(retMap, HttpStatus.OK);
