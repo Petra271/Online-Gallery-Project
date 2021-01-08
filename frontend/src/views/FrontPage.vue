@@ -357,12 +357,12 @@
                 :class="!$store.getters.mode ? 'hover_light white--text' : 'hover_dark'"
                 style="height: 50%;"
               >
-                <div class="izl">
+                <v-card style="color: rgb(0, 0, 0, 0)">
                   <!-- <div class="izl_author"><i><b> {{exhDescriptions[n - 1]["Artists"]}} </b></i></div>
                   <div class="izl_name"><i> -{{exhDescriptions[n - 1]["Name"]}} </i></div> -->
                   <div ><i><b> {{exhDescriptions[n - 1]["Artists"]}} <br> </b></i>
                   <i> -{{exhDescriptions[n - 1]["Name"]}} </i></div>
-                </div>
+                </v-card>
               </div>
             </v-expand-transition>
               <v-card-title class="align-end fill-height" primary-title>
@@ -556,7 +556,7 @@
 <script>
 import HelloWorld from '../components/HelloWorld';
 import Header from '@/components/Header'
-import axios from 'axios';
+import axios from 'axios'
 
 export default {
   name: 'App',
@@ -663,8 +663,7 @@ export default {
     descIn() {
       this.timer = setTimeout(() => { 
         this.description = `Online galerija osnovana je 2020. godine s ciljem promicanja kulture i umjetnosti. 
-      Plod mladih i britkih umova online galerija stremi podizanju svijesti i javnog mnijenja o umjetnosti te širenju iste među mladima, 
-      pogotovo ferovcima`;
+      Plod mladih i britkih umova online galerija stremi podizanju svijesti i javnog mnijenja o umjetnosti te širenju iste među mladima`;
       }, 450);
     },
 
