@@ -68,7 +68,12 @@ export default {
             '200', '500', '675', '860', '150', '1000'
         ]
      }
-  }
+  },
+
+  mounted() {
+    var logged = (localStorage.getItem('logged_in') === 'true');
+    this.$store.commit('show_tool', logged ? true : false)
+  },
 }
 </script>
 

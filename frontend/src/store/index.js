@@ -18,7 +18,11 @@ export default new Vuex.Store({
     user : {},
     collectionData: {},
     artworkData: {},
-    contestData: {}
+    contestData: {},
+    currentCollection: '',
+    currentStyle: '',
+    removeArtwork: {},
+    applyToContestData: {}
     //register_in_form: false
   },
   mutations: {
@@ -54,6 +58,22 @@ export default new Vuex.Store({
 
     set_contestData(state, contestData) {
       state.contestData = contestData
+    },
+
+    set_currentCollection(state, currentCollection) {
+      state.currentCollection = currentCollection
+    },
+
+    set_currentStyle(state, currentStyle) {
+      state.currentStyle = currentStyle
+    },
+
+    remove_artworkData(state, removeArtwork) {
+      state.removeArtwork = removeArtwork
+    },
+
+    set_applyToContest(state, applyToContestData) {
+      state.applyToContestData = applyToContestData
     },
 
     //AUTHENTICATION
@@ -199,6 +219,28 @@ export default new Vuex.Store({
         })
       })
     },
+    remove_Artwork({commit}, removeArtwork){
+      return new Promise((resolve, reject) => {
+        console.log('aft ' + sessionStorage.getItem('token'))
+        console.log(removeArtwork)
+        axios({url: `${process.env.VUE_APP_BACKEND_URI}/artist/removeArtwork`, 
+              headers: {
+                'Authorization':  `Bearer ${sessionStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+              }, 
+              data: removeArtwork, 
+              method: 'POST' 
+            })
+        .then(resp => {
+          resolve(resp)
+        })
+        .catch(err => {
+          commit('auth_error', err)
+          // sessionStorage.removeItem('token')
+          reject(err)
+        })
+      })
+    },
     create_contest({commit}, contestData){
       return new Promise((resolve, reject) => {
         console.log('aft ' + sessionStorage.getItem('token'))
@@ -209,6 +251,29 @@ export default new Vuex.Store({
                 'Content-Type': 'application/json'
               }, 
               data: contestData, 
+              method: 'POST' 
+            })
+        .then(resp => {
+          resolve(resp)
+        })
+        .catch(err => {
+          commit('auth_error', err)
+          // sessionStorage.removeItem('token')
+          reject(err)
+        })
+      })
+    },
+
+    create_applyToContest({commit}, applyToContestData){
+      return new Promise((resolve, reject) => {
+        console.log('aft ' + sessionStorage.getItem('token'))
+        console.log(applyToContestData)
+        axios({url: `${process.env.VUE_APP_BACKEND_URI}/artist/applyToContest`, 
+              headers: {
+                'Authorization':  `Bearer ${sessionStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+              }, 
+              data: applyToContestData, 
               method: 'POST' 
             })
         .then(resp => {
@@ -234,6 +299,8 @@ export default new Vuex.Store({
     isLoggedIn: state => !!state.token,
     authStatus: state => state.status,
     user: state => state.user,
-    token: state => state.token
+    token: state => state.token,
+    currentCollection: state => state.currentCollection,
+    currentStyle: state => state.currentStyle
   }
 })
