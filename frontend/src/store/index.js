@@ -19,14 +19,12 @@ export default new Vuex.Store({
     collectionData: {},
     artworkData: {},
     contestData: {},
-<<<<<<< HEAD
-    collections: []
-=======
+    collections: [],
     currentCollection: '',
     currentStyle: '',
     removeArtwork: {},
-    applyToContestData: {}
->>>>>>> 016c8db9b669ad9a80dfc5f07c8b04328fb582ed
+    applyToContestData: {},
+    artBuySrc: ''
     //register_in_form: false
   },
   mutations: {
@@ -106,6 +104,10 @@ export default new Vuex.Store({
 
     set_col(state, collections) {
       state.collections = collections
+    },
+
+    buy_art(state, artBuySrc) {
+      state.artBuySrc = artBuySrc
     }
     // change(state, register_in_form) {
     //   state.register_in_form = register_in_form
@@ -183,6 +185,7 @@ export default new Vuex.Store({
         })
       })
     },
+
     create_collection({commit}, collectionData){
       return new Promise((resolve, reject) => {
         console.log('aft ' + sessionStorage.getItem('token'))
@@ -205,6 +208,7 @@ export default new Vuex.Store({
         })
       })
     },
+
     add_artwork({commit}, artworkData){
       return new Promise((resolve, reject) => {
         console.log('aft ' + sessionStorage.getItem('token'))
@@ -227,6 +231,7 @@ export default new Vuex.Store({
         })
       })
     },
+    
     remove_Artwork({commit}, removeArtwork){
       return new Promise((resolve, reject) => {
         console.log('aft ' + sessionStorage.getItem('token'))
@@ -249,6 +254,7 @@ export default new Vuex.Store({
         })
       })
     },
+    
     create_contest({commit}, contestData){
       return new Promise((resolve, reject) => {
         console.log('aft ' + sessionStorage.getItem('token'))
@@ -308,11 +314,9 @@ export default new Vuex.Store({
     authStatus: state => state.status,
     user: state => state.user,
     token: state => state.token,
-<<<<<<< HEAD
-    collections: state => state.collections
-=======
+    collections: state => state.collections,
     currentCollection: state => state.currentCollection,
-    currentStyle: state => state.currentStyle
->>>>>>> 016c8db9b669ad9a80dfc5f07c8b04328fb582ed
+    currentStyle: state => state.currentStyle,
+    artBuySrc: state => state.artBuySrc
   }
 })

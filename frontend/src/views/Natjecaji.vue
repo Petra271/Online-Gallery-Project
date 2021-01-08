@@ -321,7 +321,7 @@ export default {
   mounted() {
     this.getContests();
     this.getCollections();
-    var logged = (localStorage.getItem('logged_in') === 'true');
+    var logged = (sessionStorage.getItem('logged_in') === 'true');
     this.$store.commit('show_tool', logged ? true : false)
   },
   // computed: {

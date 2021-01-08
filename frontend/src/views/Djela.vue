@@ -172,7 +172,7 @@ export default {
   },
 
   mounted() {
-    var logged = (localStorage.getItem('logged_in') === 'true');
+    var logged = (sessionStorage.getItem('logged_in') === 'true');
     this.$store.commit('show_tool', logged ? true : false);
     var collection = sessionStorage.getItem('currentCollection');
     this.$store.commit('set_currentCollection', collection);

@@ -20,8 +20,8 @@
     </div>
     <div>
       <v-img class="art_buy"
-        :src="artwork"
-        :lazy-src="artwork"
+        :src="'data:image/jpg;base64,' + $store.getters.artBuySrc"
+        :lazy-src="'data:image/jpg;base64,' + $store.getters.artBuySrc"
         max-height="50%"
         max-width="50%"
         contain
@@ -169,7 +169,7 @@ export default {
   },
 
   mounted() {
-    var logged = (localStorage.getItem('logged_in') === 'true');
+    var logged = (sessionStorage.getItem('logged_in') === 'true');
     this.$store.commit('show_tool', logged ? true : false)
   },
 

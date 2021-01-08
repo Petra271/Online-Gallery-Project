@@ -15,13 +15,13 @@
 
     <!-- <div>++{{$store.getters.collections}}</div>
     <div>{{exhDescription}}</div> -->
-    <div>EXHIBITION: {{exhibition}} <br><br><br><br></div> 
+    <!-- <div>EXHIBITION: {{exhibition}} <br><br><br><br></div> 
     <div>OPIS IZLOŽBE: {{exhDescription}} <br><br></div>
     <div>OPIS KOLEKCIJE: {{collectionDesc}} <br><br></div>
     <div>KOLEKCIJE: {{collections}} <br><br></div>
     <div>ARTDESC: {{artDescription}} <br><br></div>
     <div>ARTSRC: {{artSources}} <br><br></div>
-    <div>{{comments}}</div>
+    <div>{{comments}}</div> -->
 
     <div v-for="(colInd, i) in collections" :key="colInd" class="collection"
         :class="$store.getters.mode ? 'white--text' : 'black--text'"
@@ -160,7 +160,7 @@
               <v-btn color="rgb(33, 1, 1)" @click="overlay=false">Natrag</v-btn>  
             </div>
             <div style="padding-left: 30px;">
-              <v-btn color="rgba(1, 24, 12)" @click="buy()">Kupnja</v-btn>
+              <v-btn color="rgba(1, 24, 12)" to="/kupovina">Kupnja</v-btn>
             </div>
             </v-row>
           </div>
@@ -375,7 +375,7 @@ bit će pokazana u Galeriji umjetnina u Splitu, od 11. veljače do 28. ožujka 2
   },
 
   mounted() {
-    var logged = (localStorage.getItem('logged_in') === 'true');
+    var logged = (sessionStorage.getItem('logged_in') === 'true');
     this.$store.commit('show_tool', logged ? true : false)
     this.getColItems()
   },
@@ -402,6 +402,9 @@ bit će pokazana u Galeriji umjetnina u Splitu, od 11. veljače do 28. ožujka 2
       this.overlay = !this.overlay;
       this.indI = i;
       this.indJ = j;
+      console.log('artsource ' + this.artSources[i][j])
+      this.$store.commit('buy_art', this.artSources[i][j])
+      console.log('artstore ' + $store.getters.artBuySrc)
       this.getComments(this.artDescription[i][j]['id'])
     },
 
@@ -530,10 +533,6 @@ bit će pokazana u Galeriji umjetnina u Splitu, od 11. veljače do 28. ožujka 2
           }
       }
       this.authorOrigi = this.exhDescription["Artists"]
-    },
-
-    buy() {
-      this.$router.push('/kupnja')
     }
   }
 }

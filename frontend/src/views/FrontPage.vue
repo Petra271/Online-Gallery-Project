@@ -207,7 +207,7 @@
     </div>
 
   <!-- --------------------- SLIKE -------------------------------- -->
-    <div class="exh_text"> Aktivne izložbe </div>
+    <!-- <div class="exh_text"> Aktivne izložbe </div>
     <v-row>
       <v-col
         v-for="n in 8"
@@ -234,10 +234,10 @@
                 :class="!$store.getters.mode ? 'hover_light white--text' : 'hover_dark'"
                 style="height: 50%;"
               >
-                <div class="izl">
+                <div class="izl"> -->
                   <!-- <p>Izložba {{n}}</p> <br>
                   Traje do: 1{{n}}.11.2020 -->
-                  <div class="izl_author"><i><b> Jerolim Miše </b></i></div>
+                  <!-- <div class="izl_author"><i><b> Jerolim Miše </b></i></div>
                   <div class="izl_name"><i> -Od buntovnika do barda </i></div>
                 </div>
               </div>
@@ -309,7 +309,7 @@
                   </template>
                   <span>Posjeti izložbu</span>
                 </v-tooltip>
-              </v-card-title>
+              </v-card-title> -->
 
               <!-- <template v-slot:placeholder>
                 <v-row
@@ -323,11 +323,11 @@
                   ></v-progress-circular>
                 </v-row>
               </template> -->
-            </v-img>
+            <!-- </v-img>
           </v-card>
         </v-hover>
       </v-col>
-    </v-row>
+    </v-row> -->
 
 
     <!-- ---------------- IZLOŽBE UŽIVO ---------------- -->
@@ -357,12 +357,14 @@
                 :class="!$store.getters.mode ? 'hover_light white--text' : 'hover_dark'"
                 style="height: 50%;"
               >
-                <v-card style="color: rgb(0, 0, 0, 0)">
+                
                   <!-- <div class="izl_author"><i><b> {{exhDescriptions[n - 1]["Artists"]}} </b></i></div>
                   <div class="izl_name"><i> -{{exhDescriptions[n - 1]["Name"]}} </i></div> -->
-                  <div ><i><b> {{exhDescriptions[n - 1]["Artists"]}} <br> </b></i>
-                  <i> -{{exhDescriptions[n - 1]["Name"]}} </i></div>
-                </v-card>
+                  <div class="exh_title"> <i><b> {{exhDescriptions[n - 1]["Artists"]}} </b><br> 
+                    <p style="margin-top: -5%; font-weight: 100"> -{{exhDescriptions[n - 1]["Name"]}} </p></i> </div>
+                  
+                  <!-- <i> -{{exhDescriptions[n - 1]["Name"]}} </i></div> -->
+                
               </div>
             </v-expand-transition>
               <v-card-title class="align-end fill-height" primary-title>
@@ -463,6 +465,7 @@
             </v-tab-item>
             <v-tab-item>
               <v-card flat>
+                <v-card-text class="black--text">Odaberite dva datuma između kojih će prikazane izložbe biti otvorene</v-card-text>
                 <div class="calendar">
                   <v-date-picker
                     v-model="exh_dates"
@@ -1081,12 +1084,15 @@ export default {
   /* margin-left: 15%; */
 }
 
-.izl_author {
-  /* margin-top: -28%;
-  margin-left: -4%; */
+.exh_title {
+  text-align: left;
+  margin-top: -24%;
+  margin-right: auto;
+  margin-left: 2%;
+  font-size: 60%;
 }
 
-.izl_name {
+.exh_name {
   /* margin-top: -5%;
   margin-left: -4%; */
   font-weight: 100;
