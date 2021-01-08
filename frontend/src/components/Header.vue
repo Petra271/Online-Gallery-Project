@@ -69,7 +69,9 @@
               <v-list-item to="/transakcije" link> Transakcije <v-spacer></v-spacer> <v-icon>mdi-cash-multiple</v-icon> </v-list-item>
               <v-list-item to="/moj_profil" link> Moj profil <v-spacer></v-spacer> <v-icon>mdi-account-details</v-icon> </v-list-item>
               <v-list-item to="/natjecaji" link> Natječaji <v-spacer></v-spacer> <v-icon>mdi-medal-outline</v-icon> </v-list-item>
-              <v-list-item link v-on:click="sign_out()"> Odjava <v-spacer></v-spacer> <v-icon>mdi-exit-to-app</v-icon> </v-list-item>
+              <v-list-item link @click="sign_out()"> Odjava <v-spacer></v-spacer> <v-icon>mdi-exit-to-app</v-icon> </v-list-item>
+              <v-list-item link @click="create_admin()"> Admin <v-spacer></v-spacer> <v-icon>mdi-exit-to-app</v-icon> </v-list-item>
+              <v-list-item link @click="change_admin()"> Admin T<v-spacer></v-spacer> <v-icon>mdi-exit-to-app</v-icon> </v-list-item>
             </v-list>
           </v-menu>
         </div>
@@ -98,6 +100,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'Header',
 
@@ -235,6 +239,24 @@ export default {
       //    this.$store.commit('theme', true)
       // }
       this.$store.getters.mode ? this.$store.commit('theme', false) : this.$store.commit('theme', true)
+    },
+
+    create_admin() {
+      axios({url: `${process.env.VUE_APP_BACKEND_URI}/visitor/test`, method: 'POST'})
+      .then((response) => {
+        
+      })
+      .catch(err => {
+          console.log(err)
+      });
+    },
+
+    change_admin() {
+      if(this.$store.getters.admin) {
+          this.$store.commit('log_admin', false);
+        } else {
+          this.$store.commit('log_admin', true);
+        }
     }
   }
 }

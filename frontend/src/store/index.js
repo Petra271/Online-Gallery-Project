@@ -18,7 +18,15 @@ export default new Vuex.Store({
     user : {},
     collectionData: {},
     artworkData: {},
-    contestData: {}
+    contestData: {},
+<<<<<<< HEAD
+    collections: []
+=======
+    currentCollection: '',
+    currentStyle: '',
+    removeArtwork: {},
+    applyToContestData: {}
+>>>>>>> 016c8db9b669ad9a80dfc5f07c8b04328fb582ed
     //register_in_form: false
   },
   mutations: {
@@ -32,7 +40,7 @@ export default new Vuex.Store({
 
     show_tool(state, logged_in) {
       console.log('showtool ' + logged_in)
-      localStorage.setItem('logged_in', logged_in)
+      sessionStorage.setItem('logged_in', logged_in)
       state.logged_in = logged_in
     },
 
@@ -54,6 +62,22 @@ export default new Vuex.Store({
 
     set_contestData(state, contestData) {
       state.contestData = contestData
+    },
+
+    set_currentCollection(state, currentCollection) {
+      state.currentCollection = currentCollection
+    },
+
+    set_currentStyle(state, currentStyle) {
+      state.currentStyle = currentStyle
+    },
+
+    remove_artworkData(state, removeArtwork) {
+      state.removeArtwork = removeArtwork
+    },
+
+    set_applyToContest(state, applyToContestData) {
+      state.applyToContestData = applyToContestData
     },
 
     //AUTHENTICATION
@@ -78,6 +102,10 @@ export default new Vuex.Store({
 
     set_user(state, user) {
       state.user = user
+    },
+
+    set_col(state, collections) {
+      state.collections = collections
     }
     // change(state, register_in_form) {
     //   state.register_in_form = register_in_form
@@ -93,8 +121,8 @@ export default new Vuex.Store({
           // console.log('data ' + resp.data)
           const token = resp.data
           //const user = resp.data.user
-          localStorage.setItem('logged_in', true)
-          console.log('login ' + localStorage.getItem('logged_in'))
+          sessionStorage.setItem('logged_in', true)
+          console.log('login ' + sessionStorage.getItem('logged_in'))
           sessionStorage.setItem('token', token)
           console.log('login ' + sessionStorage.getItem('token'))
           commit('auth_success', token, user)
@@ -143,8 +171,8 @@ export default new Vuex.Store({
         .then(resp => {
           console.log('aft1 ' + sessionStorage.getItem('token'))
           sessionStorage.removeItem('token')
-          localStorage.setItem('logged_in', false)
-          console.log('logout ' + localStorage.getItem('logged_in'))
+          sessionStorage.setItem('logged_in', false)
+          console.log('logout ' + sessionStorage.getItem('logged_in'))
           delete axios.defaults.headers.common['Authorization']
           resolve(resp)
         })
@@ -199,6 +227,28 @@ export default new Vuex.Store({
         })
       })
     },
+    remove_Artwork({commit}, removeArtwork){
+      return new Promise((resolve, reject) => {
+        console.log('aft ' + sessionStorage.getItem('token'))
+        console.log(removeArtwork)
+        axios({url: `${process.env.VUE_APP_BACKEND_URI}/artist/removeArtwork`, 
+              headers: {
+                'Authorization':  `Bearer ${sessionStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+              }, 
+              data: removeArtwork, 
+              method: 'POST' 
+            })
+        .then(resp => {
+          resolve(resp)
+        })
+        .catch(err => {
+          commit('auth_error', err)
+          // sessionStorage.removeItem('token')
+          reject(err)
+        })
+      })
+    },
     create_contest({commit}, contestData){
       return new Promise((resolve, reject) => {
         console.log('aft ' + sessionStorage.getItem('token'))
@@ -209,6 +259,29 @@ export default new Vuex.Store({
                 'Content-Type': 'application/json'
               }, 
               data: contestData, 
+              method: 'POST' 
+            })
+        .then(resp => {
+          resolve(resp)
+        })
+        .catch(err => {
+          commit('auth_error', err)
+          // sessionStorage.removeItem('token')
+          reject(err)
+        })
+      })
+    },
+
+    create_applyToContest({commit}, applyToContestData){
+      return new Promise((resolve, reject) => {
+        console.log('aft ' + sessionStorage.getItem('token'))
+        console.log(applyToContestData)
+        axios({url: `${process.env.VUE_APP_BACKEND_URI}/artist/applyToContest`, 
+              headers: {
+                'Authorization':  `Bearer ${sessionStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+              }, 
+              data: applyToContestData, 
               method: 'POST' 
             })
         .then(resp => {
@@ -234,6 +307,12 @@ export default new Vuex.Store({
     isLoggedIn: state => !!state.token,
     authStatus: state => state.status,
     user: state => state.user,
-    token: state => state.token
+    token: state => state.token,
+<<<<<<< HEAD
+    collections: state => state.collections
+=======
+    currentCollection: state => state.currentCollection,
+    currentStyle: state => state.currentStyle
+>>>>>>> 016c8db9b669ad9a80dfc5f07c8b04328fb582ed
   }
 })

@@ -7,19 +7,12 @@
     <h2 class="te"> Aktivni natječaji </h2>
   </div>
   <div class="add_coll">
-    <v-btn text
-    color="black" 
-    text-transform: none 
-    :class="{ 'show-btns': hover }"
-    v-bind="attrs"
-    v-on="{ ...tooltip, ...menu }"
-    @click="dialog=true"
-    >
-    <v-icon>mdi-image-plus</v-icon>
+    <div style="cursor: pointer;" @click="dialog=true">
+    <v-icon color="black">mdi-image-plus</v-icon>
     Dodaj novi natječaj
-    </v-btn>
+    </div>
   </div>
-  
+
   <div justify="center" v-if="dialog">
     <v-dialog
       v-model="dialog"
@@ -191,11 +184,11 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="(entry, i) in allScores" :key="i" @click="openDialogInfo(entry)" style="cursor: pointer">
+      <tr v-for="(status, i) in names" :key="i" @click="openDialogInfo(i)" style="cursor: pointer">
         <!-- <th scope="row">{{ ++i }}</th> -->
-        <td>{{ entry.name }}</td>
-        <td>{{ entry.date1 }}</td>
-        <td>{{ entry.duration }}</td>
+        <td>{{ names[i] }}</td>
+        <td>{{ beginDates[i] }}</td>
+        <td>{{ durations[i] }}</td>
       </tr>
     </tbody>
   </table>
@@ -225,7 +218,7 @@
           >
             <v-autocomplete
               v-model="selectedCollections"
-              :items="collections"
+              :items="collectionNames"
               :rules="[v => !!v || 'Potrebno je odabrati kolekcije za natječaj']"
               label="Kolekcije"
               multiple
@@ -260,10 +253,13 @@
 </template>
 
 <script>
-import Header from '@/components/Header'
+import Header from '@/components/Header';
+import axios from 'axios';
 
 export default {
-   components: {
+  name: 'App',
+
+  components: {
     Header
   },
 
@@ -309,10 +305,22 @@ export default {
       dialogDuration: "",
       dialogCommission: "",
       dialogDate: "",
-     }
+      contests: null,
+      names: [],
+      beginDates: [],
+      durations: [],
+      descriptions: [],
+      styles: [],
+      comissions: [],
+      collectionNames: [],
+      collections: null,
+      selectedContest: '',
+    }
   },
 
   mounted() {
+    this.getContests();
+    this.getCollections();
     var logged = (localStorage.getItem('logged_in') === 'true');
     this.$store.commit('show_tool', logged ? true : false)
   },
@@ -323,7 +331,7 @@ export default {
   //     });
   //   },
   // },
-   methods: {
+  methods: {
     onSubmit() {
       var parts1 = this.date1.split('-');
       var parts2 = this.date2.split('-');
@@ -333,11 +341,11 @@ export default {
       
       let data = {
         beginDateTime: this.date1 + " 00:00",
-        duration: "P" + this.duration + "DT0H0M",
+        duration: "PT" + this.duration + "H0M",
         name: this.name,
         description: this.opis,
         style: this.stil,
-        privision: parseFloat(this.provizija)
+        provision: this.provizija
       }
       this.$store.commit('set_contestData', data)
       data = JSON.stringify(data)
@@ -347,25 +355,107 @@ export default {
       this.clearForm(); 
       this.dialog = false;
     },
+
     clearForm() {
       this.name = "";
       this.stil = "";
       this.opis = "";
       this.provizija = "";
     },
-    openDialogInfo(entry) {
+
+    openDialogInfo(i) {
       this.dialog_info = true;
-      this.dialogName = entry.name;
-      this.dialogDate = entry.date1;
-      this.dialogDuration = entry.duration;
-      this.dialogDescription = entry.opis;
-      this.dialogStyle = entry.stil;
-      this.dialogCommission = entry.provizija;
+      this.dialogName = this.names[i];
+      this.dialogDate = this.beginDates[i];
+      this.dialogDuration = this.duration[i];
+      this.dialogDescription = this.descriptions[i];
+      this.dialogStyle = this.styles[i];
+      this.dialogCommission = this.comissions[i];
+      this.selectedContest = this.names[i]
     },
+
     apply() {
+      let data = {
+        contestName: this.selectedContest,
+        collections: this.selectedCollections,
+      }
+      this.$store.commit('set_applyToContest', data)
+      data = JSON.stringify(data)
+      this.$store.dispatch('create_applyToContest', data)
+       .catch(err => console.log(err))
+
+
       this.dialog_info = false;
       this.selectedCollections = [];
-    }
+    },
+
+    getContests() {
+      console.log('exhibit ' + sessionStorage.getItem('token'))
+      axios({url: `${process.env.VUE_APP_BACKEND_URI}/visitor/getContests`, 
+            headers: {
+              'Authorization':  `Bearer ${sessionStorage.getItem('token')}`
+            },
+            method: 'GET'
+      })
+      .then((response) => {
+        this.contests = response.data
+        // console.log(JSON.stringify(this.contests))
+        for (let [name, value] of Object.entries(this.contests)) {
+          this.names.push(name)
+          // console.log(name)
+          for (let [key, info] of Object.entries(JSON.parse(value))) {
+            // console.log(info)
+            if (key == 'BeginDate') {
+              this.beginDates.push(info.substr(0, 10))
+            }
+            if (key == 'Duration') {
+              var d = info.toString()
+              this.durations.push(d.substr(d.indexOf('T') + 1, d.indexOf('H') - 2))
+              // console.log(d.substr(d.indexOf('T') + 1, d.indexOf('H') - 2))
+            }
+            if (key == 'Provision') {
+              this.comissions.push(info)
+            }
+            if (key == 'Description') {
+              this.descriptions.push(info)
+            }
+            if (key == 'Style') {
+              this.styles.push(info)
+            }
+          }
+        }
+      })
+      .catch(err => {
+          console.log(err)
+      });
+    },
+
+    getCollections() {
+      console.log('exhibit ' + sessionStorage.getItem('token'))
+      axios({url: `${process.env.VUE_APP_BACKEND_URI}/artist/getCollections`, 
+            headers: {
+              'Authorization':  `Bearer ${sessionStorage.getItem('token')}`
+            },
+            params: {
+              'type' : 'all'
+            },
+            method: 'GET'
+      })
+      .then((response) => {
+        this.collections = response.data;
+        // console.log(this.collections)
+        for (let [description, value] of Object.entries(this.collections)) {
+          for (let [key, info] of Object.entries(JSON.parse(description))) {
+            if (key == 'Name') {
+              this.collectionNames.push(info)
+            }
+          }
+        }
+      })
+      .catch(err => {
+          console.log(err)
+      });
+    },
   },
 }
 </script>

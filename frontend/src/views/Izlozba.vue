@@ -10,19 +10,28 @@
           @mouseover="informIn()" @mouseleave="informOut()"
         >
       <div class="exh_author"> <b><i> {{author}} </i></b></div>
-      <div class="exh_name"> Od buntovnika do barda </div>
+      <div class="exh_name"> {{exhDescription["Name"]}} </div>
     </div>
-    <div class="collection"
+
+    <!-- <div>++{{$store.getters.collections}}</div>
+    <div>{{exhDescription}}</div> -->
+    <div>EXHIBITION: {{exhibition}} <br><br><br><br></div> 
+    <div>OPIS IZLOŽBE: {{exhDescription}} <br><br></div>
+    <div>OPIS KOLEKCIJE: {{collectionDesc}} <br><br></div>
+    <div>KOLEKCIJE: {{collections}} <br><br></div>
+    <div>ARTDESC: {{artDescription}} <br><br></div>
+    <div>ARTSRC: {{artSources}} <br><br></div>
+    <div>{{comments}}</div>
+
+    <div v-for="(colInd, i) in collections" :key="colInd" class="collection"
         :class="$store.getters.mode ? 'white--text' : 'black--text'"
     > 
-      Kolekcija X
-    </div>
+      {{collectionDesc[i]["Name"]}}
     
-
   <v-row>
       <v-col
-        v-for="n in 6"
-        :key="n"
+        v-for="(art, j) in artDescription[i]"
+        :key="art"
         class="d-flex child-flex"
         cols="12"
         sm="3"
@@ -34,8 +43,8 @@
           >
           <div></div>
             <v-img
-              :src="pictures[n]"
-              :lazy-src="pictures[n]"
+              :src="'data:image/jpg;base64,' + artSources[i][j]"
+              :lazy-src="'data:image/jpg;base64,' + artSources[i][j]"
               aspect-ratio="1"
               class="grey lighten-2 img"
             >
@@ -46,7 +55,7 @@
                 :class="!$store.getters.mode ? 'hover_light white--text' : 'hover_dark'"
                 style="height: 50%;"
               >
-                <div class="art_name"><i><b>Poker Pasi</b></i></div>
+                <div class="art_name"><i><b>{{artDescription[i][j]["Name"]}}</b></i></div>
               </div>
             </v-expand-transition>
               <v-card-title class="align-end fill-height" primary-title>
@@ -58,12 +67,12 @@
                       v-bind="attrs"
                       v-on="{ ...tooltip, ...menu }"
                       :disabled="!$store.getters.logged_in"
-                      @click="show_art(n)"
+                      @click="show_art(i, j)"
                       >
                       <v-icon :color="!$store.getters.mode ? 'white' : 'black'">mdi-palette</v-icon>
                     </v-btn>
                   </template>
-                  <span>Pogledaj djelo</span>
+                  <span>Pogledajte djelo</span>
                 </v-tooltip>
               </v-card-title>
 
@@ -85,6 +94,8 @@
         </v-hover>
       </v-col>
     </v-row>
+
+  </div>
 
     <!-- ----------- OPIS IZLOŽBE----------- -->
     <v-overlay
@@ -127,8 +138,8 @@
       <v-card class="artwork" color="rgba(0, 0, 0, 0)" :elevation="0">
         <div></div>
         <v-img rounded
-          :src="pictures[index]"
-          :lazy-src="pictures[index]"
+          :src="'data:image/jpg;base64,' + artSources[indI][indJ]"
+          :lazy-src="'data:image/jpg;base64,' + artSources[indI][indJ]"
           aspect-ratio="1"
           class="grey lighten-2 img"
         >
@@ -139,7 +150,8 @@
               >
             Dimenzije: 180 x 220 <br>
             Tehnika: ulje na platnu <br>
-            Cijena: prava sitnica
+            <!-- Cijena: prava sitnica -->
+            Cijena: {{artDescription[indI][indJ]["Price"]}}0
           </div>
           <div class="buy_btn">
             <v-row>
@@ -148,7 +160,7 @@
               <v-btn color="rgb(33, 1, 1)" @click="overlay=false">Natrag</v-btn>  
             </div>
             <div style="padding-left: 30px;">
-              <v-btn color="rgba(1, 24, 12)" to="/kupovina">Kupnja</v-btn>
+              <v-btn color="rgba(1, 24, 12)" @click="buy()">Kupnja</v-btn>
             </div>
             </v-row>
           </div>
@@ -214,7 +226,7 @@
               <v-btn color="black" text @click="dialog = false">
                 Ne
               </v-btn>
-              <v-btn color="black" text @click="delete_comment(comIndex)">
+              <v-btn color="black" text @click="delete_comment(comments[comIndex]['id'])">
                 Da
               </v-btn>
             </v-card-actions>
@@ -223,8 +235,9 @@
       <v-container>
         <!-- <div class="com_edges"></div>     -->
         <div v-for="(com, index) in comments" :key="index">
-          <div :class="{ 'one_com_light': com[0] != '+' && !$store.getters.mode, 
-          'one_com_dark': com[0] != '+' && $store.getters.mode, 'one_com_admin': com[0] == '+'}">
+          <!-- <div :class="{ 'one_com_light': com[0] != '+' && !$store.getters.mode, 
+          'one_com_dark': com[0] != '+' && $store.getters.mode, 'one_com_admin': com[0] == '+'}"> -->
+          <div :class="{ 'one_com_light': !$store.getters.mode, 'one_com_dark': $store.getters.mode}">
             <v-row class="username_and_avatar">
               <!-- <v-avatar size="24px">
                 <img
@@ -232,7 +245,7 @@
                   alt="John"
                 >
               </v-avatar> -->
-              <p :class="{ 'username_l': !$store.getters.mode, 'username_d': $store.getters.mode}"><b>Vincent Cassel</b></p>
+              <p :class="{ 'username_l': !$store.getters.mode, 'username_d': $store.getters.mode}"><b>{{com["name"]}} {{com["surname"]}}</b></p>
                 <v-btn v-if="$store.getters.admin" icon small 
                   @click="dialog = true, comIndex = index"
                   style="margin-left: 64%; margin-top: 2%;"
@@ -244,7 +257,7 @@
             <p class="com_content"
               :class="{ 'con_l': !$store.getters.mode, 'con_d': $store.getters.mode}"
             >
-            {{com[0] == '+' ? com.substring(1, com.length) : com}}</p>
+            {{com["content"]}}</p>
           </div>
         </div>
         <div class="com_edges"></div>
@@ -267,8 +280,8 @@
             clearable
             :color="!$store.getters.mode ? inputLight : inputDark"
             append-outer-icon="mdi-triangle"
-            @keyup.13="sendComment()"
-            @click:append-outer="sendComment()"
+            @keyup.13="sendComment(indI, indJ)"
+            @click:append-outer="sendComment(indI, indJ)"
           ></v-text-field>
         </v-card>
       </v-card>
@@ -282,6 +295,7 @@
 <script>
 import Header from '@/components/Header'
 import pic1 from '@/assets/colstreet.jpg'
+import axios from 'axios'
 //import text1 from '@/assets/jerolim'
 
 export default {
@@ -347,13 +361,23 @@ bit će pokazana u Galeriji umjetnina u Splitu, od 11. veljače do 28. ožujka 2
       collapseOnScroll: true,
       comment: '',
       comIndex: -1,
-      dialog: false
+      dialog: false,
+      exhDescription: '',
+      exhibition: [],
+      collectionDesc: [],
+      collections: [],
+      artDescription: [],
+      artSources: [],
+      indI: 0,
+      indJ: 0
+
     }
   },
 
   mounted() {
     var logged = (localStorage.getItem('logged_in') === 'true');
     this.$store.commit('show_tool', logged ? true : false)
+    this.getColItems()
   },
 
   methods: {
@@ -374,20 +398,98 @@ bit će pokazana u Galeriji umjetnina u Splitu, od 11. veljače do 28. ožujka 2
       this.overlayExh = true;
     },
 
-    show_art(n) {
+    show_art(i, j) {
       this.overlay = !this.overlay;
-      this.index = n;
-
+      this.indI = i;
+      this.indJ = j;
+      this.getComments(this.artDescription[i][j]['id'])
     },
 
-    sendComment() {
-      if(this.$store.getters.admin) {
-        this.comments.push('+' + this.comment);
-        this.comment = '';
-      } else {
-        this.comments.push(this.comment);
-        this.comment = '';
+    sendComment(i, j) {
+      // if(this.$store.getters.admin) {
+      //   this.comments.push('+' + this.comment);
+      //   this.comment = '';
+      // } else {
+      //   this.comments.push(this.comment);
+      //   this.comment = '';
+      // }
+      let id = this.artDescription[i][j]['id']
+      console.log('idsend ' + id)
+      //console.log('index ' + this.indI + ' ' + this.indJ)
+      let commentData = {
+        content: this.comment,
+        artworkId: id,
+        commentId: 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee'
       }
+      //commentData = JSON.stringify(commentData)
+
+      axios({url: `${process.env.VUE_APP_BACKEND_URI}/comment/add`, 
+            headers: {
+              'Authorization':  `Bearer ${sessionStorage.getItem('token')}`,
+              'Content-Type': 'application/json'
+            },
+            data: commentData, 
+            method: 'POST'
+      })
+      .then((response) => {
+        this.comment = '';
+        this.getComments(id)
+      })
+      .catch(err => {
+          console.log(err)
+      });
+    },
+
+    getComments(id) {
+      console.log('getcom ' + id)
+      // let commentData = {
+      //   artworkId: id
+      // }
+      // commentData = JSON.stringify(commentData)
+
+      axios({url: `${process.env.VUE_APP_BACKEND_URI}/comment/get`, 
+            headers: {
+              'Authorization':  `Bearer ${sessionStorage.getItem('token')}`,
+              'Content-Type': 'application/json'
+            },
+            params: {
+              'id' : id
+            }, 
+            method: 'GET'
+      })
+      .then((response) => {
+        let i = 0
+        for (let [id, comValue] of Object.entries(response.data)) {
+          this.comments[i] = JSON.parse(comValue)
+          i++
+        }
+      })
+      .catch(err => {
+          console.log(err)
+      });
+    },
+
+    delete_comment(id) {
+      let commentData = {
+        content: 'abcd',
+        artwork: 'efgh',
+        commentId: id
+      }
+      commentData = JSON.stringify(commentData)
+      axios({url: `${process.env.VUE_APP_BACKEND_URI}/comment/remove`, 
+            headers: {
+              'Authorization':  `Bearer ${sessionStorage.getItem('token')}`
+            },
+            data: commentData,
+            method: 'DELETE'
+      })
+      .then((response) => {
+        this.dialog = false;
+      })
+      .catch(err => {
+          console.log(err)
+      });
+      //this.comments.splice(index, 1)
     },
 
     change_admin() {
@@ -398,15 +500,40 @@ bit će pokazana u Galeriji umjetnina u Splitu, od 11. veljače do 28. ožujka 2
       }
     },
 
-    delete_comment(index) {
-      // const index = this.comments.indexOf(com);
-      // if (index > -1) {
-      //   this.comments.splice(index, 1);
-      // }
-      // this.dialog = false;
-      // if(this.comments[index] === com) { 
-      this.comments.splice(index, 1)
-      this.dialog = false;
+    getColItems() {
+      console.log('mountedizl ' + this.$store.getters.collections)
+      //this.collections = $store.getters.collections
+      let i = 0
+      //JSON - opis izložbe: sve kolekcije
+      for (let [description, value] of Object.entries(this.$store.getters.collections)) {
+          this.exhDescription = JSON.parse(description)
+          this.exhibition[0] = value
+          console.log('velicina kolekcija ' + Object.entries(value).length)
+          //KOLEKCIJE S OPISOM I JSON - opis kolekcije: JSON(opis djela: source djela)
+          for (let [colDescription, artwork] of Object.entries(value)) {
+              this.collectionDesc[i] = JSON.parse(colDescription)
+              this.collections[i] = artwork
+              console.log('drugi for ' + i)
+              let j = 0
+              let artDescTmp = []
+              let artSrcTmp = []
+              //JSON - opis djela: source djela
+              for (let [artDesc, artSrc] of Object.entries(artwork)) {
+                  artDescTmp[j] = JSON.parse(artDesc)
+                  artSrcTmp[j] = artSrc
+                  j++
+              }
+
+              this.artDescription[i] = artDescTmp
+              this.artSources[i] = artSrcTmp
+              i++
+          }
+      }
+      this.authorOrigi = this.exhDescription["Artists"]
+    },
+
+    buy() {
+      this.$router.push('/kupnja')
     }
   }
 }

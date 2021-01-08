@@ -5,15 +5,15 @@
       <Header/>
     </div>
     <h1 class="ted">Moj profil</h1>
-    <div class="mkd">Kolekcija X</div>
+    <div class="mkd">{{this.$store.getters.currentCollection}}</div>
   </div>
   <div class="add_coll_d">
     <div style="cursor: pointer; font-size: " @click="dialog=true">
     <v-icon color="black">mdi-folder-edit-outline</v-icon>
-    Dodaj novu kolekciju
+    Dodaj novo djelo
     </div>
   </div>
-  
+
   <v-row justify="center">
     <v-dialog
       v-model="dialog"
@@ -35,6 +35,14 @@
           :src="name"
           :rules="[v => !!v || 'Potrebno je unijeti naziv djela']"
           label="Naziv djela"
+          required
+        ></v-text-field>
+
+        <v-text-field
+          v-model="opis"
+          :src="opis"
+          :rules="[v => !!v || 'Potrebno je unijeti opis djela']"
+          label="Opis djela"
           required
         ></v-text-field>
 
@@ -81,7 +89,7 @@
 
   <v-row>
       <v-col
-        v-for="n in pictures.length" 
+        v-for="(status, n) in pictures1.length" 
         :key="n"
         class="d-flex child-flex"
         cols="12"
@@ -90,8 +98,8 @@
         <!-- <v-hover v-slot="{ hover }" open-delay="200"> -->
           <v-card class="images_d">
             <v-img
-              :src="pictures[n - 1]"
-              :lazy-src="pictures[n - 1]"
+              :src="'data:image/jpeg;base64,' + pictures1[n]"
+              :lazy-src="'data:image/jpeg;base64,' + pictures1[n]"
               aspect-ratio="1"
               class="grey lighten-2 img"
             >
@@ -111,7 +119,7 @@
                 </v-tooltip>
               </v-card-title>
             </v-img>
-            <p class="naziv_d">{{names[n - 1]}}</p>
+            <p class="naziv_d">{{names[n]}}</p>
           </v-card>
         <!-- </v-hover> -->
       </v-col>
@@ -120,7 +128,8 @@
 </template>
 
 <script>
-import Header from '@/components/Header'
+import Header from '@/components/Header';
+import axios from 'axios';
 
 export default {
   name: 'App',
@@ -142,9 +151,9 @@ export default {
       require('@/assets/pictures/picture6.jpg'),
       ],
       name: '',
-      names: ['Djelo 1', 'Djelo 2', 'Djelo 3', 'Djelo 4', 'Djelo 5', 'Djelo 6'],
       images: [],
       name: '',
+      opis: '',
       price: '',
       priceRules: [
         v => !!v || 'Potrebno je unijeti cijenu djela',
@@ -155,13 +164,21 @@ export default {
       imageName: '',
       imageUrl: '',
       imageFile: '',
-      picked: false
+      picked: false,
+      artworks: null,
+      names: [],
+      pictures1: [],
     }
   },
 
   mounted() {
     var logged = (localStorage.getItem('logged_in') === 'true');
-    this.$store.commit('show_tool', logged ? true : false)
+    this.$store.commit('show_tool', logged ? true : false);
+    var collection = sessionStorage.getItem('currentCollection');
+    this.$store.commit('set_currentCollection', collection);
+    var style = sessionStorage.getItem('currentStyle');
+    this.$store.commit('set_currentStyle', style);
+    this.getArtworks();
   },
 
   methods: {
@@ -174,30 +191,18 @@ export default {
         this.k++;
     },
     delete_art(n) {
-      this.pictures.splice(n, 1);
-      this.names.splice(n, 1)
-    },
-    /*sendComment(file) {
-      this.pictures.push(this.file);
-      var reader = new FileReader();
-      reader.readAsDataURL(file);
-      
-    },
-    onFileChange(item, e) {
-      var files = e.target.files || e.dataTransfer.files;
-      if (!files.length)
-        return;
-      this.createImage(item, files[0]);
-    },
-    createImage(item, file) {
-      var image = new Image();
-      var reader = new FileReader();
+      // this.pictures1.splice(n, 1);
+      // this.names.splice(n, 1)
 
-      reader.onload = (e) => {
-        item.image = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    },*/
+      let data = {
+          collName: this.$store.getters.currentCollection,
+          artworkName: this.names[n + 1],
+        }
+        this.$store.commit('remove_artworkData', data)
+        data = JSON.stringify(data)
+        this.$store.dispatch('remove_Artwork', data)
+        .catch(err => console.log(err))
+    },
     pickFile() {
       this.$refs.image.click()
     },
@@ -230,10 +235,10 @@ export default {
         this.pictures.push(this.imageUrl);
         this.names.push(this.name)
         let data = {
-          collectionName: 'Testna kolekcija 1',
+          collectionName: this.$store.getters.currentCollection,
           name: this.name,
-          description: 'da',
-          style: 'ULJE_NA_PLATNU',
+          description: this.opis,
+          style: this.$store.getters.currentStyle,
           price: this.price
         }
         this.$store.commit('set_artworkData', data)
@@ -251,7 +256,38 @@ export default {
        .catch(err => console.log(err))
       })
       this.dialog = false
-    }
+    },
+
+    getArtworks() {
+      console.log('exhibit ' + sessionStorage.getItem('token'))
+      axios({url: `${process.env.VUE_APP_BACKEND_URI}/artist/getCollection`, 
+            headers: {
+              'Authorization':  `Bearer ${sessionStorage.getItem('token')}`
+            },
+            params: {
+              'name' : this.$store.getters.currentCollection //"localStorage.getItem('currentCollection')"
+            },
+            method: 'GET'
+      })
+      .then((response) => {
+        this.artworks = response.data;
+        // localStorage.setItem('currentCollection', true)
+        // console.log(this.collections)
+        for (let [description, value] of Object.entries(this.artworks)) {
+          for (let [key, pic] of Object.entries(value)) {
+            this.pictures1.push(pic)
+            for (let [k, v] of Object.entries(JSON.parse(key))) {
+              if (k == 'Name') {
+                this.names.push(v)
+              }
+            }
+          }
+        }
+      })
+      .catch(err => {
+          console.log(err)
+      });
+    },
   }
 }
 </script>

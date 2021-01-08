@@ -22,7 +22,7 @@
     >
       <v-card>
         <v-card-title class="headline">
-          Dodajte novo djelo
+          Dodajte novu kolekciju
         </v-card-title>
         <v-card-text>
           <v-form
@@ -76,7 +76,7 @@
 
   <v-row>
       <v-col
-        v-for="n in colls.length" 
+        v-for="(status, n) in names.length" 
         :key="n"
         class="d-flex child-flex"
         cols="12"
@@ -85,8 +85,8 @@
         <!-- <v-hover v-slot="{ hover }" open-delay="200"> -->
           <v-card class="images_u">
             <v-img
-              :src="`https://picsum.photos/500/300?image=${n * 3 + 10}`"
-              :lazy-src="`https://picsum.photos/10/6?image=${n * 3 + 10}`"
+              :src="'data:image/jpg;base64,' + pictures[n]"
+              :lazy-src="'data:image/jpg;base64,' + pictures[n]"
               aspect-ratio="1"
               class="grey lighten-2 img"
             >
@@ -101,7 +101,7 @@
               </div>
               </div>
             </v-expand-transition> -->
-            <v-card-title class="align-end fill-height" primary-title>
+            <!-- <v-card-title class="align-end fill-height" primary-title>
                 <v-tooltip bottom>
                   <template v-slot:activator="{ on: tooltip }">
                     <v-btn icon
@@ -117,10 +117,10 @@
                   </template>
                   <span>Izbriši</span>
                 </v-tooltip>
-              </v-card-title>
+              </v-card-title> -->
             </v-img>
-            <div @click="djela()" style="cursor: pointer;">
-                <p class="naziv">{{colls[n - 1]}}</p>
+            <div @click="djela(names[n], styles[n])" style="cursor: pointer;">
+                <p class="naziv">{{names[n]}}</p>
             </div>
           </v-card>
         <!-- </v-hover> -->
@@ -130,7 +130,8 @@
 </template>
 
 <script>
-import Header from '@/components/Header'
+import Header from '@/components/Header';
+import axios from 'axios';
 
 export default {
   name: 'App',
@@ -164,12 +165,17 @@ export default {
         'Kolekcija 1', 'Kolekcija 2', 'Kolekcija 3', 'Kolekcija 4'
       ],
       dialog: false,
+      collections: null,
+      pictures: [],
+      names: [],
+      styles: []
     }
   },
 
   mounted() {
-      var logged = (localStorage.getItem('logged_in') === 'true');
-      this.$store.commit('show_tool', logged ? true : false)
+    this.getCollectionSingles();
+    var logged = (localStorage.getItem('logged_in') === 'true');
+    this.$store.commit('show_tool', logged ? true : false);
   },
   
   methods: {
@@ -182,7 +188,11 @@ export default {
       this.k++;
     },
 
-    djela() {
+    djela(currentCollection, currentStyle) {
+      this.$store.commit('set_currentCollection', currentCollection)
+      sessionStorage.setItem('currentCollection', currentCollection)
+      sessionStorage.setItem('currentStyle', currentStyle)
+      this.$store.commit('set_currentStyle', currentStyle)
       this.$router.push('/moj_profil/djela')
     },
 
@@ -204,8 +214,40 @@ export default {
 
     delete_coll(n) {
       this.colls.splice(n, 1)
-    }
+    },
+
+    getCollectionSingles() {
+      console.log('exhibit ' + sessionStorage.getItem('token'))
+      axios({url: `${process.env.VUE_APP_BACKEND_URI}/artist/getCollections`, 
+            headers: {
+              'Authorization':  `Bearer ${sessionStorage.getItem('token')}`
+            },
+            params: {
+              'type' : 'singles'
+            },
+            method: 'GET'
+      })
+      .then((response) => {
+        this.collections = response.data;
+        // console.log(this.collections)
+        for (let [description, value] of Object.entries(this.collections)) {
+          this.pictures.push(value)
+          for (let [key, info] of Object.entries(JSON.parse(description))) {
+            if (key == 'Name') {
+              this.names.push(info)
+            }
+            if (key == 'Style') {
+              this.styles.push(info)
+            }
+          }
+        }
+      })
+      .catch(err => {
+          console.log(err)
+      });
+    },
   }
+
 }
 
 </script>
@@ -241,7 +283,7 @@ export default {
   font-size: 80px;
   font-family:  'Work Sans', sans-serif;
   margin-left: 1%;
-  margin-top: 2%;
+  margin-top: 1%;
 }
 .add_col {
   margin-left: 1.5%;
