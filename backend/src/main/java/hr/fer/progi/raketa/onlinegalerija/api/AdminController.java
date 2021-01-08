@@ -125,4 +125,17 @@ public class AdminController {
 
     }
 
+    @GetMapping(value= "/getApplications", produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<?> getApplications(@RequestParam("contestName") String contestName){
+        String currentUsername = loggedInUsers.get(BearerTokenUtil.getBearerTokenHeader());
+
+        if(!adminRepository.existsByEmail(currentUsername))
+            return new ResponseEntity<String>("No admin with this username exists", HttpStatus.NOT_FOUND);
+
+        if(!contestRepository.existsByWorkingName(contestName))
+            return new ResponseEntity<String>("No contest with this working name exists", HttpStatus.NOT_FOUND);
+
+        return service.produceApplications(contestRepository.findByWorkingName(contestName));
+    }
 }
