@@ -211,7 +211,7 @@ public class ArtistController {
                 }
 
         contest.addApplication(ca);
-        //contestApplicationRepository.save(ca);
+        contestApplicationRepository.save(ca);
 
         return ResponseEntity.ok().body("Successfully applied to contest");
     }
