@@ -120,9 +120,9 @@ public class VisitorController {
     @ResponseBody
     public ResponseEntity<?> test(){
         //adminRepository.deleteById(UUID.fromString("8bf731e0-4249-4e50-83a7-0671294d814f"));
-        adminRepository.save(new Admin("admin", "admin", "admin1@gmail.com", bCryptPasswordEncoder.encode("password"), "nekimail"));
+        if(!adminRepository.existsByEmail("admin1@gmail.com"))
+            adminRepository.save(new Admin("admin", "admin", "admin1@gmail.com", bCryptPasswordEncoder.encode("password"), "nekimail"));
 
         return ResponseEntity.ok().body("test results");
-
     }
 }

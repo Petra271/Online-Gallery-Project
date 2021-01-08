@@ -134,7 +134,7 @@ public class service {
 
     private String collToMapJson(Collection collection) throws JsonProcessingException {
         Map<String, String> res = new HashMap<>();
-        res.put("Author", collection.getArtist().getName());
+        res.put("Author", collection.getArtist().getName() + " " + collection.getArtist().getSurname());
         res.put("Name", collection.getName());
         res.put("Description", collection.getDescription());
         res.put("Style", collection.getStyle().toString());
@@ -144,10 +144,12 @@ public class service {
 
     private String artToMapJson(Artwork artwork) throws JsonProcessingException {
         Map<String, String> res = new HashMap<>();
+        res.put("id", artwork.getId().toString());
         res.put("Name", artwork.getName());
         res.put("Description", artwork.getDescription());
         res.put("Style", artwork.getStyle().toString());
         res.put("fileType", artwork.getFileType());
+        res.put("Price", String.valueOf(artwork.getPrice()));
         return new ObjectMapper().writeValueAsString(res);
     }
 
@@ -209,9 +211,10 @@ public class service {
     private String produceCommentJson(Comment c) {
         StringBuilder sb = new StringBuilder();
         sb.append("{");
+        sb.append("\"id\": \"").append(c.getCommentId()).append("\",");
         sb.append("\"name\": \"").append(c.getVisitor().getName()).append("\",");
         sb.append("\"surname\": \"").append(c.getVisitor().getSurname()).append("\",");
-        sb.append("\"content\": \"").append(c.getContent());
+        sb.append("\"content\": \"").append(c.getContent()).append("\"");
         sb.append("}");
         return sb.toString();
     }
@@ -224,7 +227,7 @@ public class service {
         sb.append("\"receiverName\": \"").append(t.getReceiver().getName()).append("\",");
         sb.append("\"receiverSurname\": \"").append(t.getReceiver().getSurname()).append("\",");
         sb.append("\"amountToArtist\": \"").append(t.getAmountToArtist()).append("\",");
-        sb.append("\"provisionAmount\": \"").append(t.getProvisionAmount());
+        sb.append("\"provisionAmount\": \"").append(t.getProvisionAmount()).append("\"");
         sb.append("}");
         return sb.toString();
     }
