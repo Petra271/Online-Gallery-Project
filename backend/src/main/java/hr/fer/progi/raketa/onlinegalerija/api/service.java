@@ -111,7 +111,7 @@ public class service {
         for (Comment c : commentSet) {
             commentMap.put(c.getCommentId(), produceCommentJson(c));
         }
-        System.out.println("Velicin ampae je : " + commentMap.size());
+
         return new ResponseEntity<>(commentMap, HttpStatus.OK);
     }
 
@@ -223,11 +223,21 @@ public class service {
 //    }
 
     private String produceCommentJson(Comment c) {
+        Visitor commenter = c.getVisitor();
+        int isCommentByArtist = 0;
+        if (commenter instanceof Artist) {
+            for (Collection col : ((Artist) commenter).getCollections()) {
+                if (col.getArtworks().contains(c.getArtwork()))
+                    isCommentByArtist = 1;
+            }
+        }
+
         StringBuilder sb = new StringBuilder();
         sb.append("{");
         sb.append("\"id\": \"").append(c.getCommentId()).append("\",");
         sb.append("\"name\": \"").append(c.getVisitor().getName()).append("\",");
         sb.append("\"surname\": \"").append(c.getVisitor().getSurname()).append("\",");
+        sb.append("\"isCommentByArtist\": \"").append(isCommentByArtist).append("\",");
         sb.append("\"content\": \"").append(c.getContent()).append("\"");
         sb.append("}");
         return sb.toString();
