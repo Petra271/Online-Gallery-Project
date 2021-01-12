@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -73,9 +74,9 @@ public class CommentController {
        if (artworkRepository.existsById(artworkId)) {
            System.out.println("\n\n\nPrimljen zahtjev za dobiti komentare.");
            //return new ResponseEntity<>(new ArrayList<>(artworkRepository.findById(artworkId).get().getComments()), HttpStatus.OK);
-           Set<Comment> commentSet = artworkRepository.findById(artworkId).get().getComments();
-           System.out.println("Velicina comment seta je: " + commentSet.size());
-           return service.produceComments(commentSet);
+           List<Comment> commentList = artworkRepository.findById(artworkId).get().getComments();
+           System.out.println("Velicina comment seta je: " + commentList.size());
+           return service.produceComments(commentList);
        } else {
            return new ResponseEntity<>("Djelo s tim ID-om ne postoji", HttpStatus.BAD_REQUEST);
        }
