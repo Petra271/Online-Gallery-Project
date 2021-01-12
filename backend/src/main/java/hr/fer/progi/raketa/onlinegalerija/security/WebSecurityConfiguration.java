@@ -54,6 +54,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, GET_APPLICATIONS).permitAll()
                 .antMatchers(HttpMethod.GET, GET_COLLECTIONS_LIST).permitAll()
                 .antMatchers(HttpMethod.GET, GET_EXHIBITION).permitAll()
+                .antMatchers(HttpMethod.POST, CLOSE_EXHIBITION).permitAll()
                 .antMatchers(HttpMethod.GET, GET_EXHIBITION_SINGLES).permitAll()
                 .antMatchers(HttpMethod.POST, TEST).permitAll()
                 .antMatchers(HttpMethod.GET, GET_COMMENTS).permitAll()

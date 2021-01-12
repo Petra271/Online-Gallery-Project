@@ -138,4 +138,19 @@ public class AdminController {
 
         return service.produceApplications(contestRepository.findByWorkingName(contestName));
     }
+
+    @PostMapping("/closeExhibition")
+    public ResponseEntity<?> closeExhibition(@RequestParam("exhName") String exhName){
+        String currentUsername = loggedInUsers.get(BearerTokenUtil.getBearerTokenHeader());
+
+        if(!adminRepository.existsByEmail(currentUsername))
+            return new ResponseEntity<String>("No admin with this username exists", HttpStatus.NOT_FOUND);
+
+        if(!exhibitionRepository.existsByName(exhName))
+            return new ResponseEntity<String>("No exhibition with this name exists", HttpStatus.NOT_FOUND);
+
+        exhibitionRepository.delete(exhibitionRepository.findByName(exhName));
+
+        return ResponseEntity.ok().body("Successfully closed exhibition");
+    }
 }

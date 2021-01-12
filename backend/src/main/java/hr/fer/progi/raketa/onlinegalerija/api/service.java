@@ -106,10 +106,11 @@ public class service {
         return new ResponseEntity<>(retMap, HttpStatus.OK);
     }
 
-    public ResponseEntity<Map<UUID, String>> produceComments(Set<Comment> commentSet) {
-        Map<UUID, String> commentMap = new HashMap<>();
-        for (Comment c : commentSet) {
-            commentMap.put(c.getCommentId(), produceCommentJson(c));
+    public ResponseEntity<Map<UUID, Map<String, String>>> produceComments(List<Comment> commentList) {
+        Map<UUID, Map<String, String>> commentMap = new HashMap<>();
+
+        for (Comment c : commentList) {
+            commentMap.put(c.getCommentId(), produceCommentMapJson(c));
         }
 
         return new ResponseEntity<>(commentMap, HttpStatus.OK);
@@ -222,25 +223,18 @@ public class service {
 //        return sb.toString();
 //    }
 
-    private String produceCommentJson(Comment c) {
+    private Map<String, String> produceCommentMapJson(Comment c) {
         Visitor commenter = c.getVisitor();
         int isCommentByArtist = 0;
-        if (commenter instanceof Artist) {
-            for (Collection col : ((Artist) commenter).getCollections()) {
-                if (col.getArtworks().contains(c.getArtwork()))
-                    isCommentByArtist = 1;
-            }
-        }
+        if(commenter.getId().equals(c.getArtwork().getCollection().getArtist().getId()))
+            isCommentByArtist = 1;
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("{");
-        sb.append("\"id\": \"").append(c.getCommentId()).append("\",");
-        sb.append("\"name\": \"").append(c.getVisitor().getName()).append("\",");
-        sb.append("\"surname\": \"").append(c.getVisitor().getSurname()).append("\",");
-        sb.append("\"isCommentByArtist\": \"").append(isCommentByArtist).append("\",");
-        sb.append("\"content\": \"").append(c.getContent()).append("\"");
-        sb.append("}");
-        return sb.toString();
+        Map<String, String> retMap = new HashMap<>();
+
+        retMap.put("name", c.getVisitor().getName() + " " + c.getVisitor().getSurname());
+        retMap.put("isByArtist", String.valueOf(isCommentByArtist));
+        retMap.put("content", c.getContent());
+        return retMap;
     }
 
     private String produceTransactionJson(Transaction t) {
