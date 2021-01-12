@@ -71,7 +71,7 @@ public class VisitorController {
         }
 
         else{
-            return new ResponseEntity<String>("This E-mail is taken", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<String>("This E-mail is taken", HttpStatus.BAD_REQUEST);
         }
 
         return ResponseEntity.ok()

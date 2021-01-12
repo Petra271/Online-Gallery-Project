@@ -64,7 +64,9 @@ public class ArtistController {
             return new ResponseEntity<String>("Style does not exist", HttpStatus.NOT_ACCEPTABLE);
         }
         Collection collection = new Collection(collectionDTO.getName(), collectionDTO.getDescription(), style, artist);
+
         collectionRepository.save(collection);
+
         return ResponseEntity.ok().body("Successful collection creation");
     }
 
@@ -72,7 +74,7 @@ public class ArtistController {
     public ResponseEntity<?> addArtwork(@RequestPart("json") ArtworkDTO artworkDTO, @RequestPart("file") MultipartFile file) throws IOException{
 
         Artist artist = artistRepository.findByEmail(loggedInUsers.get(BearerTokenUtil.getBearerTokenHeader()));
-
+        System.out.println("Email je: " + artist.getEmail());
         if(artist == null)
             return new ResponseEntity<String>("Artist was not found in the repository", HttpStatus.NOT_FOUND);
 
@@ -80,9 +82,9 @@ public class ArtistController {
                 .findByArtist(artist);
 
         Artwork artwork = null;
-        for(Collection c : collectionList)
-            if(c.getName().equals(artworkDTO.getCollectionName())) {
-                for(Artwork a : c.getArtworks())
+        for(Collection c : collectionList) {
+            if (c.getName().equals(artworkDTO.getCollectionName())) {
+                for (Artwork a : c.getArtworks())
                     if (a.getName().equals(artworkDTO.getName()))
                         return new ResponseEntity<>("An artwork of the same name already exists", HttpStatus.NOT_ACCEPTABLE);
                 artwork = new Artwork(
@@ -97,7 +99,7 @@ public class ArtistController {
                 c.addArtwork(artwork);
 
             }
-
+        }
         if(artwork == null)
             return new ResponseEntity<String>("This artist does not contain the collection this artwork is supposed be inserted in.", HttpStatus.NOT_ACCEPTABLE);
 
