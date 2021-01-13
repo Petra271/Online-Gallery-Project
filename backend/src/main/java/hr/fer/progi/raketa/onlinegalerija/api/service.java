@@ -84,7 +84,7 @@ public class service {
 
         for(Exhibition e : exhibitions){
             if(e.getBeginDateTime().plus(e.getDuration()).isBefore(LocalDateTime.now())) {
-                ac.closeExhibition(e.getName());
+                ac.closeExInternal(e.getName());
                 continue;
             }
             String image64 = "";

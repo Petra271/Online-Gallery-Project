@@ -153,6 +153,12 @@ public class AdminController {
         if(!exhibitionRepository.existsByName(exhName))
             return new ResponseEntity<String>("No exhibition with this name exists", HttpStatus.NOT_FOUND);
 
+        closeExInternal(exhName);
+
+        return ResponseEntity.ok().body("Successfully closed exhibition");
+    }
+
+    public void closeExInternal(String exhName){
         Exhibition exhibition = exhibitionRepository.findByName(exhName);
         for(Collection c : exhibition.getCollections()) {
             c.setExhibition(null);
@@ -169,8 +175,6 @@ public class AdminController {
         }
 
         exhibitionRepository.delete(exhibitionRepository.findByName(exhName));
-
-        return ResponseEntity.ok().body("Successfully closed exhibition");
     }
 
     @PostMapping("/closeContest")
