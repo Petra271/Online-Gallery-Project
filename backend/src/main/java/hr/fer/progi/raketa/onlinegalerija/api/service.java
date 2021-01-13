@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -79,8 +80,13 @@ public class service {
 
     public ResponseEntity<Map<String, String>> produceExhibitionSingles(Set<Exhibition> exhibitions) throws JsonProcessingException {
         Map<String, String> retMap = new HashMap<>();
+        AdminController ac = new AdminController();
 
         for(Exhibition e : exhibitions){
+            if(e.getBeginDateTime().plus(e.getDuration()).isBefore(LocalDateTime.now())) {
+                ac.closeExhibition(e.getName());
+                continue;
+            }
             String image64 = "";
             if(e.getCollections().iterator().hasNext()) {
                 if(e.getCollections().iterator().next().getArtworks().iterator().hasNext()) {
@@ -100,7 +106,11 @@ public class service {
         System.out.println(contest.getApplications().size());
 
         for(ContestApplication ca : contest.getApplications()){
-            retMap.put(ca.getArtist().getEmail(), ca.getCollections().stream().map(c -> c.getName()).collect(Collectors.toSet()));
+            if(retMap.get(ca.getArtist().getEmail()) == null)
+                retMap.put(ca.getArtist().getEmail(), ca.getCollections().stream().map(c -> c.getName()).collect(Collectors.toSet()));
+            else
+                for(Collection c : ca.getCollections())
+                    retMap.get(ca.getArtist().getEmail()).add(c.getName());
         }
 
         return new ResponseEntity<>(retMap, HttpStatus.OK);
@@ -231,6 +241,7 @@ public class service {
 
         Map<String, String> retMap = new HashMap<>();
 
+        retMap.put("id", c.getCommentId().toString());
         retMap.put("name", c.getVisitor().getName() + " " + c.getVisitor().getSurname());
         retMap.put("isByArtist", String.valueOf(isCommentByArtist));
         retMap.put("content", c.getContent());

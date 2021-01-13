@@ -109,7 +109,7 @@ public class ArtistController {
     }
 
     @PostMapping("/removeCollection")
-    public ResponseEntity<?> removeArtwork(@RequestBody String collName){
+    public ResponseEntity<?> removeArtwork(@RequestParam("collname") String collName){
         Artist artist = artistRepository.findByEmail(loggedInUsers.get(BearerTokenUtil.getBearerTokenHeader()));
 
         if(artist == null)
@@ -117,9 +117,18 @@ public class ArtistController {
 
         for(Collection c : artist.getCollections())
             if (c.getName().equals(collName)) {
+                if(c.getExhibition() != null)
+                    new ResponseEntity<String>("Collection currently in exhibition", HttpStatus.NOT_ACCEPTABLE);
+
+                if(c.getContestApplication() != null)
+                    new ResponseEntity<String>("Collection currently in application", HttpStatus.NOT_ACCEPTABLE);
+                
                 for (Artwork a : c.getArtworks())
                     artworkRepository.delete(a);
-                collectionRepository.deleteById(c.getId());
+
+                artist.getCollections().remove(c);
+                artistRepository.save(artist);
+                collectionRepository.delete(c);
                 return new ResponseEntity<String>("Collection successfully removed", HttpStatus.OK);
             }
 

@@ -8,6 +8,7 @@ import java.util.UUID;
 @Table(name="visitor")
 public class Visitor {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name ="id")
     private final UUID id;
 
