@@ -27,9 +27,66 @@
 			
 			
 			\subsection{Ispitivanje komponenti}
-			\textit{Potrebno je provesti ispitivanje jedinica (engl. unit testing) nad razredima koji implementiraju temeljne funkcionalnosti. Razraditi \textbf{minimalno 6 ispitnih slučajeva} u kojima će se ispitati redovni slučajevi, rubni uvjeti te izazivanje pogreške (engl. exception throwing). Poželjno je stvoriti i ispitni slučaj koji koristi funkcionalnosti koje nisu implementirane. Potrebno je priložiti izvorni kôd svih ispitnih slučajeva te prikaz rezultata izvođenja ispita u razvojnom okruženju (prolaz/pad ispita). }
+
+			{Sljedeći jedinični testovi su korišteni za ispitivanje jedinica nad razredima koji implementiraju neke od temeljnih funkcionalnosti.}
+				\begin{figure}[H]
+				
+				\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{registration_test}
+				\caption{Jedinični testovi koji testiraju registraciju novih posjetitelja i novih umjetnika}
+				
+				\end{figure}
 			
+				\begin{figure}[H]
+					
+					\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{login_test}
+					\caption{Jedinični testovi koji ispituju prijavu posjetitelja i umjetnika}
+					
+				\end{figure}
 			
+				\begin{figure}[H]
+				
+				\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{registration_with_same_email_test}
+				\caption{Jedinični test koji ispituje da se vraća prikladni kod za grešku kada se pri registraciji koristi e-mail postojećeg korisnika}
+				
+				\end{figure}
+			
+				\begin{figure}[H]
+					
+					\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{post_artwork_test}
+					\caption{Jedinični test koji ispituje dodavanje nove slike u kolekciju umjetnika}
+					
+				\end{figure}
+			
+				\begin{figure}[H]
+					
+					\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{create_collection_test}
+					\caption{Jedinični test koji ispituje stvaranje nove umjetnikove kolekcije}
+					
+				\end{figure}
+			
+			{Sljedeće slike prikazuju rezultate pokretanja jediničnih testova. Zbog načina na koji su pisani nisu mogli biti pokrenuti svi istovremeno.}
+				\begin{figure}[H]
+					
+					\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{test_results1}
+					\caption{Rezultati prvih 5 jediničnih testova, zadnja dva nisu bili pokretani}
+					
+				\end{figure}
+			
+				\begin{figure}[H]
+					
+					\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{test_results2}
+					\caption{Rezultat jediničnog testa koji ispituje dodavanje slike u kolekciju umjetnika}
+					
+				\end{figure}
+				
+				\begin{figure}[H]
+					
+					\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{test_results3}
+					\caption{Rezultat jediničnog testa koji ispituje stvaranje nove kolekcije}
+					
+				\end{figure}
+			
+			\eject	
 			
 			\subsection{Ispitivanje sustava}
 			
