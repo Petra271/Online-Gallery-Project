@@ -117,7 +117,7 @@ public class service {
     }
 
     public ResponseEntity<Map<UUID, Map<String, String>>> produceComments(List<Comment> commentList) {
-        Map<UUID, Map<String, String>> commentMap = new HashMap<>();
+        Map<UUID, Map<String, String>> commentMap = new LinkedHashMap<>();
 
         for (Comment c : commentList) {
             commentMap.put(c.getCommentId(), produceCommentMapJson(c));

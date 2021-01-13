@@ -59,7 +59,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, GET_EXHIBITION_SINGLES).permitAll()
                 .antMatchers(HttpMethod.POST, TEST).permitAll()
                 .antMatchers(HttpMethod.GET, GET_COMMENTS).permitAll()
-                .antMatchers(HttpMethod.DELETE, DELETE_COMMENT).permitAll()
+                .antMatchers(HttpMethod.POST, DELETE_COMMENT).permitAll()
                 .antMatchers(HttpMethod.POST, ADD_TRANSACTION).permitAll()
                 .antMatchers(HttpMethod.GET, GET_ALL_TRANSACTIONS).permitAll()
                 .antMatchers(HttpMethod.GET, GET_ALL_TRANSACTIONS_BY_USER).permitAll()

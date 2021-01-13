@@ -55,9 +55,8 @@ public class CommentController {
         return new ResponseEntity<>("Komentar uspjesno dodan!", HttpStatus.OK);
     }
 
-    @DeleteMapping("/remove")
-    public ResponseEntity<?> removeComment(@RequestBody CommentDTO commentDTO) {
-        UUID commentId = commentDTO.getCommentId();
+    @PostMapping("/remove")
+    public ResponseEntity<?> removeComment(@RequestParam("id") UUID commentId) {
         if (commentRepository.existsById(commentId)) {
             Comment comment = commentRepository.findById(commentId).get();
             comment.getArtwork().removeComment(comment);
