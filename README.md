@@ -9,6 +9,7 @@ Projektni zadatak: Online galerija
 
 *Važne pojedinosti:
 - link aplikacije je https://online-galerija-frontend.herokuapp.com/
+- link backenda je https://online-galerija.herokuapp.com/
 - admin može stvoriti izložbu samo iz isteklih natječaja
 - svaki put korisnik se treba logoutati prije zatvaranja taba/prozora
 - ograničena veličina slika za upload
