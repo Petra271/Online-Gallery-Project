@@ -13,15 +13,18 @@
       <div class="exh_name"> {{exhDescription["Name"]}} </div>
     </div>
 
+<<<<<<< HEAD
     <!-- <div>++{{$store.getters.collections}}</div>
     <div>{{exhDescription}}</div> -->
-    <div>EXHIBITION: {{exhibition}} <br><br><br><br></div> 
+    <!-- <div>EXHIBITION: {{exhibition}} <br><br><br><br></div> 
     <div>OPIS IZLOŽBE: {{exhDescription}} <br><br></div>
     <div>OPIS KOLEKCIJE: {{collectionDesc}} <br><br></div>
     <div>KOLEKCIJE: {{collections}} <br><br></div>
     <div>ARTDESC: {{artDescription}} <br><br></div>
-    <div>ARTSRC: {{artSources}} <br><br></div>
+    <div>ARTSRC: {{artSources}} <br><br></div> -->
 
+=======
+>>>>>>> becc9d031adc9e43b8fecc93ba4c06730a4a5e5a
     <div v-for="(colInd, i) in collections" :key="colInd" class="collection"
         :class="$store.getters.mode ? 'white--text' : 'black--text'"
     > 
@@ -155,13 +158,15 @@
           </div>
           <div class="buy_btn">
             <v-row>
-            <!-- DISABLED AKO JE VEĆ KUPLJENO -->
-            <div>
-              <v-btn color="rgb(33, 1, 1)" @click="overlay=false">Natrag</v-btn>  
-            </div>
-            <div style="padding-left: 30px;">
-              <v-btn color="rgba(1, 24, 12)" to="/kupovina">Kupnja</v-btn>
-            </div>
+              <div>
+                <v-btn color="rgb(33, 1, 1)" @click="overlay=false">Natrag</v-btn>  
+              </div>
+              <div style="padding-left: 30px;">
+                <v-btn 
+                  :disabled="artDescription[indI][indJ]['sold'] == 1"
+                  color="rgba(1, 24, 12)" 
+                  to="/kupovina">Kupnja</v-btn>
+              </div>
             </v-row>
           </div>
         </v-row>

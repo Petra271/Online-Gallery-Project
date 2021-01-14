@@ -399,8 +399,7 @@
                       v-bind="attrs"
                       v-on="{ ...tooltip, ...menu }"
                       :disabled="!$store.getters.logged_in"
-                      @click="getExhibition(exhDescriptions[n - 1]['Name'])"
-                     
+                      @click="getExhibition(exhDescriptions[n - 1]['Name'], n)"
                       >
                       <v-icon :color="!$store.getters.mode ? 'white' : 'black'">mdi-door-open</v-icon>
                     </v-btn>
@@ -546,6 +545,25 @@
       prijavite se ukoliko želite nastaviti.</p>
     </v-snackbar>    
 
+    <v-snackbar
+      v-model="exhOpened"
+      multi-line
+      color="rgb(33, 1, 1)"
+    >
+      Izložba se otvara {{snackDate[2]}}.{{snackDate[1]}}.{{snackDate[0]}}.
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="white"
+          text
+          v-bind="attrs"
+          @click="exhOpened = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
+
     <v-row>
       <v-col
         cols="12"
@@ -675,7 +693,10 @@ export default {
       imgMapVals: null,
       imagesExh: [],
       imagesInfo: [],
-      filtered: false
+      filtered: false,
+      exhOpened: false,
+      exhBeginDate: null,
+      snackDate: '2020-01-01'
 
     }
   },
@@ -894,29 +915,37 @@ export default {
       });
     },
 
-    getExhibition(exhName) {
-      console.log('collection ' + sessionStorage.getItem('token'))
-      axios({url: `${process.env.VUE_APP_BACKEND_URI}/visitor/getExhibition`, 
-            headers: {
-              'Authorization':  `Bearer ${sessionStorage.getItem('token')}`
-            },
-            params: {
-              'exName' : exhName
-            },
-            method: 'GET'
-      })
-      .then((response) => {
-        
-        //this.collections = response.data;
-        //this.$store.commit('set_col', response.data)
-        localStorage.setItem('exhibition', JSON.stringify(response.data))
-        console.log('colls ' + this.collections);
-        this.$router.push('/izlozba')
-        
-      })
-      .catch(err => {
-          console.log(err)
-      });
+    getExhibition(exhName, n) {
+      var currentDate = new Date()
+      this.exhBeginDate = this.exhDescriptions[n - 1]['BeginDate']
+      let tmp = this.exhBeginDate.split("T")
+      this.snackDate = tmp[0].split("-")
+      if (!(currentDate <= this.getvalidDate(this.exhBeginDate))) {
+        this.exhOpened = true
+      } else {
+        console.log('collection ' + sessionStorage.getItem('token'))
+        axios({url: `${process.env.VUE_APP_BACKEND_URI}/visitor/getExhibition`, 
+              headers: {
+                'Authorization':  `Bearer ${sessionStorage.getItem('token')}`
+              },
+              params: {
+                'exName' : exhName
+              },
+              method: 'GET'
+        })
+        .then((response) => {
+          
+          //this.collections = response.data;
+          //this.$store.commit('set_col', response.data)
+          localStorage.setItem('exhibition', JSON.stringify(response.data))
+          console.log('colls ' + this.collections);
+          this.$router.push('/izlozba')
+          
+        })
+        .catch(err => {
+            console.log(err)
+        });
+      }
     },
     
     getExhibitionSingles() {
@@ -1112,6 +1141,11 @@ export default {
     isBetweenDates(fromDate, toDate, givenDate) {
       return this.getvalidDate(givenDate) <= this.getvalidDate(toDate) 
               && this.getvalidDate(givenDate) >= this.getvalidDate(fromDate);
+    },
+
+    isOpened(openingDate) {
+      var currentDate = new Date()
+      return currentDate <= this.getvalidDate(openingDate) 
     }
   },
 
