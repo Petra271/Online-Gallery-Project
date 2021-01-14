@@ -3,6 +3,8 @@ package hr.fer.progi.raketa.onlinegalerija.model;
 import javax.imageio.ImageIO;
 import javax.persistence.*;
 import java.awt.*;
+import java.util.LinkedList;
+import java.util.List;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -43,7 +45,10 @@ public class Artwork {
 
     @OneToMany(mappedBy = "artwork", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
-    private Set<Comment> comments;
+    private List<Comment> comments;
+
+    @OneToOne(mappedBy = "artwork")
+    private Transaction transaction;
 
     public Artwork(){
         this.id = UUID.randomUUID();
@@ -64,6 +69,7 @@ public class Artwork {
         this.imageInBytes = imageInBytes;
         this.fileType = fileType;
         this.collection = collection;
+        comments = new LinkedList<>();
     }
 
     public UUID getId() {
@@ -94,7 +100,7 @@ public class Artwork {
         this.collection = collection;
     }
 
-    public void setComments(Set<Comment> comments) {
+    public void setComments(List<Comment> comments) {
         this.comments = comments;
     }
 
@@ -129,7 +135,7 @@ public class Artwork {
         comments.add(comment);
     }
 
-    public Set<Comment> getComments() {
+    public List<Comment> getComments() {
         return comments;
     }
 
@@ -151,5 +157,13 @@ public class Artwork {
 
     public void setFileType(String fileType) {
         this.fileType = fileType;
+    }
+
+    public Transaction getTransaction() {
+        return transaction;
+    }
+
+    public void setTransaction(Transaction transaction) {
+        this.transaction = transaction;
     }
 }

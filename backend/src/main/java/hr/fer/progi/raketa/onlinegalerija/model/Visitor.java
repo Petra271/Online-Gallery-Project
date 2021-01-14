@@ -1,6 +1,7 @@
 package hr.fer.progi.raketa.onlinegalerija.model;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -8,6 +9,7 @@ import java.util.UUID;
 @Table(name="visitor")
 public class Visitor {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name ="id")
     private final UUID id;
 
@@ -28,6 +30,14 @@ public class Visitor {
 
     @Column(name ="role", nullable = false)
     private String role;
+
+    @OneToMany(mappedBy = "payer", fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
+    private List<Transaction> transactionListAsPayer;
+
+    @OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
+    private List<Transaction> transactionListAsReceiver;
 
     public Visitor(){
         this.id = UUID.randomUUID();
@@ -92,6 +102,14 @@ public class Visitor {
 
     public void setPaypalMail(String paypalMail) {
         this.paypalMail = paypalMail;
+    }
+
+    public void addTransactionAsPayer(Transaction transaction){
+        transactionListAsPayer.add(transaction);
+    }
+
+    public void addTransactionAsReceiver(Transaction transaction){
+        transactionListAsReceiver.add(transaction);
     }
 
     @Override

@@ -71,7 +71,7 @@ public class VisitorController {
         }
 
         else{
-            return new ResponseEntity<String>("This E-mail is taken", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<String>("This E-mail is taken", HttpStatus.BAD_REQUEST);
         }
 
         return ResponseEntity.ok()
@@ -101,7 +101,7 @@ public class VisitorController {
     }
 
     @GetMapping(value="/getExhibitionSingles", produces = "application/json")
-    public ResponseEntity<?> getExhibitionSingles()throws JsonProcessingException {
+    public ResponseEntity<?> getExhibitionSingles() throws JsonProcessingException {
         return service.produceExhibitionSingles(new HashSet<>(exhibitionRepository.findAll()));
     }
 

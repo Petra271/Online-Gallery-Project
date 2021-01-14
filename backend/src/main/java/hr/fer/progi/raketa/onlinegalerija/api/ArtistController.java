@@ -64,7 +64,9 @@ public class ArtistController {
             return new ResponseEntity<String>("Style does not exist", HttpStatus.NOT_ACCEPTABLE);
         }
         Collection collection = new Collection(collectionDTO.getName(), collectionDTO.getDescription(), style, artist);
+
         collectionRepository.save(collection);
+
         return ResponseEntity.ok().body("Successful collection creation");
     }
 
@@ -72,7 +74,7 @@ public class ArtistController {
     public ResponseEntity<?> addArtwork(@RequestPart("json") ArtworkDTO artworkDTO, @RequestPart("file") MultipartFile file) throws IOException{
 
         Artist artist = artistRepository.findByEmail(loggedInUsers.get(BearerTokenUtil.getBearerTokenHeader()));
-
+        System.out.println("Email je: " + artist.getEmail());
         if(artist == null)
             return new ResponseEntity<String>("Artist was not found in the repository", HttpStatus.NOT_FOUND);
 
@@ -80,9 +82,9 @@ public class ArtistController {
                 .findByArtist(artist);
 
         Artwork artwork = null;
-        for(Collection c : collectionList)
-            if(c.getName().equals(artworkDTO.getCollectionName())) {
-                for(Artwork a : c.getArtworks())
+        for(Collection c : collectionList) {
+            if (c.getName().equals(artworkDTO.getCollectionName())) {
+                for (Artwork a : c.getArtworks())
                     if (a.getName().equals(artworkDTO.getName()))
                         return new ResponseEntity<>("An artwork of the same name already exists", HttpStatus.NOT_ACCEPTABLE);
                 artwork = new Artwork(
@@ -97,7 +99,7 @@ public class ArtistController {
                 c.addArtwork(artwork);
 
             }
-
+        }
         if(artwork == null)
             return new ResponseEntity<String>("This artist does not contain the collection this artwork is supposed be inserted in.", HttpStatus.NOT_ACCEPTABLE);
 
@@ -107,7 +109,7 @@ public class ArtistController {
     }
 
     @PostMapping("/removeCollection")
-    public ResponseEntity<?> removeArtwork(@RequestBody String collName){
+    public ResponseEntity<?> removeArtwork(@RequestParam("collname") String collName){
         Artist artist = artistRepository.findByEmail(loggedInUsers.get(BearerTokenUtil.getBearerTokenHeader()));
 
         if(artist == null)
@@ -115,9 +117,18 @@ public class ArtistController {
 
         for(Collection c : artist.getCollections())
             if (c.getName().equals(collName)) {
+                if(c.getExhibition() != null)
+                    new ResponseEntity<String>("Collection currently in exhibition", HttpStatus.NOT_ACCEPTABLE);
+
+                if(c.getContestApplication() != null)
+                    new ResponseEntity<String>("Collection currently in application", HttpStatus.NOT_ACCEPTABLE);
+                
                 for (Artwork a : c.getArtworks())
                     artworkRepository.delete(a);
-                collectionRepository.deleteById(c.getId());
+
+                artist.getCollections().remove(c);
+                artistRepository.save(artist);
+                collectionRepository.delete(c);
                 return new ResponseEntity<String>("Collection successfully removed", HttpStatus.OK);
             }
 
@@ -156,6 +167,7 @@ public class ArtistController {
         System.out.println(collNum);
         return collNum.equals("all") ? service.produceCollections(collections) : service.produceCollectionsSingles(collections);
     }
+
     @GetMapping(value="/getCollection", produces = "application/json")
     @ResponseBody
     public ResponseEntity<?> getCollection(@RequestParam("name") String collName) throws JSONException, JsonProcessingException {
@@ -205,6 +217,8 @@ public class ArtistController {
         for(int i = 0; i < collectionNames.length; i++)
             for(Collection c : artist.getCollections())
                 if(c.getName().equals(collectionNames[i])) {
+                    if(c.getContestApplication() != null ||  c.getExhibition() != null)
+                        return new ResponseEntity<String>("Contest of name " + applicationDTO.getContestName() + " is already in another application or exhibition", HttpStatus.NOT_ACCEPTABLE);
                     System.out.println("Applying " + c.getName() +" to contest");
                     collectionSetApplied.add(c);
                     c.setContestApplication(ca);

@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -26,6 +27,7 @@ import java.util.*;
 import static hr.fer.progi.raketa.onlinegalerija.security.WebSecurityConfiguration.loggedInUsers;
 
 @Controller
+@Transactional
 @RequestMapping("/admin")
 public class AdminController {
     @Autowired
@@ -42,6 +44,8 @@ public class AdminController {
     private ContestRepository contestRepository;
     @Autowired
     private ExhibitionRepository exhibitionRepository;
+    @Autowired
+    private ApplicationRepository applicationRepository;
     @Autowired
     private service service;
 
@@ -137,5 +141,66 @@ public class AdminController {
             return new ResponseEntity<String>("No contest with this working name exists", HttpStatus.NOT_FOUND);
 
         return service.produceApplications(contestRepository.findByWorkingName(contestName));
+    }
+
+    @PostMapping("/closeExhibition")
+    public ResponseEntity<?> closeExhibition(@RequestParam("exhName") String exhName){
+        String currentUsername = loggedInUsers.get(BearerTokenUtil.getBearerTokenHeader());
+
+        if(!adminRepository.existsByEmail(currentUsername))
+            return new ResponseEntity<String>("No admin with this username exists", HttpStatus.NOT_FOUND);
+
+        if(!exhibitionRepository.existsByName(exhName))
+            return new ResponseEntity<String>("No exhibition with this name exists", HttpStatus.NOT_FOUND);
+
+        closeExInternal(exhName);
+
+        return ResponseEntity.ok().body("Successfully closed exhibition");
+    }
+
+    public void closeExInternal(String exhName){
+        Exhibition exhibition = exhibitionRepository.findByName(exhName);
+        for(Collection c : exhibition.getCollections()) {
+            c.setExhibition(null);
+            collectionRepository.save(c);
+        }
+
+        for(Artist a : exhibition.getArtists()){
+            for(Exhibition e : a.getExhibitions())
+                if(e.getId().equals(exhibition.getId())) {
+                    a.getExhibitions().remove(e);
+                    break;
+                }
+            artistRepository.save(a);
+        }
+
+        exhibitionRepository.delete(exhibitionRepository.findByName(exhName));
+    }
+
+    @PostMapping("/closeContest")
+    public ResponseEntity<?> closeContest(@RequestParam("contestName") String contestName){
+        String currentUsername = loggedInUsers.get(BearerTokenUtil.getBearerTokenHeader());
+
+        if(!adminRepository.existsByEmail(currentUsername))
+            return new ResponseEntity<String>("No admin with this username exists", HttpStatus.NOT_FOUND);
+
+        if(!contestRepository.existsByWorkingName(contestName))
+            return new ResponseEntity<String>("No exhibition with this name exists", HttpStatus.NOT_FOUND);
+
+        Contest contest = contestRepository.findByWorkingName(contestName);
+        for(ContestApplication ca : contest.getApplications()){
+            for(Collection c : ca.getCollections()){
+                c.setContestApplication(null);
+                collectionRepository.save(c);
+            }
+            ca.getArtist().getApplications().remove(ca);
+            artistRepository.save(ca.getArtist());
+            ca.setContest(null);
+            applicationRepository.delete(ca);
+        }
+
+        contestRepository.delete(contest);
+
+        return ResponseEntity.ok().body("Successfully closed contest");
     }
 }

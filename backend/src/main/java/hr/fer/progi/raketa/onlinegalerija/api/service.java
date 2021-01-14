@@ -7,15 +7,21 @@ import hr.fer.progi.raketa.onlinegalerija.model.Artwork;
 import hr.fer.progi.raketa.onlinegalerija.model.Collection;
 import hr.fer.progi.raketa.onlinegalerija.repository.ContestRepository;
 import org.json.JSONException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+
 @Service
 public class service {
+    @Autowired
+    private AdminController ac;
+
     public ResponseEntity<Map<String, Map<String, String>>> produceCollections(Set<Collection> collections) throws JsonProcessingException {
         Map<String, Map<String, String>> retMap = new HashMap<>();
 
@@ -81,6 +87,10 @@ public class service {
         Map<String, String> retMap = new HashMap<>();
 
         for(Exhibition e : exhibitions){
+            if(e.getBeginDateTime().plus(e.getDuration()).isBefore(LocalDateTime.now())) {
+                ac.closeExInternal(e.getName());
+                continue;
+            }
             String image64 = "";
             if(e.getCollections().iterator().hasNext()) {
                 if(e.getCollections().iterator().next().getArtworks().iterator().hasNext()) {
@@ -100,27 +110,34 @@ public class service {
         System.out.println(contest.getApplications().size());
 
         for(ContestApplication ca : contest.getApplications()){
-            retMap.put(ca.getArtist().getEmail(), ca.getCollections().stream().map(c -> c.getName()).collect(Collectors.toSet()));
+            if(retMap.get(ca.getArtist().getEmail()) == null)
+                retMap.put(ca.getArtist().getEmail(), ca.getCollections().stream().map(c -> c.getName()).collect(Collectors.toSet()));
+            else
+                for(Collection c : ca.getCollections())
+                    retMap.get(ca.getArtist().getEmail()).add(c.getName());
         }
 
         return new ResponseEntity<>(retMap, HttpStatus.OK);
     }
 
-    public ResponseEntity<Map<UUID, String>> produceComments(Set<Comment> commentSet) {
-        Map<UUID, String> commentMap = new HashMap<>();
-        for (Comment c : commentSet) {
-            commentMap.put(c.getCommentId(), produceCommentJson(c));
+    public ResponseEntity<Map<UUID, Map<String, String>>> produceComments(List<Comment> commentList) {
+        Map<UUID, Map<String, String>> commentMap = new LinkedHashMap<>();
+
+        for (Comment c : commentList) {
+            commentMap.put(c.getCommentId(), produceCommentMapJson(c));
         }
 
         return new ResponseEntity<>(commentMap, HttpStatus.OK);
     }
 
-    public ResponseEntity<List<String>> produceTransactions(List<Transaction> transactions) {
-        List<String> transactionJsonList = new ArrayList<>();
-        for (Transaction t : transactions) {
+    public ResponseEntity<List<Map<String, String>>> produceTransactions(List<Transaction> transactions) {
+        List<Map<String, String>> transactionJsonList = new ArrayList<>();
+
+        for (Transaction t : transactions)
             transactionJsonList.add(produceTransactionJson(t));
-        }
+
         System.out.println("Velicina liste je: " + transactionJsonList.size());
+
         return new ResponseEntity<>(transactionJsonList, HttpStatus.OK);
     }
 
@@ -222,38 +239,32 @@ public class service {
 //        return sb.toString();
 //    }
 
-    private String produceCommentJson(Comment c) {
+    private Map<String, String> produceCommentMapJson(Comment c) {
         Visitor commenter = c.getVisitor();
         int isCommentByArtist = 0;
-        if (commenter instanceof Artist) {
-            for (Collection col : ((Artist) commenter).getCollections()) {
-                if (col.getArtworks().contains(c.getArtwork()))
-                    isCommentByArtist = 1;
-            }
-        }
+        if(commenter.getId().equals(c.getArtwork().getCollection().getArtist().getId()))
+            isCommentByArtist = 1;
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("{");
-        sb.append("\"id\": \"").append(c.getCommentId()).append("\",");
-        sb.append("\"name\": \"").append(c.getVisitor().getName()).append("\",");
-        sb.append("\"surname\": \"").append(c.getVisitor().getSurname()).append("\",");
-        sb.append("\"isCommentByArtist\": \"").append(isCommentByArtist).append("\",");
-        sb.append("\"content\": \"").append(c.getContent()).append("\"");
-        sb.append("}");
-        return sb.toString();
+        Map<String, String> retMap = new HashMap<>();
+
+        retMap.put("id", c.getCommentId().toString());
+        retMap.put("name", c.getVisitor().getName() + " " + c.getVisitor().getSurname());
+        retMap.put("isByArtist", String.valueOf(isCommentByArtist));
+        retMap.put("content", c.getContent());
+        return retMap;
     }
 
-    private String produceTransactionJson(Transaction t) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("{");
-        sb.append("\"payerName\": \"").append(t.getPayer().getName()).append("\",");
-        sb.append("\"payerSurname\": \"").append(t.getPayer().getSurname()).append("\",");
-        sb.append("\"receiverName\": \"").append(t.getReceiver().getName()).append("\",");
-        sb.append("\"receiverSurname\": \"").append(t.getReceiver().getSurname()).append("\",");
-        sb.append("\"amountToArtist\": \"").append(t.getAmountToArtist()).append("\",");
-        sb.append("\"provisionAmount\": \"").append(t.getProvisionAmount()).append("\"");
-        sb.append("}");
-        return sb.toString();
+    private Map<String, String> produceTransactionJson(Transaction t) {
+        Map<String, String> retMap = new HashMap<>();
+
+        retMap.put("artworkName", t.getArtwork().getName());
+        retMap.put("payerName", t.getPayer().getName() + " " + t.getPayer().getSurname());
+        retMap.put("artistName", t.getReceiver().getName() + " " + t.getReceiver().getSurname());
+        retMap.put("provision", String.valueOf(t.getProvision()));
+        retMap.put("price", String.valueOf(t.getArtwork().getPrice()));
+        retMap.put("byteArray64", Base64.getEncoder().encodeToString(t.getArtwork().getImageInBytes()));
+
+        return retMap;
     }
 
 

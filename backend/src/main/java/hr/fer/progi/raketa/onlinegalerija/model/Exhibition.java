@@ -11,6 +11,7 @@ import java.util.UUID;
 @Table(name="exhibition")
 public class Exhibition {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name ="id", nullable = true)
     private final UUID id;
 
@@ -32,11 +33,11 @@ public class Exhibition {
     @Column(name="provision", nullable = false)
     private double provision;
 
-    @ManyToMany(mappedBy = "exhibitions")
+    @ManyToMany(mappedBy = "exhibitions", cascade = CascadeType.MERGE)
     private Set<Artist> artists;
 
     @OneToMany(mappedBy = "exhibition", fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL)
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private Set<Collection> collections;
 
     public Exhibition(){
