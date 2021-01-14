@@ -14,9 +14,10 @@
         :class="$store.getters.mode ? 'white--text' : 'black--text'"
         style="width: 65%;"
     > 
-      Slika je nastala u ranoj fazi umjetnikova stvaralaštva. 
+      <!-- Slika je nastala u ranoj fazi umjetnikova stvaralaštva. 
       Ističu se brojne silnice – povijesni, politički i društveni kontekst, intelektualni i duhovni horizont, 
-      ideologemi i ukus vremena.
+      ideologemi i ukus vremena. -->
+      {{artDescription["Description"]}}
     </div>
     <div>
       <v-img class="art_buy"
@@ -95,8 +96,8 @@
           Djelo: {{artDescription["Name"]}} <br><br>
           Tehnika: {{artTechnique}} <br><br>
           Dimenzije: 180 x 220 <br><br>
-          Iznos: {{artDescription["Price"]}} <br><br>
-          PDV: 14 138 HRK <br><br>
+          <!-- Iznos: {{artDescription["Price"]}} <br><br>
+          PDV: 14 138 HRK <br><br> -->
         </div>
       </v-card>
     </div>
@@ -108,11 +109,13 @@
               v-bind:style= "[$store.getters.mode ? {'background-color': 'black'} : {'background-color': 'white'}]"
               :elevation="0">
         <div style="padding: 6px; font-size: 18px;">
-          Ime: Mato {{$store.getters.user.name}}<br><br>
-          Prezime: Lovrak {{$store.getters.user.surname}}<br><br>
+          Iznos: {{artDescription["Price"].substring(0, artDescription["Price"].indexOf('.'))}} kn<br><br>
+          PDV: 14 138 HRK <br><br>
+          <!-- Ime: Mato {{$store.getters.user.name}}<br><br>
+          Prezime: Lovrak {{$store.getters.user.surname}}<br><br> -->
           Adresa: {{street}}, {{postcode}}, {{town}} <br><br>
           Broj mobitela: {{phone}} <br><br>
-          Dostava se očekuje unutar 3 do 5 radnih dana <br><br>
+          <!-- Dostava se očekuje unutar 3 do 5 radnih dana <br><br> -->
         </div>
       </v-card>
     </div>
@@ -130,7 +133,7 @@
       :disabled="!buy_valid"
       color="rgba(1, 24, 12)"
       class="mr-4 white--text"
-      @click="bought = true; delivery = false"
+      @click="buyArt()"
     >
       Potvrdi
     </v-btn>
@@ -145,6 +148,7 @@
 
 <script>
 import Header from '@/components/Header'
+import axios from 'axios'
 
 export default {
    components: {
@@ -208,6 +212,34 @@ export default {
       tmp = tmp.charAt(0).toUpperCase() + tmp.slice(1)
       tmp = tmp.replace(/_/g, ' ')
       this.artTechnique = tmp
+    },
+
+    buyArt() {
+      this.bought = true 
+      this.delivery = false
+      axios({url: `${process.env.VUE_APP_BACKEND_URI}/transaction/addTransaction`, 
+            headers: {
+              'Authorization':  `Bearer ${sessionStorage.getItem('token')}`,
+              'Content-Type': 'application/json'
+            },
+            params: {
+              'artworkId' : this.artDescription["id"],
+              'provision' : localStorage.getItem('provision')
+            },
+            //data: commentData, 
+            method: 'POST'
+      })
+      .then((response) => {
+        setTimeout(() => { 
+          
+        }, 200);
+        //this.forceRerender()
+        
+        
+      })
+      .catch(err => {
+          console.log(err)
+      });
     }
   }
 }
@@ -293,7 +325,7 @@ export default {
 .art_data_card {
   /* border: 1px solid black;
   border-radius: 50px; */
-  height: 320px;
+  height: 230px;
 }
 
 .thanks {

@@ -63,16 +63,16 @@
   </div> -->
   <!-- ---------------- PRIJAVA ------------------------- -->
     <div v-if="this.$store.getters.sign_in_form" class="form" ref="enter_form">
-      <div v-if="loading">
+      <!-- <div v-if="loading">
         <v-progress-circular
           :size="200"
           color="black"
           indeterminate
           style="margin-left: 30%;"
         ></v-progress-circular>
-      </div>
+      </div> -->
 
-      <div v-else>
+      <div>
         <v-form
           ref="form"
           class="form_write"
@@ -124,16 +124,16 @@
 
     <!-- ------------------- REGISTRACIJA ------------------ -->
     <div v-if="this.$store.getters.register_form" class="form" ref="enter_form">
-      <div v-if="loading">
+      <!-- <div v-if="loading">
         <v-progress-circular
           :size="200"
           color="black"
           indeterminate
           style="margin-left: 30%;"
         ></v-progress-circular>
-      </div>
+      </div> -->
 
-      <div v-else>
+      <div>
         <v-form
           ref="form"
           v-model="valid"
@@ -351,7 +351,10 @@
 
 
     <!-- ---------------- IZLOŽBE UŽIVO ---------------- -->
-    <div class="exh_text"> Izložbe uživo </div>
+    <div class="exh_text"> 
+      <p v-if="!filtered"> Naše izložbe </p> 
+      <p v-else> Odabrane izložbe </p>
+    </div>
     <v-row>
       <v-col
         v-for="n in noOfExhs" :key="n"
@@ -383,8 +386,8 @@
                   <div class="exh_title"> <i><b v-if="artistsMultiple[n - 1] == false"> {{exhDescriptions[n - 1]["Artists"]}} </b><br> 
                     <p style="margin-top: -5%; font-weight: 100" 
                     v-bind:style= "artistsMultiple[n - 1] == false ? 'margin-top: -5%;' :'margin-top: -28%;'"  
-                    > -{{exhDescriptions[n - 1]["Name"]}} </p></i> </div>
-                  
+                    > -{{exhDescriptions[n - 1]["Name"]}} </p></i> 
+                  </div>
                   <!-- <i> -{{exhDescriptions[n - 1]["Name"]}} </i></div> -->
                 
               </div>
@@ -960,6 +963,7 @@ export default {
 
         this.artists = [...new Set(this.artists)];
         this.techniques = [...new Set(this.techniques)];
+        this.filtered = false
         
       })
       .catch(err => {
@@ -1062,6 +1066,7 @@ export default {
             //i++
         }
       }
+      this.filtered = true
       this.filters = false
     },
 
