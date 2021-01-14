@@ -13,7 +13,6 @@
       <div class="exh_name"> {{exhDescription["Name"]}} </div>
     </div>
 
-<<<<<<< HEAD
     <!-- <div>++{{$store.getters.collections}}</div>
     <div>{{exhDescription}}</div> -->
     <!-- <div>EXHIBITION: {{exhibition}} <br><br><br><br></div> 
@@ -23,8 +22,6 @@
     <div>ARTDESC: {{artDescription}} <br><br></div>
     <div>ARTSRC: {{artSources}} <br><br></div> -->
 
-=======
->>>>>>> becc9d031adc9e43b8fecc93ba4c06730a4a5e5a
     <div v-for="(colInd, i) in collections" :key="colInd" class="collection"
         :class="$store.getters.mode ? 'white--text' : 'black--text'"
     > 
@@ -254,8 +251,8 @@
               <p :class="{ 'username_l': !$store.getters.mode, 'username_d': $store.getters.mode}"><b>{{com["name"]}} {{com["surname"]}}</b></p>
                 <v-btn v-if="$store.getters.admin" icon small 
                   @click="dialog = true, comIndex = index"
-                  style="margin-top: 2%;"
-                  v-bind:style= "com['isByArtist'] == 1 ? 'margin-left: 64%;' :'margin-left: 67%;'"  
+                  style="margin-left: 64%; margin-top: 2%;"
+                  v-bind:style= "com['isByArtist'] == 1 ? 'margin-left: 65.5%;' :'margin-left: 64%;'"  
                   :color="$store.getters.mode ? 'black' : 'white'"
                 >
                   <v-icon>mdi-trash-can-outline</v-icon>

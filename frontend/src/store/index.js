@@ -141,10 +141,29 @@ export default new Vuex.Store({
         axios({url: `${process.env.VUE_APP_BACKEND_URI}/login`, data: user, method: 'POST' })
         .then(function(resp) {
           // console.log('data ' + resp.data)
-          const token = resp.data
+          let token = resp.data
           //const user = resp.data.user
           sessionStorage.setItem('logged_in', true)
-          console.log('login ' + sessionStorage.getItem('logged_in'))
+          //console.log('login ' + sessionStorage.getItem('logged_in'))
+          sessionStorage.setItem('tokenBefore', token)
+          let userType = token.toString().charAt(token.length - 1)
+          userType = userType.toString()
+          console.log('userType ' + userType)
+          if (userType === '1') {
+            commit('log_admin', true)
+            commit('log_artist', false)
+            console.log('jedan ' + userType)
+            
+          } else if (userType === '2') {
+            commit('log_artist', true)
+            commit('log_admin', false)
+            console.log('dva ' + userType)
+          } else {
+            commit('log_artist', false)
+            commit('log_admin', false)
+          }
+          sessionStorage.setItem('userType', userType)
+          token = token.substring(0, token.length - 2)
           sessionStorage.setItem('token', token)
           console.log('login ' + sessionStorage.getItem('token'))
           commit('auth_success', token, user)

@@ -57,7 +57,7 @@
         <div>{{exhibitsFiltered}}</div> 
         <div>{{collections}}</div>
         <div>{{exhDescriptions}}</div>
-        <div>{{artSources}}</div> -->
+        <div>{{artSources}}</div> -->        
   <!-- <div>
     {{exhibits}}
   </div> -->
@@ -348,7 +348,30 @@
         </v-hover>
       </v-col>
     </v-row> -->
-
+    <v-dialog
+      v-model="deleteExh"
+      :retain-focus="false"
+      persistent
+      max-width="311"
+    >
+      <template v-slot:activator="{}">
+        
+      </template>
+      <v-card>
+        <v-card-title class="headline">
+          Jeste li sigurni da želite izbrisati izložbu?
+        </v-card-title>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="black" text @click="deleteExh = false">
+            Ne
+          </v-btn>
+          <v-btn color="black" text @click="deleteExhibition(deleteExhIndex)">
+            Da
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <!-- ---------------- IZLOŽBE UŽIVO ---------------- -->
     <div class="exh_text"> 
@@ -405,6 +428,19 @@
                     </v-btn>
                   </template>
                   <span>Posjeti izložbu</span>
+                </v-tooltip>
+                <v-tooltip v-if="$store.getters.admin" bottom>
+                  <template v-if="$store.getters.admin" v-slot:activator="{ on: tooltip }">
+                    <v-btn v-if="$store.getters.admin" icon
+                      v-bind="attrs"
+                      v-on="{ ...tooltip, ...menu }"
+                      :disabled="!$store.getters.logged_in"
+                      @click="deleteExhIndex = n; deleteExh = true"
+                      >
+                      <v-icon :color="!$store.getters.mode ? 'white' : 'black'">mdi-close</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Izbriši izložbu</span>
                 </v-tooltip>
               </v-card-title>
             </v-img>
@@ -696,8 +732,9 @@ export default {
       filtered: false,
       exhOpened: false,
       exhBeginDate: null,
-      snackDate: '2020-01-01'
-
+      snackDate: '2020-01-01',
+      deleteExh: false,
+      deleteExhIndex: 0
     }
   },
 
@@ -1097,6 +1134,26 @@ export default {
       }
       this.filtered = true
       this.filters = false
+    },
+
+    deleteExhibition(n) {
+      axios({url: `${process.env.VUE_APP_BACKEND_URI}/admin/closeExhibition`, 
+            headers: {
+              'Authorization':  `Bearer ${sessionStorage.getItem('token')}`,
+              'Content-Type': 'application/json'
+            },
+            params: {
+              'exhName' : this.exhDescriptions[n - 1]["Name"]
+            }, 
+            method: 'POST'
+      })
+      .then((response) => {
+       this.deleteExh = false
+       window.location.reload();
+      })
+      .catch(err => {
+          console.log(err)
+      });
     },
 
     setFilters() {
