@@ -67,8 +67,8 @@
 
             <v-list>
               <v-list-item to="/transakcije" link> Transakcije <v-spacer></v-spacer> <v-icon>mdi-cash-multiple</v-icon> </v-list-item>
-              <v-list-item to="/moj_profil" link> Moj profil <v-spacer></v-spacer> <v-icon>mdi-account-details</v-icon> </v-list-item>
-              <v-list-item to="/natjecaji" link> Natječaji <v-spacer></v-spacer> <v-icon>mdi-medal-outline</v-icon> </v-list-item>
+              <v-list-item v-if="$store.getters.artist" to="/moj_profil" link > Moj profil <v-spacer></v-spacer> <v-icon>mdi-account-details</v-icon> </v-list-item>
+              <v-list-item v-if="$store.getters.artist || $store.getters.admin" to="/natjecaji" link> Natječaji <v-spacer></v-spacer> <v-icon>mdi-medal-outline</v-icon> </v-list-item>
               <v-list-item link @click="sign_out()"> Odjava <v-spacer></v-spacer> <v-icon>mdi-exit-to-app</v-icon> </v-list-item>
               <v-list-item link @click="create_admin()"> Admin <v-spacer></v-spacer> <v-icon>mdi-head-minus</v-icon> </v-list-item>
               <v-list-item link @click="change_admin()"> Admin T<v-spacer></v-spacer> <v-icon>mdi-sync</v-icon> </v-list-item>
