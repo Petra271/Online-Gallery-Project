@@ -8,7 +8,7 @@ Projektni zadatak: Online galerija
 
 Prijava umjetnika i admina
 
-U sustavu je već registriran admin koji se prijavljuje s podacima email: admin@gmail.com te lozinkom: password. Umjetnici koji se već nalaze u sustavu mogu se prijaviti email adresom artist1@gmail.com i artist2@gmail.com te lozinkom: password. 
+U sustavu je već registriran admin koji se prijavljuje s podacima email: admin1@gmail.com te lozinkom: password. Umjetnici koji se već nalaze u sustavu mogu se prijaviti email adresom artist1@gmail.com i artist2@gmail.com te lozinkom: password. 
 
 Opcije u izborniku
 
