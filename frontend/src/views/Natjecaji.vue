@@ -514,6 +514,7 @@ export default {
   },
 
   mounted() {
+    this.setUser()
     this.getContests();
     // this.getCollections();
     var logged = (sessionStorage.getItem('logged_in') === 'true');
@@ -527,6 +528,19 @@ export default {
   //   },
   // },
   methods: {
+    setUser() {
+      if (sessionStorage.getItem('userType') === '1') {
+      this.$store.commit('log_admin', true)
+      this.$store.commit('log_artist', false)
+      } else if (sessionStorage.getItem('userType') === '2') {
+        this.$store.commit('log_admin', false)
+        this.$store.commit('log_artist', true)
+      } else {
+        this.$store.commit('log_admin', false)
+        this.$store.commit('log_artist', false)
+      }
+    },
+    
     onSubmit() {
       var parts1 = this.date1.split('-');
       var parts2 = this.date2.split('-');

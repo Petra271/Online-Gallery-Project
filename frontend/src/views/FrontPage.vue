@@ -739,6 +739,7 @@ export default {
   },
 
   mounted() {
+        this.setUser()
         // Set the default value of this.item based on what's in the store
         this.sign_in_form = this.$store.getters.sign_in_form
         //this.enter_exh = this.$store.getters.logged_in
@@ -757,6 +758,19 @@ export default {
     },
 
   methods: {
+    setUser() {
+      if (sessionStorage.getItem('userType') === '1') {
+      this.$store.commit('log_admin', true)
+      this.$store.commit('log_artist', false)
+      } else if (sessionStorage.getItem('userType') === '2') {
+        this.$store.commit('log_admin', false)
+        this.$store.commit('log_artist', true)
+      } else {
+        this.$store.commit('log_admin', false)
+        this.$store.commit('log_artist', false)
+      }
+    },
+
     descIn() {
       this.timer = setTimeout(() => { 
         this.description = `Online galerija osnovana je 2020. godine s ciljem promicanja kulture i umjetnosti. 

@@ -152,17 +152,25 @@ export default new Vuex.Store({
           if (userType === '1') {
             commit('log_admin', true)
             commit('log_artist', false)
+            // sessionStorage('log_admin', true)
+            // sessionStorage('log_artist', false)
             console.log('jedan ' + userType)
+            sessionStorage.setItem('userType', userType)
             
           } else if (userType === '2') {
             commit('log_artist', true)
             commit('log_admin', false)
+            // sessionStorage('log_admin', false)
+            // sessionStorage('log_artist', true)
             console.log('dva ' + userType)
           } else {
             commit('log_artist', false)
             commit('log_admin', false)
+            // sessionStorage('log_admin', false)
+            // sessionStorage('log_artist', false)
           }
           sessionStorage.setItem('userType', userType)
+          //sessionStorage.setItem('userType', userType)
           token = token.substring(0, token.length - 2)
           sessionStorage.setItem('token', token)
           console.log('login ' + sessionStorage.getItem('token'))

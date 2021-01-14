@@ -119,6 +119,7 @@ export default {
   },
 
   mounted() {
+    this.setUser()
     this.getAllTransactions();
     this.getAllTransactionsByUser();
     var logged = (sessionStorage.getItem('logged_in') === 'true');
@@ -126,6 +127,19 @@ export default {
   },
 
   methods: {
+    setUser() {
+      if (sessionStorage.getItem('userType') === '1') {
+      this.$store.commit('log_admin', true)
+      this.$store.commit('log_artist', false)
+      } else if (sessionStorage.getItem('userType') === '2') {
+        this.$store.commit('log_admin', false)
+        this.$store.commit('log_artist', true)
+      } else {
+        this.$store.commit('log_admin', false)
+        this.$store.commit('log_artist', false)
+      }
+    },
+
     getAllTransactions() {
       axios({url: `${process.env.VUE_APP_BACKEND_URI}/transaction/getAllTransactions`, 
             headers: {
