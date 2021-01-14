@@ -6,7 +6,7 @@
     </div>
     <h2 class="te"> Aktivni natječaji </h2>
   </div>
-  <div class="add_coll">
+  <div class="add_coll" v-if="$store.getters.admin">
     <div style="cursor: pointer;" @click="dialog=true">
     <v-icon color="black">mdi-image-plus</v-icon>
     Dodaj novi natječaj
@@ -193,11 +193,11 @@
     </tbody>
   </table>
 
-  <div>
+  <div v-if="$store.getters.admin">
     <h2 class="te"> Završeni natječaji </h2>
   </div>
 
-  <table class="table mt-5 colEnded">
+  <table class="table mt-5 colEnded" v-if="$store.getters.admin">
     <thead>
       <tr>
         <th scope="colEnded">Naziv natječaja</th>
@@ -302,6 +302,100 @@
           required 
         ></v-text-field>  
 
+        <v-row>
+        <v-col
+          cols="12"
+          sm="6"
+        >
+          <v-dialog
+            ref="dialog3"
+            v-model="modal3"
+            :return-value.sync="date3"
+            persistent
+            width="290px"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                v-model="date3"
+                label="Datum početka"
+                prepend-icon="mdi-calendar"
+                readonly
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker
+              v-model="date3"
+              scrollable
+              locale="hr"
+              color="black"
+            >
+              <v-spacer></v-spacer>
+              <v-btn
+                text
+                color="primary"
+                @click="modal3 = false"
+              >
+                Cancel
+              </v-btn>
+              <v-btn
+                text
+                color="primary"
+                @click="$refs.dialog3.save(date3)"
+              >
+                OK
+              </v-btn>
+            </v-date-picker>
+          </v-dialog>
+        </v-col>
+        <v-col
+          cols="12"
+          sm="6"
+        >
+          <v-dialog
+            ref="dialog4"
+            v-model="modal4"
+            :return-value.sync="date4"
+            persistent
+            width="290px"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                v-model="date4"
+                label="Datum završetka"
+                prepend-icon="mdi-calendar"
+                readonly
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker
+              v-model="date4"
+              scrollable
+              locale="hr"
+              color="black"
+            >
+              <v-spacer></v-spacer>
+              <v-btn
+                text
+                color="primary"
+                @click="modal4 = false"
+              >
+                Cancel
+              </v-btn>
+              <v-btn
+                text
+                color="primary"
+                @click="$refs.dialog4.save(date4)"
+              >
+                OK
+              </v-btn>
+            </v-date-picker>
+          </v-dialog>
+        </v-col>
+        <v-spacer></v-spacer>
+      </v-row>  
+
         <v-autocomplete
           v-model="selectedAppCollections"
           :items="appCollections"
@@ -353,6 +447,8 @@ export default {
       dialog: false,
       dialog1: false,
       dialog2: false,
+      dialog3: false,
+      dialog4: false,
       dialog_info: false,
       dialog_create: false,
       name: "", 
@@ -379,11 +475,15 @@ export default {
       selectedCollections: [],
       date1: new Date().toISOString().substr(0, 10),
       date2: new Date().toISOString().substr(0, 10),
+      date3: new Date().toISOString().substr(0, 10),
+      date4: new Date().toISOString().substr(0, 10),
       
       duration: 0,
       modal: false,
       modal1: false,
       modal2: false,
+      modal3: false,
+      modal4: false,
 
       dialogName: "",
       dialogStyle: "",
@@ -612,6 +712,7 @@ export default {
         method: 'GET'
       })
       .then((response) => {
+        this.appCollections = [];
         this.applications = response.data;
         for (let [email, value] of Object.entries(this.applications)) {
           for (let [index, key] of Object.entries(value)) {
@@ -626,6 +727,14 @@ export default {
 
     add_exhibition() {
       var map = {}
+      var parts1 = this.date3.split('-');
+      var parts2 = this.date4.split('-');
+      var duration2 = new Date(parts2[0], parts2[1] - 1, parts2[2]) - new Date(parts1[0], parts1[1] - 1, parts1[2]);
+      duration2 = (duration2 / 86400000) * 24;
+
+      var exDate = this.date3 + " 00:00";
+      var exDuration = "PT" + duration2 + "H0M";
+      console.log(exDuration)
       
       for (let [email, value] of Object.entries(this.applications)) {
         var array = new Array();
@@ -651,7 +760,8 @@ export default {
       formData.append('contestName', this.currentContest)
       formData.append('exName', this.exName)
       formData.append('exDesc', this.exDesc)
-      console.log(JSON.stringify(formData))
+      formData.append('date', exDate)
+      formData.append('duration', exDuration)
       formData.append('desc', new Blob([
           JSON.stringify(map)
       ], {

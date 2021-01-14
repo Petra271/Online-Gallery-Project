@@ -57,7 +57,7 @@ public class TransactionController {
         Visitor payer = visitorRepository.findByEmail(currentEmail);
         Artwork artwork = artworkRepository.findById(artworkId).get();
 
-        if(artwork.getTransaction() == null)
+        if(artwork.getTransaction() != null)
             return new ResponseEntity<>("Ovo djelo je već kupljeno", HttpStatus.NOT_ACCEPTABLE);
 
         Artist artist = artwork.getCollection().getArtist();

@@ -91,7 +91,15 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
        response.addHeader(HEADER_STRING, TOKEN_PREFIX + token);
         try {
             response.getWriter().write(token);
-            //response.getWriter().write(" " + String.valueOf(((User) authResult.getPrincipal()).getUsername()));
+            String role = ((List<SimpleGrantedAuthority>) authResult.getAuthorities()).get(0).getAuthority();
+            int res = 0;
+            switch (role){
+                case "artist":
+                    res = 2;
+                case "admin":
+                    res = 1;
+            }
+            response.getWriter().write(" " + res);
         } catch (IOException e) {
             e.printStackTrace();
         }
