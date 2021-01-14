@@ -3,10 +3,16 @@
 		
 		\section{Korištene tehnologije i alati}
 		
-			\textbf{\textit{dio 2. revizije}}
+			{Komunikacija u timu realizirana je korištenjem aplikacije \underline{WhatsApp}\footnote{\url{https://www.whatsapp.com/}}. Za izradu UML dijagrama korišten je alat \underline{Astah UML}\footnote{\url{https://astah.net/products/astah-uml/}}, a kao sustav za upravljanje izvornim kodom \underline{Git}\footnote{\url{https://git-scm.com/}}. Udaljeni repozitorij projekta je dostupan na web platformi \underline{GitLab}\footnote{\url{https://gitlab.com/}}.
+				
+			Kao razvojno okruženje za \textit{frontend} korišten je \underline{Microsoft Visual Studio}\footnote{\url{https://visualstudio.microsoft.com/}} - integrirano je razvojno okruženje (IDE) tvrtke Microsoft. Prvenstveno se koristi za razvoj računalnih programa za operacijski sustav Windows, kao i za web-stranice, web-aplikacije, web-usluge i mobilne aplikacije. Visual Studio za razvoj softvera koristi razne Microsoftove platforme.
 			
-			 \textit{Detaljno navesti sve tehnologije i alate koji su primijenjeni pri izradi dokumentacije i aplikacije. Ukratko ih opisati, te navesti njihovo značenje i mjesto primjene. Za svaki navedeni alat i tehnologiju je potrebno \textbf{navesti internet poveznicu} gdje se mogu preuzeti ili više saznati o njima}.
+			Kao razvojno okruženje za \textit{backend} korišten je \underline{IntelliJ IDEA}\footnote{\url{https://www.jetbrains.com/idea/}} - integrirano je razvojno okruženje (IDE) tvrke JetBrains. Prvenstveno se koristi za razvoj programa u programskom jeziku Java, ali podržava i druge jezike. Dostupno je u dvije verzije: besplatna Community Edition i komercijalna Ultimate Edition.
 			
+			Aplikacije je napisana koristeći radni okvir \underline{Spring Boot}\footnote{\url{https://spring.io/projects/spring-boot}} i jezik \underline{Java}\footnote{\url{https://www.java.com/}} za izradu \textit{backenda} te \underline{Vue.js}\footnote{\url{https://vuejs.org/}} i jezik \underline{Javascript}\footnote{\url{https://www.javascript.com/}} za izradu \textit{frontenda}. Vue.js je open-source MVC \textit{frontend} radni okvir pisan u Javascriptu za izgradnju korisničkih sučelja i jednostraničnih aplikacija gdje se glavni dokument dinamički
+			mijenja. Radni okvir Spring Boot je specijalizacija radnog okvira \underline{Spring}\footnote{\url{https://spring.io/projects/spring-framework}} s ciljem jednostavnijeg i bržeg oblikovanja web aplikacija. U svojoj automatskoj konfiguraciji olakšava posao programeru jer više toga uobičajenog u web aplikacijama već ima podešeno.
+			
+			Za bazu podataka koristili smo \underline{PostgreSQL}\footnote{\url{https://www.postgresql.org/}}.
 			
 			\eject 
 		
@@ -15,13 +21,72 @@
 			
 			\textbf{\textit{dio 2. revizije}}\\
 			
-			 \textit{U ovom poglavlju je potrebno opisati provedbu ispitivanja implementiranih funkcionalnosti na razini komponenti i na razini cijelog sustava s prikazom odabranih ispitnih slučajeva. Studenti trebaju ispitati temeljnu funkcionalnost i rubne uvjete.}
-	
+			\textit{U ovom poglavlju je potrebno opisati provedbu ispitivanja implementiranih funkcionalnosti na razini komponenti i na razini cijelog sustava s prikazom odabranih ispitnih slučajeva. Studenti trebaju ispitati temeljnu funkcionalnost i rubne uvjete.}
+			
+			
+			
 			
 			\subsection{Ispitivanje komponenti}
-			\textit{Potrebno je provesti ispitivanje jedinica (engl. unit testing) nad razredima koji implementiraju temeljne funkcionalnosti. Razraditi \textbf{minimalno 6 ispitnih slučajeva} u kojima će se ispitati redovni slučajevi, rubni uvjeti te izazivanje pogreške (engl. exception throwing). Poželjno je stvoriti i ispitni slučaj koji koristi funkcionalnosti koje nisu implementirane. Potrebno je priložiti izvorni kôd svih ispitnih slučajeva te prikaz rezultata izvođenja ispita u razvojnom okruženju (prolaz/pad ispita). }
+
+			{Sljedeći jedinični testovi su korišteni za ispitivanje jedinica nad razredima koji implementiraju neke od temeljnih funkcionalnosti.}
+				\begin{figure}[H]
+				
+				\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{registration_test}
+				\caption{Jedinični testovi koji testiraju registraciju novih posjetitelja i novih umjetnika}
+				
+				\end{figure}
 			
+				\begin{figure}[H]
+					
+					\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{login_test}
+					\caption{Jedinični testovi koji ispituju prijavu posjetitelja i umjetnika}
+					
+				\end{figure}
 			
+				\begin{figure}[H]
+				
+				\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{registration_with_same_email_test}
+				\caption{Jedinični test koji ispituje da se vraća prikladni kod za grešku kada se pri registraciji koristi e-mail postojećeg korisnika}
+				
+				\end{figure}
+			
+				\begin{figure}[H]
+					
+					\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{post_artwork_test}
+					\caption{Jedinični test koji ispituje dodavanje nove slike u kolekciju umjetnika}
+					
+				\end{figure}
+			
+				\begin{figure}[H]
+					
+					\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{create_collection_test}
+					\caption{Jedinični test koji ispituje stvaranje nove umjetnikove kolekcije}
+					
+				\end{figure}
+			
+			{Sljedeće slike prikazuju rezultate pokretanja jediničnih testova. Zbog načina na koji su pisani nisu mogli biti pokrenuti svi istovremeno.}
+				\begin{figure}[H]
+					
+					\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{test_results1}
+					\caption{Rezultati prvih 5 jediničnih testova, zadnja dva nisu bili pokretani}
+					
+				\end{figure}
+			
+				\begin{figure}[H]
+					
+					\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{test_results2}
+					\caption{Rezultat jediničnog testa koji ispituje dodavanje slike u kolekciju umjetnika}
+					
+				\end{figure}
+				
+				\begin{figure}[H]
+					
+					\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{test_results3}
+					\caption{Rezultat jediničnog testa koji ispituje stvaranje nove kolekcije}
+					
+				\end{figure}
+			
+			\eject	
 			
 			\subsection{Ispitivanje sustava}
 			
@@ -39,9 +104,14 @@
 		
 		\section{Dijagram razmještaja}
 			
-			\textbf{\textit{dio 2. revizije}}
-			
-			 \textit{Potrebno je umetnuti \textbf{specifikacijski} dijagram razmještaja i opisati ga. Moguće je umjesto specifikacijskog dijagrama razmještaja umetnuti dijagram razmještaja instanci, pod uvjetom da taj dijagram bolje opisuje neki važniji dio sustava.}
+			{Slika prikazuje specifikacijski dijagram razmještaja koji opisuje topologiju sustava. Sustav se sastoji od poslužiteljskog računala na kojem se nalaze web poslužitelj i poslužitelj baze podataka. Web aplikacija ovisna je o bazi podataka. Klijenti koriste web preglednik za pristup aplikaciji, a komunikacija klijent – poslužitelj odvija se preko HTTP protokola.}
+			 
+			 \begin{figure}[H]
+			 	
+			 	\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{dijagram_razmjestaja}
+			 	\caption{Specifikacijski dijagram razmještaja}
+			 	
+			 \end{figure}
 			
 			\eject 
 		
