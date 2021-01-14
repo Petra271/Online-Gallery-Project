@@ -50,12 +50,16 @@ public class TransactionController {
     @PostMapping("/addTransaction")
     public ResponseEntity<?> addNewTransaction (@RequestParam("artworkId") UUID artworkId, @RequestParam("provision") double provision) {
         String currentEmail = loggedInUsers.get(BearerTokenUtil.getBearerTokenHeader());
-
+        
         if(!visitorRepository.existsByEmail(currentEmail))
-            return new ResponseEntity<>("Korisnik s emailom" + currentEmail + "ne postoji", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Korisnik s emailom" + currentEmail + "ne postoji", HttpStatus.NOT_FOUND);
 
         Visitor payer = visitorRepository.findByEmail(currentEmail);
         Artwork artwork = artworkRepository.findById(artworkId).get();
+
+        if(artwork.getTransaction() == null)
+            return new ResponseEntity<>("Ovo djelo je već kupljeno", HttpStatus.NOT_ACCEPTABLE);
+
         Artist artist = artwork.getCollection().getArtist();
 
         double amountToArtist = artwork.getPrice() - (provision/100) * artwork.getPrice();

@@ -181,6 +181,7 @@ public class service {
         res.put("Style", artwork.getStyle().toString());
         res.put("fileType", artwork.getFileType());
         res.put("Price", String.valueOf(artwork.getPrice()));
+        res.put("sold", String.valueOf(artwork.getTransaction() == null ? 0 : 1));
         return new ObjectMapper().writeValueAsString(res);
     }
 
