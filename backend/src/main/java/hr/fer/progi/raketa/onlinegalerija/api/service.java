@@ -7,6 +7,7 @@ import hr.fer.progi.raketa.onlinegalerija.model.Artwork;
 import hr.fer.progi.raketa.onlinegalerija.model.Collection;
 import hr.fer.progi.raketa.onlinegalerija.repository.ContestRepository;
 import org.json.JSONException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -15,8 +16,12 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+
 @Service
 public class service {
+    @Autowired
+    private AdminController ac;
+
     public ResponseEntity<Map<String, Map<String, String>>> produceCollections(Set<Collection> collections) throws JsonProcessingException {
         Map<String, Map<String, String>> retMap = new HashMap<>();
 
@@ -80,7 +85,6 @@ public class service {
 
     public ResponseEntity<Map<String, String>> produceExhibitionSingles(Set<Exhibition> exhibitions) throws JsonProcessingException {
         Map<String, String> retMap = new HashMap<>();
-        AdminController ac = new AdminController();
 
         for(Exhibition e : exhibitions){
             if(e.getBeginDateTime().plus(e.getDuration()).isBefore(LocalDateTime.now())) {
@@ -126,12 +130,14 @@ public class service {
         return new ResponseEntity<>(commentMap, HttpStatus.OK);
     }
 
-    public ResponseEntity<List<String>> produceTransactions(List<Transaction> transactions) {
-        List<String> transactionJsonList = new ArrayList<>();
-        for (Transaction t : transactions) {
+    public ResponseEntity<List<Map<String, String>>> produceTransactions(List<Transaction> transactions) {
+        List<Map<String, String>> transactionJsonList = new ArrayList<>();
+
+        for (Transaction t : transactions)
             transactionJsonList.add(produceTransactionJson(t));
-        }
+
         System.out.println("Velicina liste je: " + transactionJsonList.size());
+
         return new ResponseEntity<>(transactionJsonList, HttpStatus.OK);
     }
 
@@ -248,17 +254,17 @@ public class service {
         return retMap;
     }
 
-    private String produceTransactionJson(Transaction t) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("{");
-        sb.append("\"payerName\": \"").append(t.getPayer().getName()).append("\",");
-        sb.append("\"payerSurname\": \"").append(t.getPayer().getSurname()).append("\",");
-        sb.append("\"receiverName\": \"").append(t.getReceiver().getName()).append("\",");
-        sb.append("\"receiverSurname\": \"").append(t.getReceiver().getSurname()).append("\",");
-        sb.append("\"amountToArtist\": \"").append(t.getAmountToArtist()).append("\",");
-        sb.append("\"provisionAmount\": \"").append(t.getProvisionAmount()).append("\"");
-        sb.append("}");
-        return sb.toString();
+    private Map<String, String> produceTransactionJson(Transaction t) {
+        Map<String, String> retMap = new HashMap<>();
+
+        retMap.put("artworkName", t.getArtwork().getName());
+        retMap.put("payerName", t.getPayer().getName() + " " + t.getPayer().getSurname());
+        retMap.put("artistName", t.getReceiver().getName() + " " + t.getReceiver().getSurname());
+        retMap.put("provision", String.valueOf(t.getProvision()));
+        retMap.put("price", String.valueOf(t.getArtwork().getPrice()));
+        retMap.put("byteArray64", Base64.getEncoder().encodeToString(t.getArtwork().getImageInBytes()));
+
+        return retMap;
     }
 
 

@@ -1,28 +1,44 @@
 package hr.fer.progi.raketa.onlinegalerija.api;
 
 import hr.fer.progi.raketa.onlinegalerija.dao.TransactionDTO;
+import hr.fer.progi.raketa.onlinegalerija.model.Artist;
+import hr.fer.progi.raketa.onlinegalerija.model.Artwork;
 import hr.fer.progi.raketa.onlinegalerija.model.Transaction;
 import hr.fer.progi.raketa.onlinegalerija.model.Visitor;
-import hr.fer.progi.raketa.onlinegalerija.repository.TransactionRepository;
-import hr.fer.progi.raketa.onlinegalerija.repository.VisitorRepository;
+import hr.fer.progi.raketa.onlinegalerija.repository.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
+import java.util.UUID;
 
 import static hr.fer.progi.raketa.onlinegalerija.security.WebSecurityConfiguration.loggedInUsers;
 
 @Controller
 @RequestMapping("/transaction")
 public class TransactionController {
-
+    @Autowired
     private TransactionRepository transactionRepository;
+    @Autowired
     private VisitorRepository visitorRepository;
+    @Autowired
+    private ArtistRepository artistRepository;
+    @Autowired
+    private CollectionRepository collectionRepository;
+    @Autowired
+    private ArtworkRepository artworkRepository;
+    @Autowired
+    private AdminRepository adminRepository;
+    @Autowired
+    private ContestRepository contestRepository;
+    @Autowired
+    private ExhibitionRepository exhibitionRepository;
+    @Autowired
+    private ApplicationRepository applicationRepository;
     private service service;
 
     public TransactionController(TransactionRepository transactionRepository, VisitorRepository visitorRepository, service service) {
@@ -32,18 +48,45 @@ public class TransactionController {
     }
 
     @PostMapping("/addTransaction")
-    public ResponseEntity<?> addNewTransaction (@RequestBody TransactionDTO transactionDTO) {
-        transactionRepository.save(new Transaction(visitorRepository.findById(transactionDTO.getPayerId()).get(),
-                                                   visitorRepository.findById(transactionDTO.getReceiverId()).get(),
-                                                   transactionDTO.getTotalAmount(),
-                                                   transactionDTO.getTotalAmount() * (1 - transactionDTO.getProvision()),
-                                                transactionDTO.getProvision(),
-                                                    transactionDTO.getTotalAmount() * transactionDTO.getProvision()));
+    public ResponseEntity<?> addNewTransaction (@RequestParam("artworkId") UUID artworkId, @RequestParam("provision") double provision) {
+        String currentEmail = loggedInUsers.get(BearerTokenUtil.getBearerTokenHeader());
+
+        if(!visitorRepository.existsByEmail(currentEmail))
+            return new ResponseEntity<>("Korisnik s emailom" + currentEmail + "ne postoji", HttpStatus.BAD_REQUEST);
+
+        Visitor payer = visitorRepository.findByEmail(currentEmail);
+        Artwork artwork = artworkRepository.findById(artworkId).get();
+        Artist artist = artwork.getCollection().getArtist();
+
+        double amountToArtist = artwork.getPrice() - (provision/100) * artwork.getPrice();
+
+        Transaction transaction = new Transaction(
+                payer,
+                artist,
+                artwork.getPrice(),
+                amountToArtist,
+                provision,
+                (provision/100) * artwork.getPrice(),
+                artwork
+        );
+        payer.addTransactionAsPayer(transaction);
+        visitorRepository.save(payer);
+        artist.addTransactionAsReceiver(transaction);
+        visitorRepository.save(artist);
+        artwork.setTransaction(transaction);
+        artworkRepository.save(artwork);
+
+        transactionRepository.save(transaction);
         return new ResponseEntity<>("Transakcija uspjesno dodana!", HttpStatus.OK);
     }
 
     @GetMapping("/getAllTransactions")
     public ResponseEntity<?> getAllTransactions() {
+        String currentUsername = loggedInUsers.get(BearerTokenUtil.getBearerTokenHeader());
+
+        if(!adminRepository.existsByEmail(currentUsername))
+            return new ResponseEntity<String>("No admin with this username exists", HttpStatus.NOT_FOUND);
+
         return service.produceTransactions(transactionRepository.findAll());
     }
 

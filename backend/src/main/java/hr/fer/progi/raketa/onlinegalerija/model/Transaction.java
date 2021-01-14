@@ -11,11 +11,11 @@ public class Transaction {
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "payer", nullable = false)
+    @JoinColumn(name = "payer_id", nullable = false)
     private Visitor payer;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "receiver", nullable = false)
+    @JoinColumn(name = "receiver_id", nullable = false)
     private Visitor receiver;
 
     @Column(name="total_amount", nullable = false)
@@ -30,13 +30,15 @@ public class Transaction {
     @Column(name="provision_amount", nullable = false)
     private double provisionAmount;
 
-    public Transaction() {
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "artwork_id", referencedColumnName = "id")
+    private Artwork artwork;
 
-    }
+    public Transaction() {}
 
     public Transaction(Visitor payer, Visitor receiver,
                        double totalAmount, double amountToArtist,
-                       double provision, double provisionAmount) {
+                       double provision, double provisionAmount, Artwork artwork) {
         this.id = UUID.randomUUID();
         this.payer = payer;
         this.receiver = receiver;
@@ -44,6 +46,7 @@ public class Transaction {
         this.amountToArtist = amountToArtist;
         this.provision = provision;
         this.provisionAmount = provisionAmount;
+        this.artwork = artwork;
     }
 
     public UUID getId() {
@@ -73,4 +76,6 @@ public class Transaction {
     public double getProvisionAmount() {
         return provisionAmount;
     }
+
+    public Artwork getArtwork(){return artwork;}
 }

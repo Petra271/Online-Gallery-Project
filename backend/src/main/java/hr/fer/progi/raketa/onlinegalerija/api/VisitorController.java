@@ -101,7 +101,9 @@ public class VisitorController {
     }
 
     @GetMapping(value="/getExhibitionSingles", produces = "application/json")
-    public ResponseEntity<?> getExhibitionSingles()throws JsonProcessingException {
+    public ResponseEntity<?> getExhibitionSingles() throws JsonProcessingException {
+        if(exhibitionRepository.findAll().size() == 0)
+            return ResponseEntity.ok().body("ok");
         return service.produceExhibitionSingles(new HashSet<>(exhibitionRepository.findAll()));
     }
 

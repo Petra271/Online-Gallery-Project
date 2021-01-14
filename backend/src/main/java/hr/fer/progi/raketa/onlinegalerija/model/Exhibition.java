@@ -33,7 +33,6 @@ public class Exhibition {
     @Column(name="provision", nullable = false)
     private double provision;
 
-
     @ManyToMany(mappedBy = "exhibitions", cascade = CascadeType.MERGE)
     private Set<Artist> artists;
 
