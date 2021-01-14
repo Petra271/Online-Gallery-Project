@@ -23,8 +23,10 @@ export default new Vuex.Store({
     currentCollection: '',
     currentStyle: '',
     removeArtwork: {},
-    applyToContestData: {},
-    artBuySrc: ''
+    applyToContestData: {},   
+    artBuySrc: '',
+    artistBuyName: '',
+    artDescription: []
     //register_in_form: false
   },
   mutations: {
@@ -108,6 +110,14 @@ export default new Vuex.Store({
 
     buy_art(state, artBuySrc) {
       state.artBuySrc = artBuySrc
+    },
+
+    set_art_desc(state, artDescription) {
+      state.artDescription = artDescription
+    },
+
+    set_artist_buy(state, artistBuyName) {
+      state.artistBuyName = artistBuyName
     }
     // change(state, register_in_form) {
     //   state.register_in_form = register_in_form
@@ -128,6 +138,7 @@ export default new Vuex.Store({
           sessionStorage.setItem('token', token)
           console.log('login ' + sessionStorage.getItem('token'))
           commit('auth_success', token, user)
+          sessionStorage.setItem('filtered', false)
           resolve(resp)
         })
         .catch(err => {
@@ -174,6 +185,7 @@ export default new Vuex.Store({
           console.log('aft1 ' + sessionStorage.getItem('token'))
           sessionStorage.removeItem('token')
           sessionStorage.setItem('logged_in', false)
+          sessionStorage.setItem('filtered', false)
           console.log('logout ' + sessionStorage.getItem('logged_in'))
           delete axios.defaults.headers.common['Authorization']
           resolve(resp)
@@ -254,7 +266,7 @@ export default new Vuex.Store({
         })
       })
     },
-    
+
     create_contest({commit}, contestData){
       return new Promise((resolve, reject) => {
         console.log('aft ' + sessionStorage.getItem('token'))
@@ -317,6 +329,8 @@ export default new Vuex.Store({
     collections: state => state.collections,
     currentCollection: state => state.currentCollection,
     currentStyle: state => state.currentStyle,
-    artBuySrc: state => state.artBuySrc
+    artBuySrc: state => state.artBuySrc,
+    artDescription: state => state.artDescription,
+    artistBuyName: state => state.artistBuyName
   }
 })

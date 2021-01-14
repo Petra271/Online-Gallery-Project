@@ -166,6 +166,7 @@ export default {
       //this.register_form = false;
       this.$store.commit('sign_in', true)
       this.$store.commit('register', false)
+      this.$vuetify.goTo(180)
     },
 
     scrollToClass(className) {
@@ -183,6 +184,7 @@ export default {
       // this.sign_in_form = false;
       this.$store.commit('register', true)
       this.$store.commit('sign_in', false)
+      this.$vuetify.goTo(380)
     },
 
     sign_out() {

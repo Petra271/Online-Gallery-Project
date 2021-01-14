@@ -20,13 +20,13 @@
     <div>OPIS KOLEKCIJE: {{collectionDesc}} <br><br></div>
     <div>KOLEKCIJE: {{collections}} <br><br></div>
     <div>ARTDESC: {{artDescription}} <br><br></div>
-    <div>ARTSRC: {{artSources}} <br><br></div>
-    <div>{{comments}}</div> -->
+    <div>ARTSRC: {{artSources}} <br><br></div> -->
 
     <div v-for="(colInd, i) in collections" :key="colInd" class="collection"
         :class="$store.getters.mode ? 'white--text' : 'black--text'"
     > 
-      {{collectionDesc[i]["Name"]}}
+      <div v-if="multipleAuthors" class="col_author"><b><i> {{collectionDesc[i]["Author"]}} </i></b></div>
+      <div class="col_name">{{collectionDesc[i]["Name"]}}</div>
     
   <v-row>
       <v-col
@@ -149,7 +149,7 @@
                :class="$store.getters.mode ? 'white--text' : 'black--text'"
               >
             Dimenzije: 180 x 220 <br>
-            Tehnika: ulje na platnu <br>
+            Tehnika: {{techniqueComp}} <br>
             <!-- Cijena: prava sitnica -->
             Cijena: {{artDescription[indI][indJ]["Price"]}}0
           </div>
@@ -226,7 +226,7 @@
               <v-btn color="black" text @click="dialog = false">
                 Ne
               </v-btn>
-              <v-btn color="black" text @click="delete_comment(comments[comIndex]['id'])">
+              <v-btn color="black" text @click="delete_comment(comments[comIndex]['id'], comIndex)">
                 Da
               </v-btn>
             </v-card-actions>
@@ -234,10 +234,11 @@
         </v-dialog>
       <v-container>
         <!-- <div class="com_edges"></div>     -->
-        <div v-for="(com, index) in comments" :key="index">
+        <div v-for="(com, index) in comments" :key="com">
           <!-- <div :class="{ 'one_com_light': com[0] != '+' && !$store.getters.mode, 
           'one_com_dark': com[0] != '+' && $store.getters.mode, 'one_com_admin': com[0] == '+'}"> -->
-          <div :class="{ 'one_com_light': !$store.getters.mode, 'one_com_dark': $store.getters.mode}">
+          <div v-if="renderComponent" :class="{ 'one_com_light': !$store.getters.mode, 
+          'one_com_dark': $store.getters.mode, 'one_com_artist': com['isByArtist'] == 1}">
             <v-row class="username_and_avatar">
               <!-- <v-avatar size="24px">
                 <img
@@ -248,7 +249,8 @@
               <p :class="{ 'username_l': !$store.getters.mode, 'username_d': $store.getters.mode}"><b>{{com["name"]}} {{com["surname"]}}</b></p>
                 <v-btn v-if="$store.getters.admin" icon small 
                   @click="dialog = true, comIndex = index"
-                  style="margin-left: 64%; margin-top: 2%;"
+                  style="margin-top: 2%;"
+                  v-bind:style= "com['isByArtist'] == 1 ? 'margin-left: 64%;' :'margin-left: 67%;'"  
                   :color="$store.getters.mode ? 'black' : 'white'"
                 >
                   <v-icon>mdi-trash-can-outline</v-icon>
@@ -318,8 +320,8 @@ export default {
       opacity: 0.9,
       opacityExh: 0.9,
       index: 0,
-      authorOrigi: 'Jerolim Miše',
-      author: 'Jerolim Miše',
+      authorOrigi: '',
+      author: 'Saznajte više o izložbi',
       info: `Moderna galerija – nacionalni muzej moderne umjetnosti ovogodišnji izložbeni program zaključuje kritičkom retrospektivom
 velikana hrvatskog slikarstva Jerolima Miše, koju priređuje u suradnji s Galerijom umjetnina iz Splita, 
 a u povodu 130 obljetnice rođenja i 50 godina smrti istaknutog hrvatskoga slikara.
@@ -359,15 +361,18 @@ bit će pokazana u Galeriji umjetnina u Splitu, od 11. veljače do 28. ožujka 2
       selection: [],
       comments: [],
       collapseOnScroll: true,
+      renderComponent: true,
       comment: '',
       comIndex: -1,
       dialog: false,
       exhDescription: '',
       exhibition: [],
+      exhibitionRes: [],
       collectionDesc: [],
       collections: [],
       artDescription: [],
       artSources: [],
+      multipleAuthors: false,
       indI: 0,
       indJ: 0
 
@@ -390,7 +395,11 @@ bit će pokazana u Galeriji umjetnina u Splitu, od 11. veljače do 28. ožujka 2
 
     informOut() {
       setTimeout(() => { 
-        this.author = this.authorOrigi;
+        if (this.multipleAuthors) {
+          this.author = ''
+        } else {
+          this.author = this.authorOrigi;
+        }
       }, 250);
     },
 
@@ -399,13 +408,22 @@ bit će pokazana u Galeriji umjetnina u Splitu, od 11. veljače do 28. ožujka 2
     },
 
     show_art(i, j) {
-      this.overlay = !this.overlay;
+      
+      //this.overlay = !this.overlay;
       this.indI = i;
       this.indJ = j;
-      console.log('artsource ' + this.artSources[i][j])
+      //console.log('artsource ' + this.artSources[i][j])
       this.$store.commit('buy_art', this.artSources[i][j])
-      console.log('artstore ' + $store.getters.artBuySrc)
+      console.log('artdesc1')
+      localStorage.setItem('artBuySrc', this.artSources[i][j])
+      localStorage.setItem('artDesc', JSON.stringify(this.artDescription[i][j]))
+      localStorage.setItem('artistBuyName', this.collectionDesc[i]["Author"])
+      // this.$store.commit('set_art_desc', this.artDescription[i][j])
+      // this.$store.commit('set_artist_buy', this.collectionDesc[i]["Author"])
       this.getComments(this.artDescription[i][j]['id'])
+      setTimeout(() => { 
+        this.overlay = !this.overlay;
+      }, 500);
     },
 
     sendComment(i, j) {
@@ -416,6 +434,7 @@ bit će pokazana u Galeriji umjetnina u Splitu, od 11. veljače do 28. ožujka 2
       //   this.comments.push(this.comment);
       //   this.comment = '';
       // }
+      this.comments[this.comments.length] = this.comment
       let id = this.artDescription[i][j]['id']
       console.log('idsend ' + id)
       //console.log('index ' + this.indI + ' ' + this.indJ)
@@ -435,8 +454,12 @@ bit će pokazana u Galeriji umjetnina u Splitu, od 11. veljače do 28. ožujka 2
             method: 'POST'
       })
       .then((response) => {
-        this.comment = '';
-        this.getComments(id)
+        setTimeout(() => { 
+          this.overlay = false
+        }, 200);
+        //this.forceRerender()
+        
+        this.comment = ''
       })
       .catch(err => {
           console.log(err)
@@ -463,52 +486,82 @@ bit će pokazana u Galeriji umjetnina u Splitu, od 11. veljače do 28. ožujka 2
       .then((response) => {
         let i = 0
         for (let [id, comValue] of Object.entries(response.data)) {
-          this.comments[i] = JSON.parse(comValue)
+          //console.log('commentjson ' + comValue)
+          this.comments[i] = comValue
           i++
         }
+        this.renderComponent = false;
+
+        this.$nextTick(() => {
+          // Add the component back in
+          this.renderComponent = true;
+        });
+        //console.log('comlength ' + this.comments.length)
       })
       .catch(err => {
           console.log(err)
       });
     },
 
-    delete_comment(id) {
+    delete_comment(id, index) {
       let commentData = {
         content: 'abcd',
-        artwork: 'efgh',
-        commentId: id
+        commentId: id,
+        artworkId: 'abcd'
       }
       commentData = JSON.stringify(commentData)
       axios({url: `${process.env.VUE_APP_BACKEND_URI}/comment/remove`, 
             headers: {
-              'Authorization':  `Bearer ${sessionStorage.getItem('token')}`
+              'Authorization':  `Bearer ${sessionStorage.getItem('token')}`,
+              'Access-Control-Allow-Origin': '*'
             },
-            data: commentData,
-            method: 'DELETE'
+            params: {
+            'id' : id
+            }, 
+            method: 'POST'
       })
       .then((response) => {
         this.dialog = false;
+        this.comments.splice(index, 1)
       })
       .catch(err => {
           console.log(err)
       });
-      //this.comments.splice(index, 1)
     },
 
-    change_admin() {
-      if(this.$store.getters.admin) {
-        this.$store.commit('log_admin', false);
-      } else {
-        this.$store.commit('log_admin', true);
-      }
+    // forceRerender() {
+    //   // Remove my-component from the DOM
+    //   this.renderComponent = false;
+
+    //   this.$nextTick(() => {
+    //     // Add the component back in
+    //     this.renderComponent = true;
+    //   });
+    // },
+
+    // change_admin() {
+    //   if(this.$store.getters.admin) {
+    //     this.$store.commit('log_admin', false);
+    //   } else {
+    //     this.$store.commit('log_admin', true);
+    //   }
+    // },
+
+    transformTech(i, j) {
+      let tmp = this.artDescription[i][j]["Style"]
+      tmp = tmp.toLowerCase()
+      tmp = tmp.charAt(0).toUpperCase() + tmp.slice(1)
+      tmp = tmp.replace(/_/g, ' ')
+      return tmp
     },
 
     getColItems() {
-      console.log('mountedizl ' + this.$store.getters.collections)
-      //this.collections = $store.getters.collections
+      console.log('mountedizl ' + localStorage.getItem('exhibition'))
+      this.exhibitionRes = JSON.parse(localStorage.getItem('exhibition'))
+      this.multipleAuthors = false
       let i = 0
       //JSON - opis izložbe: sve kolekcije
-      for (let [description, value] of Object.entries(this.$store.getters.collections)) {
+      for (let [description, value] of Object.entries(this.exhibitionRes)) {
           this.exhDescription = JSON.parse(description)
           this.exhibition[0] = value
           console.log('velicina kolekcija ' + Object.entries(value).length)
@@ -533,8 +586,23 @@ bit će pokazana u Galeriji umjetnina u Splitu, od 11. veljače do 28. ožujka 2
           }
       }
       this.authorOrigi = this.exhDescription["Artists"]
+      //this.authorOrigi = 'Mersad Berber,Jerolim Miše'
+      if (this.authorOrigi.indexOf(',') != -1) {
+        this.multipleAuthors = true
+        //this.authorOrigi = this.authorOrigi.substring(0, this.authorOrigi.indexOf(','))
+      }
     }
-  }
+  },
+
+  computed: {
+      techniqueComp () {
+        let tmp = this.artDescription[this.indI][this.indJ]["Style"]
+        tmp = tmp.toLowerCase()
+        tmp = tmp.charAt(0).toUpperCase() + tmp.slice(1)
+        tmp = tmp.replace(/_/g, ' ')
+        return tmp
+      }
+  },
 }
 </script>
 
@@ -547,13 +615,13 @@ bit će pokazana u Galeriji umjetnina u Splitu, od 11. veljače do 28. ožujka 2
 .exh_author {
   margin-top: 2.5%;
   margin-bottom: -3%;
-  margin-left: 2%;
+  margin-left: 3.5%;
   font-size: 80px;
 }
 
 .exh_name {
   /* margin-top: 4%; */
-  margin-left: 2%;
+  margin-left: 3.5%;
   font-size: 80px;
   font-weight: 100;
 }
@@ -563,6 +631,20 @@ bit će pokazana u Galeriji umjetnina u Splitu, od 11. veljače do 28. ožujka 2
   margin-bottom: -2%;
   margin-left: 1.5%;
   font-size: 80px;
+}
+
+.col_author {
+  margin-top: 2.5%;
+  margin-bottom: -1.5%;
+  margin-left: 1%;
+  font-size: 60px;
+}
+
+.col_name {
+  margin-left: 1%;
+  margin-bottom: -2%;
+  font-size: 60px;
+  font-weight: 100;
 }
 
 .desc_card {
@@ -645,7 +727,7 @@ bit će pokazana u Galeriji umjetnina u Splitu, od 11. veljače do 28. ožujka 2
   background-color: white;
 }
 
-.one_com_admin {
+.one_com_artist {
   margin-left: -3%;
   /* background-color: rgb(51, 168, 90); */
   margin-bottom: -2%;
