@@ -37,6 +37,28 @@
       </tr>
     </tbody>
   </table>
+
+  <table class="table mt-5 col">
+    <thead>
+      <tr>
+        <th scope="col">Kupljeno djelo</th>
+        <th scope="col">Kupac</th>
+        <th scope="col">Umjetnik</th>
+        <th scope="col">Provizija</th>
+        <th scope="col">Cijena</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="(status, i) in allArts" :key="i">
+        <!-- <th scope="row">{{ ++i }}</th> -->
+        <td>{{ allArts[i] }}</td>
+        <td>{{ allPayers[i] }}</td>
+        <td>{{ allReceivers[i] }}</td>
+        <td>{{ allProvisions[i] }}</td>
+        <td>{{ allPrices[i] }}</td>
+      </tr>
+    </tbody>
+  </table>
   
 </v-app>
 </template>
@@ -66,7 +88,19 @@ export default {
         ],
         prices: [
             '200', '500', '675', '860', '150', '1000'
-        ]
+        ],
+        allTransactions: null,
+        userTransactions: null,
+        allArts: [],
+        allPrices: [],
+        allPayers: [],
+        allReceivers: [],
+        allProvisions: [],
+        userArts: [],
+        userPrices: [],
+        userPayers: [],
+        userReceivers: [],
+        userProvisions: [],
      }
   },
 
@@ -74,13 +108,83 @@ export default {
     var logged = (sessionStorage.getItem('logged_in') === 'true');
     this.$store.commit('show_tool', logged ? true : false)
   },
+
+  methods: {
+    getAllTransactions() {
+      console.log('exhibit ' + sessionStorage.getItem('token'))
+      axios({url: `${process.env.VUE_APP_BACKEND_URI}/transaction/getAllTransactions`, 
+            headers: {
+              'Authorization':  `Bearer ${sessionStorage.getItem('token')}`
+            },
+            method: 'GET'
+      })
+      .then((response) => {
+        this.allTransactions = response.data;
+        for (let [user, transactions] of Object.entries(this.allTransactions)) {
+          for (let [key, value] of Object.entries(JSON.parse(transactions))) {
+            if (key == 'Name') {
+            this.allArts.push(value)
+            }
+            if (key == 'TotalAmount') {
+              this.allPrices.push(value)
+            }
+            if (key == 'PayerId') {
+              this.allPayers.push(value)
+            }
+            if (key == 'ReceiverId') {
+              this.allReceivers.push(value)
+            }
+            if (key == 'Provision') {
+              this.allProvisions.push(value)
+            }
+          }
+        }
+      })
+      .catch(err => {
+          console.log(err)
+      });
+    },
+
+    getAllTransactionsByUser() {
+      console.log('exhibit ' + sessionStorage.getItem('token'))
+      axios({url: `${process.env.VUE_APP_BACKEND_URI}/transaction/getAllTransactionsByUser`, 
+            headers: {
+              'Authorization':  `Bearer ${sessionStorage.getItem('token')}`
+            },
+            method: 'GET'
+      })
+      .then((response) => {
+        this.userTransactions = response.data;
+        for (let [key, value] of Object.entries(this.userTransactions)) {
+          if (key == 'Name') {
+            this.userArts.push(value)
+          }
+          if (key == 'TotalAmount') {
+            this.userPrices.push(value)
+          }
+          if (key == 'PayerId') {
+            this.userPayers.push(value)
+          }
+          if (key == 'ReceiverId') {
+            this.userReceivers.push(value)
+          }
+          if (key == 'Provision') {
+            this.userProvisions.push(value)
+          }
+        }
+      })
+      .catch(err => {
+          console.log(err)
+      });
+    },
+  },
 }
 </script>
 
 <style>
 
 .comp {
- margin-top: 200px;
+  margin-top: 200px;
 }
 .te {
   font-size: 80px;
@@ -89,8 +193,11 @@ export default {
   margin-top: 2%;
 }
 .col {
-    table-layout: fixed;
-    color: black;
+  width: 100%;
+  table-layout: fixed;
+  color: black;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 .col td{
   padding: 10px;
@@ -111,14 +218,12 @@ export default {
   text-align: left;
   background-color: rgba(49, 54, 54, 0.842);
   color: white;
-  font-size: 20px;
-  
+  font-size: 20px; 
 }
 .image {
   max-width: 100px;
 }
 .infos {
-    padding-left: 20px;
-
+  padding-left: 20px;
 }
 </style>

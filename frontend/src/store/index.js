@@ -13,6 +13,7 @@ export default new Vuex.Store({
     logged_in: false,
     mode: false,
     admin: false,
+    artist: false,
     status: '',
     token: sessionStorage.getItem('token') || '',
     user : {},
@@ -24,7 +25,8 @@ export default new Vuex.Store({
     currentStyle: '',
     removeArtwork: {},
     applyToContestData: {},
-    artBuySrc: ''
+    artBuySrc: '',
+    exhibitionData: {}
     //register_in_form: false
   },
   mutations: {
@@ -48,6 +50,10 @@ export default new Vuex.Store({
 
     log_admin(state, admin) {
       state.admin = admin
+    },
+
+    log_artist(state, artist) {
+      state.artist = artist
     },
 
     set_collectionData(state, collectionData) {
@@ -76,6 +82,10 @@ export default new Vuex.Store({
 
     set_applyToContest(state, applyToContestData) {
       state.applyToContestData = applyToContestData
+    },
+
+    set_exhibitionData(state, exhibitionData) {
+      state.exhibitionData = exhibitionData
     },
 
     //AUTHENTICATION
@@ -300,6 +310,29 @@ export default new Vuex.Store({
         })
       })
     },
+
+    create_exhibition({commit}, exhibitionData){
+      return new Promise((resolve, reject) => {
+        console.log('aft ' + sessionStorage.getItem('token'))
+        console.log(JSON.stringify(exhibitionData))
+        axios({url: `${process.env.VUE_APP_BACKEND_URI}/admin/createExhibition`, 
+              headers: {
+                'Authorization':  `Bearer ${sessionStorage.getItem('token')}`,
+                // 'Content-Type': 'application/json'
+              }, 
+              data: exhibitionData, 
+              method: 'POST' 
+            })
+        .then(resp => {
+          resolve(resp)
+        })
+        .catch(err => {
+          commit('auth_error', err)
+          // sessionStorage.removeItem('token')
+          reject(err)
+        })
+      })
+    },
   },
 
   modules: {
@@ -310,6 +343,7 @@ export default new Vuex.Store({
     logged_in: state =>  state.logged_in,
     mode: state =>  state.mode,
     admin: state =>  state.admin,
+    artist: state =>  state.artist,
     isLoggedIn: state => !!state.token,
     authStatus: state => state.status,
     user: state => state.user,
