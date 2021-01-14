@@ -110,7 +110,7 @@
               :elevation="0">
         <div style="padding: 6px; font-size: 18px;">
           Iznos: {{artDescription["Price"].substring(0, artDescription["Price"].indexOf('.'))}} kn<br><br>
-          PDV: 14 138 HRK <br><br>
+          PDV: {{pdv}} kn<br><br>
           <!-- Ime: Mato {{$store.getters.user.name}}<br><br>
           Prezime: Lovrak {{$store.getters.user.surname}}<br><br> -->
           Adresa: {{street}}, {{postcode}}, {{town}} <br><br>
@@ -241,7 +241,14 @@ export default {
           console.log(err)
       });
     }
-  }
+  },
+
+  computed: {
+      pdv () {
+        let tmp = parseFloat(this.artDescription["Price"].substring(0, this.artDescription["Price"].indexOf('.')))
+        return tmp / 4
+      }
+  },
 }
 </script>
 
