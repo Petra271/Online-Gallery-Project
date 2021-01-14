@@ -117,12 +117,60 @@
 		
 		\section{Upute za puštanje u pogon}
 		
-			\textbf{\textit{dio 2. revizije}}\\
+			\subsubsection{Instalacija poslužitelja baze podataka}
 		
-			 \textit{U ovom poglavlju potrebno je dati upute za puštanje u pogon (engl. deployment) ostvarene aplikacije. Na primjer, za web aplikacije, opisati postupak kojim se od izvornog kôda dolazi do potpuno postavljene baze podataka i poslužitelja koji odgovara na upite korisnika. Za mobilnu aplikaciju, postupak kojim se aplikacija izgradi, te postavi na neku od trgovina. Za stolnu (engl. desktop) aplikaciju, postupak kojim se aplikacija instalira na računalo. Ukoliko mobilne i stolne aplikacije komuniciraju s poslužiteljem i/ili bazom podataka, opisati i postupak njihovog postavljanja. Pri izradi uputa preporučuje se \textbf{naglasiti korake instalacije uporabom natuknica} te koristiti što je više moguće \textbf{slike ekrana} (engl. screenshots) kako bi upute bile jasne i jednostavne za slijediti.}
+			Prije instalacije potrebno je preuzeti instalacijski program sa sljedeće poveznice:
+				\href{https://www.postgresql.org/download/}{\underline{https://www.postgresql.org/download/}}.
+			\newline\newline
+			Napomene za instalaciju:
+			\begin{list}{$\circ$}{}
+				\item  kod odabira komponenti sustava koje će biti
+				instalirane, obavezno je označiti komponente
+	 			\textbf{PostgreSQL Server} i \textbf{PgAdmin} 
+				\item  ostaviti predložena vrata za pristup
+				sustavu baze podataka: \textbf{5432}
+				\item  ostale postavke, poput lozinke postgres korisnika, postaviti proizvoljno
+			\end{list}
+		
+			\subsubsection{Instalacija Mavena}
+			Ukoliko Maven već nije instaliran, potrebno ga je preuzeti s poveznice\newline
+			\href{https://maven.apache.org/download.cgi}{\underline{https://maven.apache.org/download.cgi}} i instalirati.
+		
+			\subsubsection{Korištenje pgAdmin programa za pristup PostgreSQL sustavu baze podataka}
 			
+			Pri prvom pokretanju programa pgAdmin potrebno je upisati
+			„master“ lozinku – istu onu koju je postavljena za postgres korisnika.
+			Nakon unosa lozinke otvoriti u prozoru „Browser“ listu
+			„Servers“ i kliknuti na znak pored „PostgreSQL 12“.
+			Ponovno unijeti lozinku za postgres korisnika.
 			
-			 \textit{Dovršenu aplikaciju potrebno je pokrenuti na javno dostupnom poslužitelju. Studentima se preporuča korištenje neke od sljedećih besplatnih usluga: \href{https://aws.amazon.com/}{Amazon AWS}, \href{https://azure.microsoft.com/en-us/}{Microsoft Azure} ili \href{https://www.heroku.com/}{Heroku}. Mobilne aplikacije trebaju biti objavljene na F-Droid, Google Play ili Amazon App trgovini.}
+			\subsubsection{Konfiguracija veze s bazom podataka}
+			U datoteci \textbf{application.properties} koja se nalazi u direktoriju
+			\newline
+			„backend/src/main/resources“, potrebno je postaviti postgres korisnika i lozinku koja je stavljena tijekom instalacije poslužitelja baze podataka. Pri prvom pokretanju aplikacije, baza se automatski stvara.
 			
+			\begin{figure}[H]
+				\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{db_username_pass}
+			\end{figure}
+		
+			\eject
+		
+			\subsubsection{Pokretanje aplikacije}
+
+			U terminalu se pozicionirati u direktorij  „backend“. Izvesti naredbu:
+			\begin{list}{$\circ$}{}
+				\item  mvn spring-boot:run -Drun.arguments=-{}-server.port=8080
+			\end{list}
+			Ova naredba pokrenut će Spring Boot aplikaciju na portu 8080. Broj porta može se promijeniti, ali onda je potrebno u datoteci \textbf{.env} u direktoriju „frontend“ promijeniti broj porta na koji se šalju zahtjevi.
 			
-			\eject 
+			\begin{figure}[H]
+				\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{change_port}
+			\end{figure}
+		
+		\noindent Pozicionirati u direktorij „frontend“. Izvesti naredbe:
+		\begin{list}{$\circ$}{}
+			\item  npm install
+			\item  npm run serve -{}- -{}-port 8081
+		\end{list}
+		Prva naredba instalirat će sve potrebne pakete, a druga će pokrenuti Vue JS aplikaciju na portu 8081.
+		

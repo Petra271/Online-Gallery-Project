@@ -369,6 +369,14 @@
 
 		\section{Dijagram komponenti}
 		
-			\textbf{\textit{dio 2. revizije}}\\
-		
-			 \textit{Potrebno je priložiti dijagram komponenti s pripadajućim opisom. Dijagram komponenti treba prikazivati strukturu cijele aplikacije.}
+			
+			{Dijagram komponenti prikazuje organizaciju komponenti prema okolini. Sustavu se pristupa preko sučelja za dohvat HTML, CSS i Javascript datoteke te preko REST API komponenti. Router je komponenta Vue.js-a koja određuje koju će datoteku sučelje dobiti. Preko sučelja za JSON podatke pristupa se REST API-u. REST API je zadužen za backend podatke aplikacije.
+			JPA služi za dohvat podataka iz baze podataka dok se podaci koji se šalju Java Springom šalju u obliku DTO (Data Transfer Object).  }
+			
+			\begin{figure}[H]
+				
+				\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{dijagram_komponenti}
+				\caption{\newline Dijagram komponenti}
+				
+			\end{figure}
+			\eject 
