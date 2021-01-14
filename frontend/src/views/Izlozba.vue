@@ -15,12 +15,12 @@
 
     <!-- <div>++{{$store.getters.collections}}</div>
     <div>{{exhDescription}}</div> -->
-    <!-- <div>EXHIBITION: {{exhibition}} <br><br><br><br></div> 
+    <div>EXHIBITION: {{exhibition}} <br><br><br><br></div> 
     <div>OPIS IZLOŽBE: {{exhDescription}} <br><br></div>
     <div>OPIS KOLEKCIJE: {{collectionDesc}} <br><br></div>
     <div>KOLEKCIJE: {{collections}} <br><br></div>
     <div>ARTDESC: {{artDescription}} <br><br></div>
-    <div>ARTSRC: {{artSources}} <br><br></div> -->
+    <div>ARTSRC: {{artSources}} <br><br></div>
 
     <div v-for="(colInd, i) in collections" :key="colInd" class="collection"
         :class="$store.getters.mode ? 'white--text' : 'black--text'"
@@ -151,7 +151,7 @@
             Dimenzije: 180 x 220 <br>
             Tehnika: {{techniqueComp}} <br>
             <!-- Cijena: prava sitnica -->
-            Cijena: {{artDescription[indI][indJ]["Price"]}}0
+            Cijena: {{artDescription[indI][indJ]["Price"].substring(0, artDescription[indI][indJ]["Price"].indexOf('.'))}} kn
           </div>
           <div class="buy_btn">
             <v-row>
@@ -418,6 +418,7 @@ bit će pokazana u Galeriji umjetnina u Splitu, od 11. veljače do 28. ožujka 2
       localStorage.setItem('artBuySrc', this.artSources[i][j])
       localStorage.setItem('artDesc', JSON.stringify(this.artDescription[i][j]))
       localStorage.setItem('artistBuyName', this.collectionDesc[i]["Author"])
+      localStorage.setItem('provision', this.exhDescription["Provision"])
       // this.$store.commit('set_art_desc', this.artDescription[i][j])
       // this.$store.commit('set_artist_buy', this.collectionDesc[i]["Author"])
       this.getComments(this.artDescription[i][j]['id'])
