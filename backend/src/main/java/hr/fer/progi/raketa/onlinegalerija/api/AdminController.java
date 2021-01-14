@@ -102,8 +102,10 @@ public class AdminController {
         if(contest == null)
             return new ResponseEntity<String>("No contest with this name exists", HttpStatus.NOT_FOUND);
 
+        DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
         Exhibition ex = new Exhibition(
-                LocalDateTime.parse(date),
+                LocalDateTime.parse(date, f),
                 Duration.parse(duration),
                 exName,
                 contest.getStyle(),

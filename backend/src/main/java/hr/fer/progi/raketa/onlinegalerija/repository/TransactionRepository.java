@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public interface TransactionRepository extends JpaRepository<Transaction, UUID> {
 
-    @Query(value = "SELECT * FROM transaction  WHERE payer = :uuid OR receiver = :uuid",
+    @Query(value = "SELECT * FROM transaction  WHERE payer_id = :uuid OR receiver_id = :uuid",
             nativeQuery = true)
     List<Transaction> findTransactionsByUser(@Param("uuid") UUID uuid);
 }
