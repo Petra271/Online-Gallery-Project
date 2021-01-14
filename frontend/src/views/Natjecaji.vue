@@ -6,7 +6,7 @@
     </div>
     <h2 class="te"> Aktivni natječaji </h2>
   </div>
-  <div class="add_coll">
+  <div class="add_coll" v-if="$store.getters.admin">
     <div style="cursor: pointer;" @click="dialog=true">
     <v-icon color="black">mdi-image-plus</v-icon>
     Dodaj novi natječaj
@@ -32,21 +32,21 @@
         <v-text-field
           v-model="name"
           :rules="[v => !!v || 'Potrebno je unijeti naziv natječaja']"
-          label="Naziv izložbe"
+          label="Naziv natječaja"
           required
         ></v-text-field>
         
         <v-combobox
           v-model="stil"
           :items="items"
-          :rules="[v => !!v || 'Potrebno je odabrati stil natječaja']"
+          :rules="[v => !!v || 'Potrebno je odabrati stil izložbe']"
           label="Stil izložbe"
           required
         ></v-combobox>
         
         <v-text-field
           v-model="opis" 
-          :rules="[v => !!v || 'Potrebno je unijeti opis kolekcije']"
+          :rules="[v => !!v || 'Potrebno je unijeti opis izložbe']"
           label="Opis izložbe"
           required 
         ></v-text-field>
@@ -175,20 +175,42 @@
     </v-dialog>
   </div>
 
-  <table class="table mt-5 col">
+  <table class="table mt-5 colActive">
     <thead>
       <tr>
-        <th scope="col">Naziv natječaja</th>
-        <th scope="col">Vrijeme početka</th>
-        <th scope="col">Trajanje natječaja (u danima)</th>
+        <th scope="colActive">Naziv natječaja</th>
+        <th scope="colActive">Vrijeme početka</th>
+        <th scope="colActive">Trajanje natječaja (u danima)</th>
       </tr>
     </thead>
     <tbody>
       <tr v-for="(status, i) in names" :key="i" @click="openDialogInfo(i)" style="cursor: pointer">
         <!-- <th scope="row">{{ ++i }}</th> -->
-        <td>{{ names[i] }}</td>
-        <td>{{ beginDates[i] }}</td>
-        <td>{{ durations[i] }}</td>
+        <td v-if="activeNames.includes(status)">{{ names[i] }}</td>
+        <td v-if="activeNames.includes(status)">{{ beginDates[i] }}</td>
+        <td v-if="activeNames.includes(status)">{{ durations[i] }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div v-if="$store.getters.admin">
+    <h2 class="te"> Završeni natječaji </h2>
+  </div>
+
+  <table class="table mt-5 colEnded" v-if="$store.getters.admin">
+    <thead>
+      <tr>
+        <th scope="colEnded">Naziv natječaja</th>
+        <th scope="colEnded">Vrijeme početka</th>
+        <th scope="colEnded">Trajanje natječaja (u danima)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="(status, i) in names" :key="i" @click="openDialogCreate(i)" style="cursor: pointer" >
+        <!-- <th scope="row">{{ ++i }}</th> -->
+        <td v-if="passiveNames.includes(status)">{{ names[i] }}</td>
+        <td v-if="passiveNames.includes(status)">{{ beginDates[i] }}</td>
+        <td v-if="passiveNames.includes(status)">{{ durations[i] }}</td>
       </tr>
     </tbody>
   </table>
@@ -204,7 +226,7 @@
           {{ this.dialogName }}
         </v-card-title>
         <v-card-text style="color:black">
-          Natječaj je otvoren od {{ this.dialogDate }}, a bit će otvoren {{ this.duration }} dana.<br/>
+          Natječaj je otvoren od {{ this.dialogDate }}, a bit će otvoren {{ this.dialogDuration }} dana.<br/>
           Stil ove izložbe jest {{ this.dialogStyle }}.<br/>
           {{ this.dialogDescription }}<br/>
           Vrijednost provizije u postocima koja se plaća galeriji za svaku prodanu sliku iznosi {{ this.dialogCommission }}.<br/>
@@ -249,6 +271,163 @@
     </v-card>
     </v-dialog>
   </div>
+
+  <div justify="center" v-if="dialog_create">
+    <v-dialog
+      v-model="dialog_create"
+      persistent
+      max-width="500"
+    >
+      <v-card>
+        <v-card-title class="headline">
+          Stvorite novu izložbu
+        </v-card-title>
+        <v-card-text>
+          <v-form
+        ref="form"
+        v-model="valid"
+        lazy-validation
+      >
+        <v-text-field
+          v-model="exName"
+          :rules="[v => !!v || 'Potrebno je unijeti naziv izložbe']"
+          label="Naziv izložbe"
+          required
+        ></v-text-field>
+        
+        <v-text-field
+          v-model="exDesc" 
+          :rules="[v => !!v || 'Potrebno je unijeti opis izložbe']"
+          label="Opis izložbe"
+          required 
+        ></v-text-field>  
+
+        <v-row>
+        <v-col
+          cols="12"
+          sm="6"
+        >
+          <v-dialog
+            ref="dialog3"
+            v-model="modal3"
+            :return-value.sync="date3"
+            persistent
+            width="290px"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                v-model="date3"
+                label="Datum početka"
+                prepend-icon="mdi-calendar"
+                readonly
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker
+              v-model="date3"
+              scrollable
+              locale="hr"
+              color="black"
+            >
+              <v-spacer></v-spacer>
+              <v-btn
+                text
+                color="primary"
+                @click="modal3 = false"
+              >
+                Cancel
+              </v-btn>
+              <v-btn
+                text
+                color="primary"
+                @click="$refs.dialog3.save(date3)"
+              >
+                OK
+              </v-btn>
+            </v-date-picker>
+          </v-dialog>
+        </v-col>
+        <v-col
+          cols="12"
+          sm="6"
+        >
+          <v-dialog
+            ref="dialog4"
+            v-model="modal4"
+            :return-value.sync="date4"
+            persistent
+            width="290px"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                v-model="date4"
+                label="Datum završetka"
+                prepend-icon="mdi-calendar"
+                readonly
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker
+              v-model="date4"
+              scrollable
+              locale="hr"
+              color="black"
+            >
+              <v-spacer></v-spacer>
+              <v-btn
+                text
+                color="primary"
+                @click="modal4 = false"
+              >
+                Cancel
+              </v-btn>
+              <v-btn
+                text
+                color="primary"
+                @click="$refs.dialog4.save(date4)"
+              >
+                OK
+              </v-btn>
+            </v-date-picker>
+          </v-dialog>
+        </v-col>
+        <v-spacer></v-spacer>
+      </v-row>  
+
+        <v-autocomplete
+          v-model="selectedAppCollections"
+          :items="appCollections"
+          :rules="[v => !!v || 'Potrebno je odabrati prijavljene kolekcije za izložbu']"
+          label="Kolekcije"
+          multiple
+          small-chips
+          deletable-chips
+          clearable
+        ></v-autocomplete>    
+      </v-form>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="black"
+            text
+            @click="dialog_create = false"
+          >
+            Poništi
+          </v-btn>
+          <v-btn
+            color="black"
+            text
+            @click="add_exhibition()"
+          >
+            Dodaj
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </div>
 </v-app>
 </template>
 
@@ -268,7 +447,10 @@ export default {
       dialog: false,
       dialog1: false,
       dialog2: false,
+      dialog3: false,
+      dialog4: false,
       dialog_info: false,
+      dialog_create: false,
       name: "", 
       score: "", 
       allScores: [],
@@ -293,11 +475,15 @@ export default {
       selectedCollections: [],
       date1: new Date().toISOString().substr(0, 10),
       date2: new Date().toISOString().substr(0, 10),
+      date3: new Date().toISOString().substr(0, 10),
+      date4: new Date().toISOString().substr(0, 10),
       
       duration: 0,
       modal: false,
       modal1: false,
       modal2: false,
+      modal3: false,
+      modal4: false,
 
       dialogName: "",
       dialogStyle: "",
@@ -308,6 +494,7 @@ export default {
       contests: null,
       names: [],
       beginDates: [],
+      endDates: [],
       durations: [],
       descriptions: [],
       styles: [],
@@ -315,12 +502,21 @@ export default {
       collectionNames: [],
       collections: null,
       selectedContest: '',
+      activeNames: [],
+      passiveNames: [],
+      applications: null,
+      appCollections: [],
+      selectedAppCollections: [],
+      exName: "",
+      exDesc: "",
+      currentContest: "",
     }
   },
 
   mounted() {
+    this.setUser()
     this.getContests();
-    this.getCollections();
+    // this.getCollections();
     var logged = (sessionStorage.getItem('logged_in') === 'true');
     this.$store.commit('show_tool', logged ? true : false)
   },
@@ -332,6 +528,19 @@ export default {
   //   },
   // },
   methods: {
+    setUser() {
+      if (sessionStorage.getItem('userType') === '1') {
+      this.$store.commit('log_admin', true)
+      this.$store.commit('log_artist', false)
+      } else if (sessionStorage.getItem('userType') === '2') {
+        this.$store.commit('log_admin', false)
+        this.$store.commit('log_artist', true)
+      } else {
+        this.$store.commit('log_admin', false)
+        this.$store.commit('log_artist', false)
+      }
+    },
+    
     onSubmit() {
       var parts1 = this.date1.split('-');
       var parts2 = this.date2.split('-');
@@ -354,6 +563,7 @@ export default {
 
       this.clearForm(); 
       this.dialog = false;
+      window.location.reload(); 
     },
 
     clearForm() {
@@ -367,11 +577,23 @@ export default {
       this.dialog_info = true;
       this.dialogName = this.names[i];
       this.dialogDate = this.beginDates[i];
-      this.dialogDuration = this.duration[i];
+      this.dialogDuration = this.durations[i];
       this.dialogDescription = this.descriptions[i];
       this.dialogStyle = this.styles[i];
       this.dialogCommission = this.comissions[i];
-      this.selectedContest = this.names[i]
+      this.selectedContest = this.names[i];
+      if (this.activeNames.includes(this.names[i])){
+        this.dialog_info = true;
+      }
+      this.getCollections();
+    },
+
+    openDialogCreate(i) {
+      this.currentContest = this.names[i]
+      this.getApplications(i);
+      if (this.passiveNames.includes(this.names[i])){
+        this.dialog_create = true;
+      }
     },
 
     apply() {
@@ -398,20 +620,17 @@ export default {
             method: 'GET'
       })
       .then((response) => {
-        this.contests = response.data
-        // console.log(JSON.stringify(this.contests))
+        this.contests = response.data;
+        this.sortingContests(this.contests);
         for (let [name, value] of Object.entries(this.contests)) {
           this.names.push(name)
-          // console.log(name)
           for (let [key, info] of Object.entries(JSON.parse(value))) {
-            // console.log(info)
             if (key == 'BeginDate') {
               this.beginDates.push(info.substr(0, 10))
             }
             if (key == 'Duration') {
               var d = info.toString()
               this.durations.push(d.substr(d.indexOf('T') + 1, d.indexOf('H') - 2))
-              // console.log(d.substr(d.indexOf('T') + 1, d.indexOf('H') - 2))
             }
             if (key == 'Provision') {
               this.comissions.push(info)
@@ -431,7 +650,7 @@ export default {
     },
 
     getCollections() {
-      console.log('exhibit ' + sessionStorage.getItem('token'))
+      console.log('izložba ' + sessionStorage.getItem('token'))
       axios({url: `${process.env.VUE_APP_BACKEND_URI}/artist/getCollections`, 
             headers: {
               'Authorization':  `Bearer ${sessionStorage.getItem('token')}`
@@ -442,19 +661,133 @@ export default {
             method: 'GET'
       })
       .then((response) => {
+        this.collectionNames = [];
         this.collections = response.data;
-        // console.log(this.collections)
+        let tempNames = [];
+        let tempStyles = [];
         for (let [description, value] of Object.entries(this.collections)) {
           for (let [key, info] of Object.entries(JSON.parse(description))) {
             if (key == 'Name') {
-              this.collectionNames.push(info)
+              tempNames.push(info)
             }
+            if (key == 'Style') {
+              tempStyles.push(info)
+            }
+          }
+        }
+        console.log("stil " + this.dialogStyle)
+        for (let i = 0; i < tempStyles.length; i++) {
+          if (tempStyles[i] == this.dialogStyle) {
+            this.collectionNames.push(tempNames[i])
+          }
+        }
+        console.log("predane kolekcije " + this.collectionNames)
+      })
+      .catch(err => {
+          console.log(err)
+      });
+    },
+
+    sortingContests(coll) {
+      var today = new Date()
+      for (let [name, value] of Object.entries(coll)) {
+        var result = new Date();
+        var dur = 0;
+        for (let [key, info] of Object.entries(JSON.parse(value))) {
+          
+          if (key == 'BeginDate') {
+            var parts = info.substr(0, 10).split('-');            
+            result = new Date(parts[0], parts[1] - 1, parts[2]);
+          }
+          if (key == 'Duration') {
+            dur = info;
+          }
+        }
+
+        result = new Date(result.getTime() + (dur.substr(dur.indexOf('T') + 1, dur.indexOf('H') - 2) * 24 * 60 * 60 * 1000))
+        if (result > today) {
+          this.activeNames.push(name)
+        }
+        else {
+          this.passiveNames.push(name)
+        }
+      }
+    },
+
+    getApplications(i) {
+      console.log('exhibit ' + sessionStorage.getItem('token'))
+      axios({url: `${process.env.VUE_APP_BACKEND_URI}/admin/getApplications`, 
+        headers: {
+          'Authorization':  `Bearer ${sessionStorage.getItem('token')}`
+        },
+        params: {
+          'contestName' : this.names[i]
+        },
+        method: 'GET'
+      })
+      .then((response) => {
+        this.appCollections = [];
+        this.applications = response.data;
+        for (let [email, value] of Object.entries(this.applications)) {
+          for (let [index, key] of Object.entries(value)) {
+            this.appCollections.push(key);
           }
         }
       })
       .catch(err => {
           console.log(err)
       });
+    },
+
+    add_exhibition() {
+      var map = {}
+      var parts1 = this.date3.split('-');
+      var parts2 = this.date4.split('-');
+      var duration2 = new Date(parts2[0], parts2[1] - 1, parts2[2]) - new Date(parts1[0], parts1[1] - 1, parts1[2]);
+      duration2 = (duration2 / 86400000) * 24;
+
+      var exDate = this.date3 + " 00:00";
+      var exDuration = "PT" + duration2 + "H0M";
+      console.log(exDuration)
+      
+      for (let [email, value] of Object.entries(this.applications)) {
+        var array = new Array();
+        var j = 0;
+        console.log(value)
+        for (let [index, key] of Object.entries(value)) {
+          console.log(this.selectedAppCollections.length)
+          for (var i = 0; i < this.selectedAppCollections.length; i++) {
+            if (key == this.selectedAppCollections[i]) {
+              array[j++] = key;
+            }
+          }
+        }
+        map[email] = array;
+      }
+      console.log(map)
+      // const obj = Object.fromEntries(map);
+      
+      // // obj = JSON.stringify(obj)
+      // console.log(JSON.stringify(obj));
+
+      let formData = new FormData()
+      formData.append('contestName', this.currentContest)
+      formData.append('exName', this.exName)
+      formData.append('exDesc', this.exDesc)
+      formData.append('date', exDate)
+      formData.append('duration', exDuration)
+      formData.append('desc', new Blob([
+          JSON.stringify(map)
+      ], {
+          type: "application/json"
+      }))
+      
+      console.log(formData)
+      this.$store.commit('set_exhibitionData', formData)
+      this.$store.dispatch('create_exhibition', formData)
+       .catch(err => console.log(err))
+
+      this.dialog_create = false
     },
   },
 }
@@ -470,27 +803,31 @@ export default {
   font-family:  'Work Sans', sans-serif;
   margin-left: 2%;
   margin-top: 2%;
+  color: black;
 }
 .add_coll {
   margin-left: 1%;
   margin-top: 2%;
 }
-.col {
-    table-layout: fixed;
+.colEnded {
+  width: 100%;
+  table-layout: fixed;
+  padding-left: 10px;
+  padding-right: 10px;
 }
-.col td{
+.colEnded td{
   padding: 10px;
   padding-top: 15px;
   padding-bottom: 15px;
   font-size: 25px;
 }
-.col tr:nth-child(even){
+.colEnded tr:nth-child(even){
   background-color: #f2f2f2;
 }
-.col tr:hover {
+.colEnded tr:hover {
   background-color: #ddd;
 }
-.col th {
+.colEnded th {
   padding: 10px;
   padding-top: 20px;
   padding-bottom: 20px;
@@ -498,6 +835,33 @@ export default {
   background-color: rgba(49, 54, 54, 0.842);
   color: white;
   font-size: 30px;
-  
+}
+
+.colActive {
+  width: 100%;
+  table-layout: fixed;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+.colActive td{
+  padding: 10px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  font-size: 25px;
+}
+.colActive tr:nth-child(even){
+  background-color: #f2f2f2;
+}
+.colActive tr:hover {
+  background-color: #ddd;
+}
+.colActive th {
+  padding: 10px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  text-align: left;
+  background-color: rgba(49, 54, 54, 0.842);
+  color: white;
+  font-size: 30px; 
 }
 </style>

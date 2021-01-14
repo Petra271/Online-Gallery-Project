@@ -67,11 +67,11 @@
 
             <v-list>
               <v-list-item to="/transakcije" link> Transakcije <v-spacer></v-spacer> <v-icon>mdi-cash-multiple</v-icon> </v-list-item>
-              <v-list-item to="/moj_profil" link> Moj profil <v-spacer></v-spacer> <v-icon>mdi-account-details</v-icon> </v-list-item>
-              <v-list-item to="/natjecaji" link> Natječaji <v-spacer></v-spacer> <v-icon>mdi-medal-outline</v-icon> </v-list-item>
+              <v-list-item v-if="$store.getters.artist" to="/moj_profil" link > Moj profil <v-spacer></v-spacer> <v-icon>mdi-account-details</v-icon> </v-list-item>
+              <v-list-item v-if="$store.getters.artist || $store.getters.admin" to="/natjecaji" link> Natječaji <v-spacer></v-spacer> <v-icon>mdi-medal-outline</v-icon> </v-list-item>
               <v-list-item link @click="sign_out()"> Odjava <v-spacer></v-spacer> <v-icon>mdi-exit-to-app</v-icon> </v-list-item>
-              <v-list-item link @click="create_admin()"> Admin <v-spacer></v-spacer> <v-icon>mdi-head-minus</v-icon> </v-list-item>
-              <v-list-item link @click="change_admin()"> Admin T<v-spacer></v-spacer> <v-icon>mdi-sync</v-icon> </v-list-item>
+              <!-- <v-list-item link @click="create_admin()"> Admin <v-spacer></v-spacer> <v-icon>mdi-head-minus</v-icon> </v-list-item> -->
+              <!-- <v-list-item link @click="change_admin()"> Admin T<v-spacer></v-spacer> <v-icon>mdi-sync</v-icon> </v-list-item> -->
             </v-list>
           </v-menu>
         </div>
@@ -166,6 +166,7 @@ export default {
       //this.register_form = false;
       this.$store.commit('sign_in', true)
       this.$store.commit('register', false)
+      this.$vuetify.goTo(180)
     },
 
     scrollToClass(className) {
@@ -183,6 +184,7 @@ export default {
       // this.sign_in_form = false;
       this.$store.commit('register', true)
       this.$store.commit('sign_in', false)
+      this.$vuetify.goTo(380)
     },
 
     sign_out() {

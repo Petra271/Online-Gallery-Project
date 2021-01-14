@@ -82,25 +82,27 @@
         cols="12"
         sm="3"
       >
-        <!-- <v-hover v-slot="{ hover }" open-delay="200"> -->
-          <v-card class="images_u">
+        <v-hover v-slot="{ hover }" open-delay="200">
+          <v-card class="images_u"
+          >
             <v-img
               :src="'data:image/jpg;base64,' + pictures[n]"
               :lazy-src="'data:image/jpg;base64,' + pictures[n]"
               aspect-ratio="1"
               class="grey lighten-2 img"
             >
-            <!-- <v-expand-transition>
+            <v-expand-transition>
               <div
                 v-if="hover"
-                class="d-flex transition-fast-in-fast-out orange darken-2 v-card--reveal display-3 white--text"
-                style="height: 100%;"
+                class="d-flex transition-fast-in-fast-out darken-2 v-card--reveal display-3"
+                :class="!$store.getters.mode ? 'hover_light white--text' : 'hover_dark'"
+                style="height: 50%;"
               >
               <div class="izl">
-                <p>Stil {{n}}</p> <br>
+                <p>{{ styles[n] }}</p> <br>
               </div>
               </div>
-            </v-expand-transition> -->
+            </v-expand-transition>
             <!-- <v-card-title class="align-end fill-height" primary-title>
                 <v-tooltip bottom>
                   <template v-slot:activator="{ on: tooltip }">
@@ -123,7 +125,7 @@
                 <p class="naziv">{{names[n]}}</p>
             </div>
           </v-card>
-        <!-- </v-hover> -->
+        </v-hover>
       </v-col> 
     </v-row>
   </v-app>
@@ -173,12 +175,26 @@ export default {
   },
 
   mounted() {
+    this.setUser()
     this.getCollectionSingles();
     var logged = (sessionStorage.getItem('logged_in') === 'true');
     this.$store.commit('show_tool', logged ? true : false);
   },
   
   methods: {
+    setUser() {
+      if (sessionStorage.getItem('userType') === '1') {
+      this.$store.commit('log_admin', true)
+      this.$store.commit('log_artist', false)
+      } else if (sessionStorage.getItem('userType') === '2') {
+        this.$store.commit('log_admin', false)
+        this.$store.commit('log_artist', true)
+      } else {
+        this.$store.commit('log_admin', false)
+        this.$store.commit('log_artist', false)
+      }
+    },
+    
     validate() {
       this.$refs.form.validate()
       if (this.valid) {
@@ -210,6 +226,7 @@ export default {
       this.colls.push(this.name)
       // this.$store.commit('name', this.name)
       this.dialog = false
+      window.location.reload(); 
     },
 
     delete_coll(n) {

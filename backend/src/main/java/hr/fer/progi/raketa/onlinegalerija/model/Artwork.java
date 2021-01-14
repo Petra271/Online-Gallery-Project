@@ -47,6 +47,9 @@ public class Artwork {
             cascade = CascadeType.ALL)
     private List<Comment> comments;
 
+    @OneToOne(mappedBy = "artwork")
+    private Transaction transaction;
+
     public Artwork(){
         this.id = UUID.randomUUID();
     }
@@ -154,5 +157,13 @@ public class Artwork {
 
     public void setFileType(String fileType) {
         this.fileType = fileType;
+    }
+
+    public Transaction getTransaction() {
+        return transaction;
+    }
+
+    public void setTransaction(Transaction transaction) {
+        this.transaction = transaction;
     }
 }

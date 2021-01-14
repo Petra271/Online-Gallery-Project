@@ -167,6 +167,7 @@ public class ArtistController {
         System.out.println(collNum);
         return collNum.equals("all") ? service.produceCollections(collections) : service.produceCollectionsSingles(collections);
     }
+
     @GetMapping(value="/getCollection", produces = "application/json")
     @ResponseBody
     public ResponseEntity<?> getCollection(@RequestParam("name") String collName) throws JSONException, JsonProcessingException {
@@ -216,6 +217,8 @@ public class ArtistController {
         for(int i = 0; i < collectionNames.length; i++)
             for(Collection c : artist.getCollections())
                 if(c.getName().equals(collectionNames[i])) {
+                    if(c.getContestApplication() != null ||  c.getExhibition() != null)
+                        return new ResponseEntity<String>("Contest of name " + applicationDTO.getContestName() + " is already in another application or exhibition", HttpStatus.NOT_ACCEPTABLE);
                     System.out.println("Applying " + c.getName() +" to contest");
                     collectionSetApplied.add(c);
                     c.setContestApplication(ca);

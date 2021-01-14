@@ -57,153 +57,173 @@
         <div>{{exhibitsFiltered}}</div> 
         <div>{{collections}}</div>
         <div>{{exhDescriptions}}</div>
-        <div>{{artSources}}</div> -->
+        <div>{{artSources}}</div> -->        
   <!-- <div>
     {{exhibits}}
   </div> -->
   <!-- ---------------- PRIJAVA ------------------------- -->
     <div v-if="this.$store.getters.sign_in_form" class="form" ref="enter_form">
-      <v-form
-        ref="form"
-        class="form_write"
-        v-model="valid"
-        lazy-validation
-      >
+      <!-- <div v-if="loading">
+        <v-progress-circular
+          :size="200"
+          color="black"
+          indeterminate
+          style="margin-left: 30%;"
+        ></v-progress-circular>
+      </div> -->
 
-        <v-text-field class="form_write"
-          v-model="email_sign"
-          :rules="emailRules"
-          label="E-mail"
-          required
-        ></v-text-field>
-
-        <v-text-field
-          v-model="password_sign"
-          :append-icon="show_sign ? 'mdi-eye' : 'mdi-eye-off'"
-          :rules="[pass_rules.required, pass_rules.min]"
-          :type="show_sign ? 'text' : 'password'"
-          name="input-10-1"
-          label="Lozinka"
-          counter
-          @click:append="show_sign = !show_sign"
-          required
-        ></v-text-field>
-
-      <div class="form_buttons">
-        <v-btn rounded 
-          :disabled="!valid"
-          color="rgba(1, 24, 12)"
-          class="mr-4 white--text"
-          @keyup.13="validate_s()"
-          @click="validate_s()"
+      <div>
+        <v-form
+          ref="form"
+          class="form_write"
+          v-model="valid"
+          lazy-validation
         >
-          Prijava
-        </v-btn>
 
-        <v-btn rounded
-          color="rgb(33, 1, 1)"
-          class="mr-4 white--text"
-          @click="cancel()"
-        >
-          Natrag
-        </v-btn>
+          <v-text-field class="form_write"
+            v-model="email_sign"
+            :rules="emailRules"
+            label="E-mail"
+            required
+          ></v-text-field>
 
+          <v-text-field
+            v-model="password_sign"
+            :append-icon="show_sign ? 'mdi-eye' : 'mdi-eye-off'"
+            :rules="[pass_rules.required, pass_rules.min]"
+            :type="show_sign ? 'text' : 'password'"
+            name="input-10-1"
+            label="Lozinka"
+            counter
+            @click:append="show_sign = !show_sign"
+            required
+          ></v-text-field>
+
+        <div class="form_buttons">
+          <v-btn rounded 
+            :disabled="!valid"
+            color="rgba(1, 24, 12)"
+            class="mr-4 white--text"
+            @click="validate_s()"
+          >
+            Prijava
+          </v-btn>
+
+          <v-btn rounded
+            color="rgb(33, 1, 1)"
+            class="mr-4 white--text"
+            @click="cancel()"
+          >
+            Natrag
+          </v-btn>
+
+        </div>
+        </v-form>
       </div>
-      </v-form>
     </div>
 
     <!-- ------------------- REGISTRACIJA ------------------ -->
     <div v-if="this.$store.getters.register_form" class="form" ref="enter_form">
-      <v-form
-        ref="form"
-        v-model="valid"
-        lazy-validation
-      >
-        <v-text-field
-          v-model="name"
-          :rules="[v => !!v || 'Potrebno je upisati ime']"
-          label="Ime"
-          required
-        ></v-text-field>
-
-        <v-text-field
-          v-model="surname" 
-          :rules="[v => !!v || 'Potrebno je upisati prezime']"
-          label="Prezime"
-          required
-        ></v-text-field>
-
-        <v-text-field
-          v-model="email"
-          :rules="emailRules"
-          label="E-mail"
-          required
-        ></v-text-field>
-
-        <v-text-field
-          v-model="payPal"
-          :rules="payPalRules"
-          label="PayPal račun"
-          required
-        ></v-text-field>
-
-        <v-text-field
-          v-model="password_reg"
-          :append-icon="show_reg ? 'mdi-eye' : 'mdi-eye-off'"
-          :rules="[pass_rules.required, pass_rules.min]"
-          :type="show_reg ? 'text' : 'password'"
-          name="input-10-1"
-          label="Lozinka"
-          hint="Najmanje 8 znakova"
-          counter
-          @click:append="show_reg = !show_reg"
-        ></v-text-field>
-
-        <v-file-input v-if="artist_check"  
-          type="file"
-          v-model="pdf"
-          :rules="[v => !!v || 'Potrebno je priložiti datoteku']"
-          small-chips    
-          accept="application/pdf"
-          label="Priložite PDF datoteku"
-        ></v-file-input>
-
-        <v-alert
-          :value="artist_check"
+      <!-- <div v-if="loading">
+        <v-progress-circular
+          :size="200"
           color="black"
-          dark
-          icon="mdi-brush"
-          transition="scale-transition"
-        >
-          Ukoliko se želite registrirati kao umjetnik trebate priložiti svoj portfolio u obliku PDF datoteke.
-        </v-alert>
-        
-        <v-checkbox
-          color="black"
-          v-model="artist_check"
-          label="Ja sam umjetnik"
-        ></v-checkbox>
+          indeterminate
+          style="margin-left: 30%;"
+        ></v-progress-circular>
+      </div> -->
 
-      <div class="form_buttons">
-        <v-btn rounded
-          :disabled="!valid"
-          color="rgba(1, 24, 12)"
-          class="mr-4 white--text"
-          @click="validate_r()"
+      <div>
+        <v-form
+          ref="form"
+          v-model="valid"
+          lazy-validation
         >
-          Registracija
-        </v-btn>
+          <v-text-field
+            v-model="name"
+            :rules="[v => !!v || 'Potrebno je upisati ime']"
+            label="Ime"
+            required
+          ></v-text-field>
 
-        <v-btn rounded
-          color="rgba(33, 1, 1)"
-          class="mr-4 white--text"
-          @click="cancel()"
-        >
-          Natrag
-        </v-btn>
+          <v-text-field
+            v-model="surname" 
+            :rules="[v => !!v || 'Potrebno je upisati prezime']"
+            label="Prezime"
+            required
+          ></v-text-field>
 
+          <v-text-field
+            v-model="email"
+            :rules="emailRules"
+            label="E-mail"
+            required
+          ></v-text-field>
+
+          <v-text-field
+            v-model="payPal"
+            :rules="payPalRules"
+            label="PayPal račun"
+            required
+          ></v-text-field>
+
+          <v-text-field
+            v-model="password_reg"
+            :append-icon="show_reg ? 'mdi-eye' : 'mdi-eye-off'"
+            :rules="[pass_rules.required, pass_rules.min]"
+            :type="show_reg ? 'text' : 'password'"
+            name="input-10-1"
+            label="Lozinka"
+            hint="Najmanje 8 znakova"
+            counter
+            @click:append="show_reg = !show_reg"
+          ></v-text-field>
+
+          <v-file-input v-if="artist_check"  
+            type="file"
+            v-model="pdf"
+            :rules="[v => !!v || 'Potrebno je priložiti datoteku']"
+            small-chips    
+            accept="application/pdf"
+            label="Priložite PDF datoteku"
+          ></v-file-input>
+
+          <v-alert
+            :value="artist_check"
+            color="black"
+            dark
+            transition="scale-transition"
+          >
+            <p style="font-weight: 100"> Ukoliko se želite registrirati kao umjetnik trebate priložiti svoj portfolio u obliku PDF datoteke. </p>
+          </v-alert>
+          
+          <v-checkbox
+            color="black"
+            v-model="artist_check"
+            label="Ja sam umjetnik"
+          ></v-checkbox>
+
+        <div class="form_buttons">
+          <v-btn rounded
+            :disabled="!valid"
+            color="rgba(1, 24, 12)"
+            class="mr-4 white--text"
+            @click="validate_r()"
+          >
+            Registracija
+          </v-btn>
+
+          <v-btn rounded
+            color="rgba(33, 1, 1)"
+            class="mr-4 white--text"
+            @click="cancel()"
+          >
+            Natrag
+          </v-btn>
+
+        </div>
+        </v-form>
       </div>
-      </v-form>
     </div>
 
   <!-- --------------------- SLIKE -------------------------------- -->
@@ -328,10 +348,36 @@
         </v-hover>
       </v-col>
     </v-row> -->
-
+    <v-dialog
+      v-model="deleteExh"
+      :retain-focus="false"
+      persistent
+      max-width="311"
+    >
+      <template v-slot:activator="{}">
+        
+      </template>
+      <v-card>
+        <v-card-title class="headline">
+          Jeste li sigurni da želite izbrisati izložbu?
+        </v-card-title>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="black" text @click="deleteExh = false">
+            Ne
+          </v-btn>
+          <v-btn color="black" text @click="deleteExhibition(deleteExhIndex)">
+            Da
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <!-- ---------------- IZLOŽBE UŽIVO ---------------- -->
-    <div class="exh_text"> Izložbe uživo </div>
+    <div class="exh_text"> 
+      <p v-if="!filtered"> Naše izložbe </p> 
+      <p v-else> Odabrane izložbe </p>
+    </div>
     <v-row>
       <v-col
         v-for="n in noOfExhs" :key="n"
@@ -360,9 +406,11 @@
                 
                   <!-- <div class="izl_author"><i><b> {{exhDescriptions[n - 1]["Artists"]}} </b></i></div>
                   <div class="izl_name"><i> -{{exhDescriptions[n - 1]["Name"]}} </i></div> -->
-                  <div class="exh_title"> <i><b> {{exhDescriptions[n - 1]["Artists"]}} </b><br> 
-                    <p style="margin-top: -5%; font-weight: 100"> -{{exhDescriptions[n - 1]["Name"]}} </p></i> </div>
-                  
+                  <div class="exh_title"> <i><b v-if="artistsMultiple[n - 1] == false"> {{exhDescriptions[n - 1]["Artists"]}} </b><br> 
+                    <p style="margin-top: -5%; font-weight: 100" 
+                    v-bind:style= "artistsMultiple[n - 1] == false ? 'margin-top: -5%;' :'margin-top: -28%;'"  
+                    > -{{exhDescriptions[n - 1]["Name"]}} </p></i> 
+                  </div>
                   <!-- <i> -{{exhDescriptions[n - 1]["Name"]}} </i></div> -->
                 
               </div>
@@ -374,13 +422,25 @@
                       v-bind="attrs"
                       v-on="{ ...tooltip, ...menu }"
                       :disabled="!$store.getters.logged_in"
-                      @click="getExhibition(exhDescriptions[n - 1]['Name'])"
-                     
+                      @click="getExhibition(exhDescriptions[n - 1]['Name'], n)"
                       >
                       <v-icon :color="!$store.getters.mode ? 'white' : 'black'">mdi-door-open</v-icon>
                     </v-btn>
                   </template>
                   <span>Posjeti izložbu</span>
+                </v-tooltip>
+                <v-tooltip v-if="$store.getters.admin" bottom>
+                  <template v-if="$store.getters.admin" v-slot:activator="{ on: tooltip }">
+                    <v-btn v-if="$store.getters.admin" icon
+                      v-bind="attrs"
+                      v-on="{ ...tooltip, ...menu }"
+                      :disabled="!$store.getters.logged_in"
+                      @click="deleteExhIndex = n; deleteExh = true"
+                      >
+                      <v-icon :color="!$store.getters.mode ? 'white' : 'black'">mdi-close</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Izbriši izložbu</span>
                 </v-tooltip>
               </v-card-title>
             </v-img>
@@ -521,6 +581,25 @@
       prijavite se ukoliko želite nastaviti.</p>
     </v-snackbar>    
 
+    <v-snackbar
+      v-model="exhOpened"
+      multi-line
+      color="rgb(33, 1, 1)"
+    >
+      Izložba se otvara {{snackDate[2]}}.{{snackDate[1]}}.{{snackDate[0]}}.
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="white"
+          text
+          v-bind="attrs"
+          @click="exhOpened = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
+
     <v-row>
       <v-col
         cols="12"
@@ -544,8 +623,8 @@
           label="Date range"
           prepend-icon="mdi-calendar"
           readonly
-        ></v-text-field>  -->
-        <!-- model: {{ exh_dates }} -->
+        ></v-text-field> 
+        model: {{ exh_dates }} {{exh_dates[0]}} -->
       </v-col>
     </v-row>
   </div>
@@ -572,6 +651,7 @@ export default {
   data: () => {
     return {
       description: '',
+      loading: false,
       snackReg: false,
       sign_att: false,
       register_att: false,
@@ -613,7 +693,7 @@ export default {
           emailMatch: () => (`The email and password you entered don't match`),
         },
       is_admin: false,
-      exh_dates: ['2020-12-10', '2020-12-20'],
+      exh_dates: [],
       filters: false,
       tab: null,
       filter_types: ['Stil', 'Umjetnici', 'Datum'],
@@ -629,6 +709,8 @@ export default {
         'Oton Iveković'
       ],
       artists: [],
+      artistsMultiple: [],
+      artistsMultipleOrigi: [],
       techniques: [],    
       selectedArtists: [],
       selectedTech: null,
@@ -639,16 +721,25 @@ export default {
       exhibits: null,
       exhibitsFiltered: [],
       exhDescriptions: [],
+      exhDescriptionsOrigi: [],
       artSources: [],
+      artSourcesOrigi: [],
       noOfExhs: 0,
+      noOfExhsOrigi: 0, 
       imgMapVals: null,
       imagesExh: [],
       imagesInfo: [],
-
+      filtered: false,
+      exhOpened: false,
+      exhBeginDate: null,
+      snackDate: '2020-01-01',
+      deleteExh: false,
+      deleteExhIndex: 0
     }
   },
 
   mounted() {
+        this.setUser()
         // Set the default value of this.item based on what's in the store
         this.sign_in_form = this.$store.getters.sign_in_form
         //this.enter_exh = this.$store.getters.logged_in
@@ -657,16 +748,33 @@ export default {
         var logged = (sessionStorage.getItem('logged_in') === 'true');
         this.$store.commit('show_tool', logged ? true : false)
 
-        console.log('mounted')
-        this.getExhibitionSingles()
+        console.log('mountedf ' + sessionStorage.getItem('filtered'))
+        //if (sessionStorage.getItem('filtered') === 'false' || sessionStorage.getItem('filtered') == undefined) {
+          this.getExhibitionSingles()
+        // } else {
+        //   this.applyFilters()
+        // }
         //this.getCollections()
     },
 
   methods: {
+    setUser() {
+      if (sessionStorage.getItem('userType') === '1') {
+      this.$store.commit('log_admin', true)
+      this.$store.commit('log_artist', false)
+      } else if (sessionStorage.getItem('userType') === '2') {
+        this.$store.commit('log_admin', false)
+        this.$store.commit('log_artist', true)
+      } else {
+        this.$store.commit('log_admin', false)
+        this.$store.commit('log_artist', false)
+      }
+    },
+
     descIn() {
       this.timer = setTimeout(() => { 
         this.description = `Online galerija osnovana je 2020. godine s ciljem promicanja kulture i umjetnosti. 
-      Plod mladih i britkih umova online galerija stremi podizanju svijesti i javnog mnijenja o umjetnosti te širenju iste među mladima`;
+      Plod mladih i britkih umova, online galerija stremi podizanju svijesti i javnog mnijenja o umjetnosti te širenju iste među mladima.`;
       }, 450);
     },
 
@@ -718,6 +826,7 @@ export default {
 
     validate_s() {
         this.$refs.form.validate()
+        this.loading = true;
         let email = this.email_sign
         let password = this.password_sign
         console.log('login' + email + ' ' + password)
@@ -742,6 +851,7 @@ export default {
         // this.register_form = false;
         this.$store.commit('sign_in', false)
         this.$store.commit('register', false)
+        this.loading = false
         this.$router.push('/')
     },
 
@@ -755,6 +865,7 @@ export default {
           flag: this.pdf == 'empty_file' ? false : true
           // is_admin: this.is_admin
         }
+        this.loading = true
         this.$store.commit('set_user', data)
         data = JSON.stringify(data)
         let formData = new FormData()
@@ -797,6 +908,7 @@ export default {
         this.snackReg = true
         this.$store.commit('sign_in', false)
         this.$store.commit('register', false)
+        this.loading = false
         this.$router.push('/')
         
     },
@@ -854,28 +966,37 @@ export default {
       });
     },
 
-    getExhibition(exhName) {
-      console.log('collection ' + sessionStorage.getItem('token'))
-      axios({url: `${process.env.VUE_APP_BACKEND_URI}/visitor/getExhibition`, 
-            headers: {
-              'Authorization':  `Bearer ${sessionStorage.getItem('token')}`
-            },
-            params: {
-              'exName' : exhName
-            },
-            method: 'GET'
-      })
-      .then((response) => {
-        
-        //this.collections = response.data;
-        this.$store.commit('set_col', response.data)
-        console.log('colls ' + this.collections);
-        this.$router.push('/izlozba')
-        
-      })
-      .catch(err => {
-          console.log(err)
-      });
+    getExhibition(exhName, n) {
+      var currentDate = new Date()
+      this.exhBeginDate = this.exhDescriptions[n - 1]['BeginDate']
+      let tmp = this.exhBeginDate.split("T")
+      this.snackDate = tmp[0].split("-")
+      if (!(currentDate <= this.getvalidDate(this.exhBeginDate))) {
+        this.exhOpened = true
+      } else {
+        console.log('collection ' + sessionStorage.getItem('token'))
+        axios({url: `${process.env.VUE_APP_BACKEND_URI}/visitor/getExhibition`, 
+              headers: {
+                'Authorization':  `Bearer ${sessionStorage.getItem('token')}`
+              },
+              params: {
+                'exName' : exhName
+              },
+              method: 'GET'
+        })
+        .then((response) => {
+          
+          //this.collections = response.data;
+          //this.$store.commit('set_col', response.data)
+          localStorage.setItem('exhibition', JSON.stringify(response.data))
+          console.log('colls ' + this.collections);
+          this.$router.push('/izlozba')
+          
+        })
+        .catch(err => {
+            console.log(err)
+        });
+      }
     },
     
     getExhibitionSingles() {
@@ -893,7 +1014,9 @@ export default {
             this.noOfExhs++
             for (let [key, info] of Object.entries(JSON.parse(description))) {
                 if (key == 'Artists') {
+                  this.artistsMultiple[i] = false
                   if (info.includes(",")) {
+                      this.artistsMultiple[i] = true
                       var tmp = info.split(",")
                       for (let j = 0; j < tmp.length; j++) {
                           this.artists[i] = tmp[j]
@@ -904,14 +1027,23 @@ export default {
                     i++
                   }
                 } else if (key == 'Style') {
+                  info = info.toLowerCase()
+                  info = info.charAt(0).toUpperCase() + info.slice(1)
+                  info = info.replace(/_/g, ' ')
                   this.techniques[tech] = info
                   tech++
                 }
             }
         }
 
+        this.noOfExhsOrigi = this.noOfExhs
+        this.artSourcesOrigi = this.artSources
+        this.exhDescriptionsOrigi = this.exhDescriptions
+        this.artistsMultipleOrigi = this.artistsMultiple
+
         this.artists = [...new Set(this.artists)];
         this.techniques = [...new Set(this.techniques)];
+        this.filtered = false
         
       })
       .catch(err => {
@@ -920,37 +1052,174 @@ export default {
     },
 
     applyFilters() {
-      let i = 0
-      for (let [description, value] of Object.entries(this.exhibits)) {
-          let include = false
-          var descJSON = JSON.parse(description)
-          for (let [key, info] of Object.entries(JSON.parse(description))) {
-              
-              // if (key == 'Style') {
-              //     if (this.selectedTech == info) {
-              //       include = true
-              //     } else {
-              //       include = false
-              //     }
-              // } else if (key == 'Artists') {
-              //     if (this.selectedArtists != null) {
-              //       for (let i = 0; i < this.selectedArtists; i++) {
-              //           if (this.selectedArtists[i] == info) {
-              //             include = true
-              //           } else {
-              //             include = false
-              //           }
-              //       }
-              //     } 
-              // }
-          }
-          this.exhibitsFiltered[i] = '-----------------'
-          i++
+      this.resetExh()
+      // sessionStorage.setItem('selectedTech', this.selectedTech)
+      // sessionStorage.setItem('selectedArtists', this.selectedArtists)
+      // this.setFilters()
+      if (this.selectedTech == null && this.selectedArtists.length == 0 && this.exh_dates.length < 2) {
+          this.revertExhOrigi()
+      } else {
+        let techFilter = false
+        let artistFilter = false
+        let dateFilter = false
+        // let i = 0
+        for (let [description, value] of Object.entries(this.exhibits)) {
+            let include = false
+            var descJSON = JSON.parse(description)
+            let tech = null
+            let artistsFiltered = []
+            let date = null
+            for (let [key, info] of Object.entries(JSON.parse(description))) {
+                if (key == 'Style') {                    
+                    tech = info
+                    tech = tech.toLowerCase()
+                    tech = tech.charAt(0).toUpperCase() + tech.slice(1)
+                    tech = tech.replace(/_/g, ' ')
+                    //console.log('technique ' + tech + ' filter ' + this.techniques[this.selectedTech - 1])
+                    let selTech = ''
+                    //console.log('seltech ' + this.selectedTech)
+                    if (this.selectedTech != null) {
+                      selTech = this.techniques[this.selectedTech - 1].toString()
+                    }
+                    if (selTech == tech.toString() || this.selectedTech === null) {
+                        techFilter = true
+                    } else {
+                        techFilter = false
+                    }
+                    console.log('techfilter ' + techFilter)
+
+                } else if (key == 'Artists') {
+                    //let i = 0
+                    this.artistsMultiple[this.noOfExhs] = false
+                    if (info.includes(",")) {
+                        this.artistsMultiple[this.noOfExhs] = true
+                        var tmp = info.split(",")
+                        //console.log('tmp ' + tmp.length)
+                        // for (let j = 0; j < tmp.length; j++) {
+                        //     this.artistsFiltered[j] = tmp[j]
+                        //     //i++
+                        // }
+                        this.artistsFiltered = tmp
+                    } else {
+                      this.artistsFiltered = info
+                      //i++
+                    }
+                    //CHECK IF selectedArtists CONTAINS CURRENT ARTIST(S)
+                    //console.log('artistlength ' + this.artistsFiltered)
+                    if (this.selectedArtists.length > 0) {
+                      if (Array.isArray(this.artistsFiltered)) {
+                          //console.log('filteredlen ' + this.artistsFiltered.length)
+                          for (let i = 0; i < this.artistsFiltered.length; i++) {
+                              //console.log('filterart ' + this.artistsFiltered[i])
+                              artistFilter = this.filteredArtistExists(i, false)
+                              //console.log('artistarray ' + artistsFiltered)
+                              //console.log('artistfilter ' + artistFilter)
+                          }
+                      } else {
+                        artistFilter = this.filteredArtistExists(0, true)
+                        // console.log('filterart1 ' + this.artistsFiltered)
+                        // console.log('artistarray1 ' + artistsFiltered)
+                        // console.log('artistfilter1 ' + artistFilter)
+                      }
+                    } else {
+                      artistFilter = true
+                    }
+
+                } else if (key == 'BeginDate') {
+                  //let beginDate = info.split("T")
+                  //console.log('beginDate')
+                  dateFilter = this.isBetweenDates(this.exh_dates[0], this.exh_dates[1], info)
+                  console.log('dateb ' + dateFilter)
+                  if (this.exh_dates.length < 2) {
+                    dateFilter = true
+                  } 
+                }
+                console.log('artistFilAfter ' + artistFilter)
+            }
+            if (techFilter && artistFilter && dateFilter) {
+              //console.log('DA!!!!!!!!!!!!!!!!!!!!')
+              this.artSources[this.noOfExhs] = value
+              this.exhDescriptions[this.noOfExhs] = JSON.parse(description)
+              this.noOfExhs++
+            }
+            //this.exhibitsFiltered[i] = '-----------------'
+            //i++
+        }
       }
+      this.filtered = true
       this.filters = false
-    }
+    },
+
+    deleteExhibition(n) {
+      axios({url: `${process.env.VUE_APP_BACKEND_URI}/admin/closeExhibition`, 
+            headers: {
+              'Authorization':  `Bearer ${sessionStorage.getItem('token')}`,
+              'Content-Type': 'application/json'
+            },
+            params: {
+              'exhName' : this.exhDescriptions[n - 1]["Name"]
+            }, 
+            method: 'POST'
+      })
+      .then((response) => {
+       this.deleteExh = false
+       window.location.reload();
+      })
+      .catch(err => {
+          console.log(err)
+      });
+    },
+
+    setFilters() {
+     
+      this.selectedTech = sessionStorage.getItem('selectedTech')
+      this.selectedArtists = sessionStorage.getItem('selectedArtists')
+    },
+
+    resetExh() {
+      sessionStorage.setItem('filtered', true)
+      //this.filtered = true
+      this.noOfExhs = 0
+      this.artSources = []
+      this.exhDescriptions = []
+      this.artistsMultiple = []
+    },
     
+    revertExhOrigi() {
+      sessionStorage.setItem('filtered', false)
+      console.log('revertOrigi ')
+      //this.filtered = false
+      this.noOfExhs = this.noOfExhsOrigi
+      this.artSources = this.artSourcesOrigi
+      this.exhDescriptions = this.exhDescriptionsOrigi
+      this.artistsMultiple = this.artistsMultipleOrigi
+    },
+
+    filteredArtistExists(i, single) {
+      console.log('filterartfun ' + single ? this.artistsFiltered : this.artistsFiltered[i])
+      if (this.selectedArtists.indexOf(single ? this.artistsFiltered : this.artistsFiltered[i]) != -1 
+          || this.selectedArtists.length == 0) {
+        return true
+      } else {
+        return false
+      }
+    },
+
+    getvalidDate :function(d) { 
+      return new Date(d) 
+    },
+
+    isBetweenDates(fromDate, toDate, givenDate) {
+      return this.getvalidDate(givenDate) <= this.getvalidDate(toDate) 
+              && this.getvalidDate(givenDate) >= this.getvalidDate(fromDate);
+    },
+
+    isOpened(openingDate) {
+      var currentDate = new Date()
+      return currentDate <= this.getvalidDate(openingDate) 
+    }
   },
+
 
   computed: {
       dateRangeText () {

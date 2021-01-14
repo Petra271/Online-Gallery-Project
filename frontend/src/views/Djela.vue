@@ -46,7 +46,16 @@
           required
         ></v-text-field>
 
-        <v-text-field
+        <v-combobox
+          v-if="this.$store.getters.currentStyle=='MJESOVITI'"
+          v-model="stil"
+          :items="items"
+          :rules="[v => !!v || 'Potrebno je odabrati stil djela']"
+          label="Stil djela"
+          required
+        ></v-combobox>
+
+        <v-text-field 
           v-model="price" 
           :rules="priceRules"
           label="Cijena djela"
@@ -150,7 +159,16 @@ export default {
       require('@/assets/pictures/picture5.jpg'),
       require('@/assets/pictures/picture6.jpg'),
       ],
+      items: [
+        'FOTOGRAFIJE',
+        'ULJE_NA_PLATNU',
+        'AKVAREL',
+        'KOLAZ',
+        'OLOVKA',
+        'PASTELE'
+      ],
       name: '',
+      stil: '',
       images: [],
       name: '',
       opis: '',
@@ -172,6 +190,7 @@ export default {
   },
 
   mounted() {
+    this.setUser()
     var logged = (sessionStorage.getItem('logged_in') === 'true');
     this.$store.commit('show_tool', logged ? true : false);
     var collection = sessionStorage.getItem('currentCollection');
@@ -182,6 +201,19 @@ export default {
   },
 
   methods: {
+    setUser() {
+      if (sessionStorage.getItem('userType') === '1') {
+      this.$store.commit('log_admin', true)
+      this.$store.commit('log_artist', false)
+      } else if (sessionStorage.getItem('userType') === '2') {
+        this.$store.commit('log_admin', false)
+        this.$store.commit('log_artist', true)
+      } else {
+        this.$store.commit('log_admin', false)
+        this.$store.commit('log_artist', false)
+      }
+    },
+
     validate() {
         this.$refs.form.validate()
         if (this.valid) {
@@ -195,13 +227,14 @@ export default {
       // this.names.splice(n, 1)
 
       let data = {
-          collName: this.$store.getters.currentCollection,
-          artworkName: this.names[n + 1],
-        }
-        this.$store.commit('remove_artworkData', data)
-        data = JSON.stringify(data)
-        this.$store.dispatch('remove_Artwork', data)
-        .catch(err => console.log(err))
+        collName: this.$store.getters.currentCollection,
+        artworkName: this.names[n + 1],
+      }
+      this.$store.commit('remove_artworkData', data)
+      data = JSON.stringify(data)
+      this.$store.dispatch('remove_Artwork', data)
+      .catch(err => console.log(err))
+      window.location.reload(); 
     },
     pickFile() {
       this.$refs.image.click()
@@ -234,11 +267,14 @@ export default {
         this.imageUrl = fr.result
         this.pictures.push(this.imageUrl);
         this.names.push(this.name)
+        if (this.stil == ''){
+          this.stil = this.$store.getters.currentStyle
+        }
         let data = {
           collectionName: this.$store.getters.currentCollection,
           name: this.name,
           description: this.opis,
-          style: this.$store.getters.currentStyle,
+          style: this.stil,
           price: this.price
         }
         this.$store.commit('set_artworkData', data)
@@ -250,12 +286,18 @@ export default {
         ], {
             type: "application/json"
         }))
-        console.log(data)
-        console.log(formData)
+        console.log(JSON.stringify(formData))
         this.$store.dispatch('add_artwork', formData)
        .catch(err => console.log(err))
       })
-      this.dialog = false
+      this.dialog = false;
+      window.location.reload(); 
+      // sleep(2000).then(() => { 
+        
+      //   this.pictures1 = [];
+      //   this.names = [];
+      //   this.getArtworks();
+      // });
     },
 
     getArtworks() {

@@ -80,7 +80,9 @@ public class AdminController {
     public ResponseEntity<?> createExhibition(@RequestPart("contestName") String contestName,
                                   @RequestPart("exName") String exName,
                                   @RequestPart("exDesc") String exDesc,
-                                  @RequestPart("desc") String accepted) throws JsonProcessingException {
+                                  @RequestPart("desc") String accepted,
+                                  @RequestPart("date") String date,
+                                  @RequestPart("duration") String duration) throws JsonProcessingException {
 
         String currentUsername = loggedInUsers.get(BearerTokenUtil.getBearerTokenHeader());
 
@@ -100,9 +102,11 @@ public class AdminController {
         if(contest == null)
             return new ResponseEntity<String>("No contest with this name exists", HttpStatus.NOT_FOUND);
 
+        DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
         Exhibition ex = new Exhibition(
-                contest.getBeginDateTime(),
-                contest.getDuration(),
+                LocalDateTime.parse(date, f),
+                Duration.parse(duration),
                 exName,
                 contest.getStyle(),
                 exDesc,
@@ -125,6 +129,7 @@ public class AdminController {
         ex.setArtists(artists);
         ex.setCollections(collections);
         exhibitionRepository.save(ex);
+        closeContest(contestName);
         return ResponseEntity.ok().body("Successfully added exhibition");
 
     }
@@ -177,15 +182,14 @@ public class AdminController {
         exhibitionRepository.delete(exhibitionRepository.findByName(exhName));
     }
 
-    @PostMapping("/closeContest")
-    public ResponseEntity<?> closeContest(@RequestParam("contestName") String contestName){
+
+    public void closeContest(String contestName){
         String currentUsername = loggedInUsers.get(BearerTokenUtil.getBearerTokenHeader());
 
-        if(!adminRepository.existsByEmail(currentUsername))
-            return new ResponseEntity<String>("No admin with this username exists", HttpStatus.NOT_FOUND);
-
-        if(!contestRepository.existsByWorkingName(contestName))
-            return new ResponseEntity<String>("No exhibition with this name exists", HttpStatus.NOT_FOUND);
+        if(!contestRepository.existsByWorkingName(contestName)) {
+            System.out.println("No contest with this name exists");
+            return;
+        }
 
         Contest contest = contestRepository.findByWorkingName(contestName);
         for(ContestApplication ca : contest.getApplications()){
@@ -201,6 +205,6 @@ public class AdminController {
 
         contestRepository.delete(contest);
 
-        return ResponseEntity.ok().body("Successfully closed contest");
+        return;
     }
 }
