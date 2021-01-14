@@ -80,7 +80,9 @@ public class AdminController {
     public ResponseEntity<?> createExhibition(@RequestPart("contestName") String contestName,
                                   @RequestPart("exName") String exName,
                                   @RequestPart("exDesc") String exDesc,
-                                  @RequestPart("desc") String accepted) throws JsonProcessingException {
+                                  @RequestPart("desc") String accepted,
+                                  @RequestPart("date") String date,
+                                  @RequestPart("duration") String duration) throws JsonProcessingException {
 
         String currentUsername = loggedInUsers.get(BearerTokenUtil.getBearerTokenHeader());
 
@@ -101,8 +103,8 @@ public class AdminController {
             return new ResponseEntity<String>("No contest with this name exists", HttpStatus.NOT_FOUND);
 
         Exhibition ex = new Exhibition(
-                contest.getBeginDateTime(),
-                contest.getDuration(),
+                LocalDateTime.parse(date),
+                Duration.parse(duration),
                 exName,
                 contest.getStyle(),
                 exDesc,
