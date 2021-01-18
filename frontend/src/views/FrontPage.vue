@@ -971,7 +971,7 @@ export default {
       this.exhBeginDate = this.exhDescriptions[n - 1]['BeginDate']
       let tmp = this.exhBeginDate.split("T")
       this.snackDate = tmp[0].split("-")
-      if (!(currentDate <= this.getvalidDate(this.exhBeginDate))) {
+      if (currentDate < this.getvalidDate(this.exhBeginDate)) {
         this.exhOpened = true
       } else {
         console.log('collection ' + sessionStorage.getItem('token'))
